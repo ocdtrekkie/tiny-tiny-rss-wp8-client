@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="99"
+   height="99"
+   id="RSSicon"
+   viewBox="0 0 198 198"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="IconBase.svg"
+   inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\Tiles\IconicTileMediumLarge.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <metadata
+     id="metadata3829">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1218"
+     inkscape:window-height="777"
+     id="namedview3827"
+     showgrid="false"
+     inkscape:zoom="5.3181818"
+     inkscape:cx="63.493168"
+     inkscape:cy="52.408724"
+     inkscape:window-x="54"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="RSSicon"
+     width="1488.19px"
+     inkscape:showpageshadow="true" />
+  <defs
+     id="defs3798">
+    <linearGradient
+       x1="0.085000001"
+       y1="0.085000001"
+       x2="0.91500002"
+       y2="0.91500002"
+       id="RSSg">
+      <stop
+         offset="0.0"
+         stop-color="#E3702D"
+         id="stop3801" />
+      <stop
+         offset="0.1071"
+         stop-color="#EA7D31"
+         id="stop3803" />
+      <stop
+         offset="0.3503"
+         stop-color="#F69537"
+         id="stop3805" />
+      <stop
+         offset="0.5"
+         stop-color="#FB9E3A"
+         id="stop3807" />
+      <stop
+         offset="0.7016"
+         stop-color="#EA7C31"
+         id="stop3809" />
+      <stop
+         offset="0.8866"
+         stop-color="#DE642B"
+         id="stop3811" />
+      <stop
+         offset="1.0"
+         stop-color="#D95B29"
+         id="stop3813" />
+    </linearGradient>
+  </defs>
+  <path
+     style="fill:#ffffff;fill-opacity:1"
+     d="m 47.49633,131.1061 c -10.755163,0 -19.497013,8.67724 -19.497013,19.42217 0,10.74495 8.74185,19.47848 19.497013,19.47848 10.024909,0 17.455333,-7.28783 18.530203,-15.42148 -4.197479,-4.76161 -5.878117,-10.55402 -5.080343,-17.43398 -2.714066,-3.88412 -8.623336,-5.96148 -13.44986,-6.04519 z"
+     id="circle3821"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     sodipodi:nodetypes="cssccc" />
+  <path
+     style="fill:#ffffff;fill-opacity:1"
+     d="m 27.999317,75.99214 0,27.52883 c 14.037245,0.0259 26.029737,4.63207 37.332683,12.94812 L 72.488,88.264707 C 68.874938,86.218703 67.126012,84.411962 63.274259,82.860274 52.101108,78.342618 40.052837,75.996784 27.999317,75.99214 z M 97.676,104.646 l -5.354,19 c -0.876699,3.42072 -1.352043,6.27556 -1.352,8.556 -4.3e-5,6.60137 4.203994,9.85202 12.566,9.852 3.3077,2e-5 8.6017,-1.88993 15.664,-4.372 -4.4024,-13.28033 -11.815,-22.95502 -21.524,-33.036 z m 24.06,46.756 0,10.246 c -6.45133,1.96688 -17.00358,3.04137 -27.582,3.266 0.257887,2.35516 0.389542,2.72354 0.39437,5.09275 L 124.104,170.006 c -0.026,-6.92725 -0.82266,-11.85094 -2.368,-18.604 z"
+     id="path3823"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     sodipodi:nodetypes="cccccccccscccccccc" />
+  <path
+     style="fill:#ffffff;fill-opacity:1"
+     d="m 27.999317,28.140392 0,28.373271 C 42.498499,56.533079 54.988079,57.359964 68.43,62.79 l 9.636,0 4.284,-18.704 6.48,-3.084 C 69.392553,31.33615 49.71144,28.208316 27.999317,28.140392 z M 110.692,51.304 107.65,62.79 l 17.354,0 c -4.51643,-4.131117 -9.29985,-7.971519 -14.312,-11.486 z m 24.23,21.338 -1.972,12.274 -29.808,0 -0.114,0.338 c 12.63173,10.590851 22.91146,21.96631 29.892,36.8924 6.98054,14.92609 10.65379,31.38468 10.68,47.8596 l 28.4,7.5e-4 c -0.0279,-17.44417 -3.31189,-36.87816 -9.634,-53.13875 -6.32211,-16.26059 -15.67828,-31.336828 -27.444,-44.226 z"
+     id="path3825"
+     inkscape:connector-curvature="0"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     sodipodi:nodetypes="cccccccccccccccsccsc" />
+  <g
+     transform="matrix(0.95527519,0,0,0.8501241,8.7880185,9.1128913)"
+     style="font-size:216.85968018000000000px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#a5a2a2;stroke-width:0;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Oblique"
+     id="text3831-1"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90">
+    <path
+       inkscape:connector-curvature="0"
+       d="m 126.89125,85.875902 -31.238143,0 -11.435172,51.357928 c -0.917746,4.0238 -1.376117,7.90655 -1.376072,10.58902 -4.5e-5,7.76519 5.320559,12.17623 14.074059,12.17621 3.882518,2e-5 9.291328,-1.41072 18.115438,-5.08154 l 0,21.28188 c -7.62404,2.61192 -17.05662,3.91817 -30.186737,3.91817 -8.612303,0 -14.586718,-2.25942 -19.810521,-7.62444 -5.223854,-5.365 -7.835509,-11.71813 -7.835491,-20.33041 -1.8e-5,-2.82367 0.317897,-5.61085 0.953246,-8.36399 l 13.56629,-57.922828 -13.885297,0 4.552928,-19.164924 13.130251,0 4.447221,-23.189049 27.45348,-10.165207 -6.99739,33.354256 31.02484,0 z"
+       style="fill:#ffffff;fill-opacity:1;stroke:#a5a2a2;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Oblique"
+       id="path3769-7"
+       sodipodi:nodetypes="ccccsccssscccccccccc" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="backup"
+     transform="translate(0,-2)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Ebene"
+     transform="translate(0,-2)" />
+  <g
+     transform="matrix(0.95527519,0,0,0.8501241,8.8404032,8.9996927)"
+     style="font-size:216.85968018000000000px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#a5a2a2;stroke-width:3.81423330000000020;stroke-miterlimit:4;stroke-opacity:1;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Oblique"
+     id="text3831"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <g
+     transform="matrix(0.95527519,0,0,0.8501241,8.7880185,9.1128913)"
+     style="font-size:216.85968018000000000px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#a5a2a2;stroke-width:3.81423330000000020;stroke-miterlimit:4;stroke-opacity:1;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Oblique"
+     id="text3831-4"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <g
+     transform="matrix(0.95527519,0,0,0.8501241,8.9430102,8.9580473)"
+     style="font-size:216.85968018000000000px;font-style:oblique;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:#a5a2a2;stroke-width:3.81423330000000020;stroke-miterlimit:4;stroke-opacity:1;font-family:Trebuchet MS;-inkscape-font-specification:Trebuchet MS Bold Oblique"
+     id="text3831-9"
+     inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\ApplicationIcon.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+</svg>
