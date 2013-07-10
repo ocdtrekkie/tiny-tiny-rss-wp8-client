@@ -143,9 +143,6 @@
   <data name="PublishedFeeds" xml:space="preserve">
     <value>Published Articles</value>
   </data>
-  <data name="AllFeeds" xml:space="preserve">
-    <value>All Articles</value>
-  </data>
   <data name="RefreshAppBarButtonText" xml:space="preserve">
     <value>Refresh</value>
   </data>
@@ -201,5 +198,16 @@
   <data name="AllFeedsTitle" xml:space="preserve">
     <value>All Feeds</value>
     <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+    <comment>Headline for Categories View on Main Page</comment>
+  </data>
+  <data name="AllFeeds" xml:space="preserve">
+    <value>All Articles</value>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Uncategorized</value>
+    <comment>Name of Uncategorized Category</comment>
   </data>
 </root>

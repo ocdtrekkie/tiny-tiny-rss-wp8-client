@@ -96,7 +96,9 @@
     <Compile Include="ArticlePage.xaml.cs">
       <DependentUpon>ArticlePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\StringLengthVisibilityConverter.cs" />
+    <Compile Include="Classes\ExtendedFeed.cs" />
+    <Compile Include="Classes\KeyedList.cs" />
+    <Compile Include="Classes\Converter.cs" />
     <Compile Include="Classes\WebBrowserHelper.cs" />
     <Compile Include="Classes\ResolutionHelper.cs" />
     <Compile Include="Classes\WrappedArticle.cs" />

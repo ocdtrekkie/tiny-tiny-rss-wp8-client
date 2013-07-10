@@ -16,7 +16,7 @@
     shell:SystemTray.IsVisible="True"
     BackKeyPress="PhoneApplicationPage_BackKeyPress">
     <phone:PhoneApplicationPage.Resources>
-        <local:StringLengthVisibilityConverter x:Key="LengthConverter" />
+        <local:StringToVisibilityConverter x:Key="LengthConverter" />
     </phone:PhoneApplicationPage.Resources>
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="true" IsVisible="True" />

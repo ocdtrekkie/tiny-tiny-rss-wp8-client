@@ -83,6 +83,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\Category.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Feed.cs" />
     <Compile Include="Classes\SimpleResponseParser.cs" />

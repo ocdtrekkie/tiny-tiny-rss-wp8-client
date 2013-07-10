@@ -106,6 +106,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Categories ähnelt.
+        /// </summary>
+        public static string Categories {
+            get {
+                return ResourceManager.GetString("Categories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Connection Failed ähnelt.
         /// </summary>
         public static string FailedConnection {
@@ -291,6 +300,15 @@ namespace TinyTinyRSS.Resources {
         public static string TooglePublishAppBarButtonText {
             get {
                 return ResourceManager.GetString("TooglePublishAppBarButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Uncategorized ähnelt.
+        /// </summary>
+        public static string Uncategorized {
+            get {
+                return ResourceManager.GetString("Uncategorized", resourceCulture);
             }
         }
         

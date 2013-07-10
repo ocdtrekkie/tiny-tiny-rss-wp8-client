@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:TinyTinyRSS"
+    xmlns:localClasses="clr-namespace:TinyTinyRSS.Classes"
     x:Class="TinyTinyRSS.MainPage"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -16,13 +17,38 @@
     toolkit:TiltEffect.IsTiltEnabled="True"
     shell:SystemTray.IsVisible="True">
 
-    <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
+    <phone:PhoneApplicationPage.Resources>
+        <localClasses:IntToStringConverter x:Key="IntStringConverter" />
+        <phone:JumpListItemBackgroundConverter x:Key="BackgroundConverter"/>
+        <phone:JumpListItemForegroundConverter x:Key="ForegroundConverter"/>
+        <Style x:Key="JumpListStyle" TargetType="phone:LongListSelector">
+            <Setter Property="LayoutMode" Value="List" />
+            <Setter Property="Margin" Value="12,12,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Margin="20, 6">
+                            <TextBlock Text="{Binding Key}"
+                                       Foreground="{StaticResource PhoneAccentBrush}"                                       
+                                       FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                                       FontSize="28" Padding="6" Width="Auto"
+                                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="false" IsVisible="True" />
-    </shell:SystemTray.ProgressIndicator>    
+    </shell:SystemTray.ProgressIndicator>
+    
+    <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivotsteuerelement-->
-        <phone:Pivot Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" LoadingPivotItem="Pivot_LoadingPivotItem">
+        <phone:Pivot Name="MainPivot" Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" LoadingPivotItem="Pivot_LoadingPivotItem">
             <!--Pivotelement eins-->
             <phone:PivotItem>
                 <phone:PivotItem.Header>
@@ -39,19 +65,19 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button Grid.Column="0" Grid.Row="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="0" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Fresh" Text="{Binding LocalizedResources.FreshFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
-                        <Button Grid.Column="1" Grid.Row="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="1" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Starred" Text="{Binding LocalizedResources.StarredFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
-                        <Button Grid.Column="2" Grid.Row="0" Margin="0" Background="{StaticResource PhoneAccentBrush}" BorderThickness="2" Click="Button_Click" BorderBrush="{StaticResource PhoneAccentBrush}"  Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="2" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Archived" Text="{Binding LocalizedResources.ArchivedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
-                        <Button Grid.Column="0" Grid.Row="1" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="0" Grid.Row="1" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Published" Text="{Binding LocalizedResources.PublishedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
-                        <Button Grid.Column="1" Grid.Row="1" Background="{StaticResource PhoneAccentBrush}"  Click="Button_Click" BorderThickness="2" BorderBrush="{StaticResource PhoneAccentBrush}"  Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="1" Grid.Row="1" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}"  Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="All" Text="{Binding LocalizedResources.AllFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
                     </Grid>
@@ -60,28 +86,36 @@
             <!-- Pivotelement zwei -->
             <phone:PivotItem Name="AllFeedsPivot">
                 <phone:PivotItem.Header>
-                    <TextBlock FontSize="36" Text="{Binding LocalizedResources.AllFeeds, Source={StaticResource LocalizedStrings}}"/>
+                    <TextBlock FontSize="36" Text="{Binding LocalizedResources.AllFeedsTitle, Source={StaticResource LocalizedStrings}}"/>
                 </phone:PivotItem.Header>
-                <ListBox x:Name="AllFeedsList" ItemsSource="{Binding}" SelectionChanged="AllFeedsList_SelectionChanged">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid HorizontalAlignment="Stretch" Margin="0,0,5,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding title}" FontSize="26" Margin="0,5" Grid.Column="0"/>
-                                    <TextBlock Text="{Binding unread}" FontSize="26" Margin="0,5" Grid.Column="1" TextAlignment="Right"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-            </phone:PivotItem>
+                <phone:LongListSelector x:Name="AllFeedsList" 
+                                        ItemsSource="{Binding}" 
+                                        SelectionChanged="AllFeedsList_SelectionChanged"
+                                        JumpListStyle="{StaticResource JumpListStyle}"
+                                        Background="Transparent"
+                                        LayoutMode="List"
+                                        IsGroupingEnabled="true"
+                                        HideEmptyGroups ="true">
+                    <phone:LongListSelector.GroupHeaderTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Key}" FontSize="36" Padding="6" Foreground="{StaticResource PhoneAccentBrush}"
+            FontFamily="{StaticResource PhoneFontFamilySemiLight}" HorizontalAlignment="Left" VerticalAlignment="Center"/>                                
+                        </DataTemplate>
+                    </phone:LongListSelector.GroupHeaderTemplate>
+                    <phone:LongListSelector.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch" Margin="0,0,5,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="26" Margin="0,5" Grid.Column="0"/>
+                                <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="26" Margin="0,5" Grid.Column="1" TextAlignment="Right" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </phone:LongListSelector.ItemTemplate>
+                </phone:LongListSelector>
+            </phone:PivotItem>            
         </phone:Pivot>
 
         <!--Auskommentieren, um ein Ausrichtungsraster anzuzeigen und sicherzustellen, dass Ihre Steuerelemente

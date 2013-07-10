@@ -123,10 +123,20 @@ namespace TinyTinyRSS.Interface
         {
             string getFeeds = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getFeeds\",\"cat_id\":-3,\"unread_only\":false}";
             Console.WriteLine(getFeeds);
-            ResponseArray unreadItems = await SendRequestArrayAsync(null, getFeeds);
-            List<Feed> feeds = ParseContentOrError<Feed>(unreadItems);
+            ResponseArray response = await SendRequestArrayAsync(null, getFeeds);
+            List<Feed> feeds = ParseContentOrError<Feed>(response);
             Console.WriteLine(feeds.Count);
             return feeds;
+        }
+
+        public async Task<List<Category>> getCategories()
+        {
+            string getCategories = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getCategories\",\"unread_only\":false,\"enable_nested\":false,\"include_empty\":true}";
+            Console.WriteLine(getCategories);
+            ResponseArray response = await SendRequestArrayAsync(null, getCategories);
+            List<Category> cats = ParseContentOrError<Category>(response);
+            Console.WriteLine(cats.Count);
+            return cats;
         }
 
         public async Task<Response> SendRequestAsync(string server, string requestUrl)

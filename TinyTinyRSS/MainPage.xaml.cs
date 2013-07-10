@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using TinyTinyRSS.Interface.Classes;
 using System.Collections.ObjectModel;
+using TinyTinyRSSInterface.Classes;
+using System.Windows.Data;
+using TinyTinyRSS.Classes;
 
 namespace TinyTinyRSS
 {
@@ -22,16 +25,14 @@ namespace TinyTinyRSS
         ApplicationBarIconButton settingsAppBarButton;
         ApplicationBarIconButton refreshAppBarButton;
 
-        ObservableCollection<Feed> feedList;
+        List<KeyedList<string, ExtendedFeed>> FeedListDataSource;
 
         private bool validConnection = false;
 
         public MainPage()
         {
             InitializeComponent();
-            BuildLocalizedApplicationBar();
-            feedList = new ObservableCollection<Feed>();
-            AllFeedsList.DataContext = feedList;
+            BuildLocalizedApplicationBar();           
             this.Loaded += PageLoaded;
         }
 
@@ -40,19 +41,7 @@ namespace TinyTinyRSS
             validConnection = await TtRssInterface.getInterface().CheckLogin();
             if (validConnection)
             {
-                // Counters
-                // Unread
-                int unread = await TtRssInterface.getInterface().getUnReadCount(); ;
-                Fresh.Text = AppResources.FreshFeeds + " (" + unread + ")";
-                // Starred
-                List<Headline> headlinesS = await TtRssInterface.getInterface().getHeadlines((int) FeedId.Starred);
-                Starred.Text = AppResources.StarredFeeds + " (" + headlinesS.Count + ")";
-                // Archived
-                List<Headline> headlinesA = await TtRssInterface.getInterface().getHeadlines((int) FeedId.Archived);
-                Archived.Text = AppResources.ArchivedFeeds + " (" + headlinesA.Count + ")";
-                // Published
-                List<Headline> headlinesP = await TtRssInterface.getInterface().getHeadlines((int) FeedId.Published);
-                Published.Text = AppResources.PublishedFeeds + " (" + headlinesP.Count + ")";
+                await UpdateSpecialFeeds();
             }
             else
             {
@@ -118,7 +107,7 @@ namespace TinyTinyRSS
         /// </summary>
         /// <param name="sender">Button that has been touched</param>
         /// <param name="e">Events</param>
-        private void AppBarButton_Click(object sender, EventArgs e)
+        private async void AppBarButton_Click(object sender, EventArgs e)
         {
             if (sender.Equals(this.settingsAppBarButton))
             {
@@ -126,31 +115,98 @@ namespace TinyTinyRSS
             }
             else if (sender.Equals(this.refreshAppBarButton))
             {
-                
+                if (MainPivot.SelectedItem == AllFeedsPivot)
+                {
+                    await UpdateAllFeedsList();
+                }
+                else
+                {
+                    await UpdateSpecialFeeds();
+                }
             }
         }
 
         private async void Pivot_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
-            if (e.Item == AllFeedsPivot && feedList.Count==0)
+            if (e.Item == AllFeedsPivot && FeedListDataSource == null)
             {
-                SystemTray.ProgressIndicator.IsIndeterminate = true;
-                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds();
-                theFeeds.ForEach(x => feedList.Add(x));
-                SystemTray.ProgressIndicator.IsIndeterminate = false;
+                await UpdateAllFeedsList();
             }
+         }
+
+        private Category getCategoryById(List<Category> categories, int id)
+        {
+            foreach (Category cat in categories)
+            {
+                if (cat.id == id)
+                {
+                    return cat;
+                }
+            }
+            return null;
         }
 
         private void AllFeedsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int selectedIndex = AllFeedsList.SelectedIndex;
-            if (selectedIndex == -1)
+            ExtendedFeed selected = AllFeedsList.SelectedItem as ExtendedFeed;
+            if (selected == null)
             {
                 return;
             }
-            Feed selected = feedList[selectedIndex];
             AllFeedsList.SelectedItem = null;
-            NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + selected.id, UriKind.Relative));
+            NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + selected.feed.id, UriKind.Relative));
+        }
+
+        private async Task<bool> UpdateAllFeedsList()
+        {
+            SystemTray.ProgressIndicator.IsIndeterminate = true;
+            List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds();
+            theFeeds.Sort();
+            List<Category> categories = await TtRssInterface.getInterface().getCategories();
+
+            List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
+            theFeeds.ForEach(x => extendedFeeds.Add(new ExtendedFeed(x, getCategoryById(categories, x.cat_id))));
+
+            var groupedFeeds =
+                from feed in extendedFeeds
+                orderby feed.cat.combined
+                group feed by feed.cat.combined into feedByTitle
+                select new KeyedList<string, ExtendedFeed>(feedByTitle);
+
+            FeedListDataSource = new List<KeyedList<string, ExtendedFeed>>(groupedFeeds);
+            AllFeedsList.DataContext = FeedListDataSource;
+            SystemTray.ProgressIndicator.IsIndeterminate = false;
+            return true;
+        }
+
+        private async Task<bool> UpdateSpecialFeeds()
+        {
+            // Counters
+            // Unread
+            int unread = await TtRssInterface.getInterface().getUnReadCount();
+            if (unread != 0)
+            {
+                Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + " (" + unread + ")";
+            }
+            // Starred
+            List<Headline> headlinesS = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Starred);
+            if (headlinesS.Count != 0)
+            {
+                Starred.Text = AppResources.StarredFeeds + Environment.NewLine + " (" + headlinesS.Count + ")";
+            }
+            // Archived
+            List<Headline> headlinesA = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Archived);
+            if (headlinesA.Count != 0)
+            {
+                Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + " (" + headlinesA.Count + ")";
+            }
+            // Published
+            List<Headline> headlinesP = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Published);
+            if (headlinesP.Count != 0)
+            {
+                Published.Text = AppResources.PublishedFeeds + Environment.NewLine + " (" + headlinesP.Count + ")";
+            }
+            return true;
         }
     }
 }

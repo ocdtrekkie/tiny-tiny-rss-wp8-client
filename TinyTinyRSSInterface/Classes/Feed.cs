@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TinyTinyRSS.Interface.Classes
 {
-    public class Feed
+    public class Feed : IComparable<Feed>
     {
         public string title {get;set;}
         public string feed_url {get; set;}
@@ -16,5 +16,18 @@ namespace TinyTinyRSS.Interface.Classes
         public int cat_id {get; set;}
         public long last_updated {get; set;}
         public int order_id {get; set;}
+
+        public int CompareTo(Feed obj)
+        {
+            int byUnread = obj.unread.CompareTo(this.unread);
+            if (byUnread == 0)
+            {
+                return this.title.CompareTo(obj.title);
+            }
+            else
+            {
+                return byUnread;
+            }
+        }
     }
 }
