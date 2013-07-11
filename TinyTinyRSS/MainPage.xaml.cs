@@ -188,11 +188,19 @@ namespace TinyTinyRSS
             {
                 Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + " (" + unread + ")";
             }
+            else
+            {
+                Fresh.Text = AppResources.FreshFeeds;
+            }
             // Starred
             List<Headline> headlinesS = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Starred);
             if (headlinesS.Count != 0)
             {
                 Starred.Text = AppResources.StarredFeeds + Environment.NewLine + " (" + headlinesS.Count + ")";
+            }
+            else
+            {
+                Starred.Text = AppResources.StarredFeeds;
             }
             // Archived
             List<Headline> headlinesA = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Archived);
@@ -200,11 +208,19 @@ namespace TinyTinyRSS
             {
                 Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + " (" + headlinesA.Count + ")";
             }
+            else
+            {
+                Archived.Text = AppResources.ArchivedFeeds;
+            }
             // Published
             List<Headline> headlinesP = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Published);
             if (headlinesP.Count != 0)
             {
                 Published.Text = AppResources.PublishedFeeds + Environment.NewLine + " (" + headlinesP.Count + ")";
+            }
+            else
+            {
+                Published.Text = AppResources.PublishedFeeds;
             }
             return true;
         }

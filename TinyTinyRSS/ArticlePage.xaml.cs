@@ -26,11 +26,12 @@ namespace TinyTinyRSS
         private ObservableCollection<WrappedArticle> ArticlesCollection;
         private int TotalCount;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
-        private ApplicationBarMenuItem publishAppBarMenu, archiveAppBarMenu;
+        private ApplicationBarMenuItem publishAppBarMenu; //, archiveAppBarMenu;
 
         public ArticlePage()
         {
             InitializeComponent();
+            Counter.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             BuildLocalizedApplicationBar();
             this.Loaded += PageLoaded;
@@ -77,6 +78,15 @@ namespace TinyTinyRSS
             setHtml(item.Article.content);
             UpdateLocalizedApplicationBar(item.Article);
             SystemTray.ProgressIndicator.IsIndeterminate = false;
+            if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
+            {
+                bool success = await TtRssInterface.getInterface().updateArticle(item.Article.id, UpdateField.Unread, UpdateMode.False);
+                if (success)
+                {
+                    item.Article.unread = false;
+                    UpdateLocalizedApplicationBar(item.Article);
+                }
+            }  
         } 
 
         private void setHtml(string content)
@@ -106,20 +116,6 @@ namespace TinyTinyRSS
                 if (result != null) { return result; }
             }
             return null;
-        }
-
-        private async void PivotControl_UnloadedPivotItem(object sender, PivotItemEventArgs e)
-        {
-            WrappedArticle bound = e.Item.DataContext as WrappedArticle;
-            Article article = bound.Article;
-            if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
-            {
-                bool success = await TtRssInterface.getInterface().updateArticle(article.id, UpdateField.Unread, UpdateMode.False);
-                if (success)
-                {
-                    article.unread = false;
-                }
-            }            
         }
 
         private void UpdateLocalizedApplicationBar(Article article)
@@ -182,22 +178,27 @@ namespace TinyTinyRSS
         {
             UpdateField field;
             Article current = ArticlesCollection[PivotControl.SelectedIndex].Article;
-            if (sender == archiveAppBarMenu)
-            {
-                field = UpdateField.Archived;
-            }
-            else if (sender == publishAppBarMenu)
+            bool remove = false;
+            //if (sender == archiveAppBarMenu)
+            //{
+            //    field = UpdateField.Archived;
+            //}
+            //else 
+            if (sender == publishAppBarMenu)
             {
                 field = UpdateField.Published;
                 if (feedId == (int) FeedId.Published)
                 {
-                    ArticlesCollection.RemoveAt(PivotControl.SelectedIndex);
-                    TotalCount--;
+                    remove = true;
                 }
             }            
             else if (sender == toggleStarAppBarButton)
             {
                 field = UpdateField.Starred;
+                if (feedId == (int)FeedId.Starred)
+                {
+                    remove = true;
+                }
             }
             else if (sender == toogleReadAppBarButton)
             {
@@ -213,6 +214,18 @@ namespace TinyTinyRSS
                 ArticlesCollection[PivotControl.SelectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id);
                 UpdateLocalizedApplicationBar(ArticlesCollection[PivotControl.SelectedIndex].Article);
             }
+            if (remove)
+            {
+                if (TotalCount == 1)
+                {
+                    NavigationService.GoBack();
+                }
+                else
+                {
+                    TotalCount--;
+                    ArticlesCollection.RemoveAt(PivotControl.SelectedIndex);
+                }
+            }
         }
 
         private void openExt_Click(object sender, EventArgs e)
@@ -225,16 +238,24 @@ namespace TinyTinyRSS
             }
         }
 
-        private async void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        private void PhoneApplicationPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
         {
-            Article article = ArticlesCollection[PivotControl.SelectedIndex].Article;
-            if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
+            Counter.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
+            if (Orientation.Equals(PageOrientation.LandscapeLeft) || Orientation.Equals(PageOrientation.LandscapeRight))
             {
-                bool success = await TtRssInterface.getInterface().updateArticle(article.id, UpdateField.Unread, UpdateMode.False);
-                if (success)
-                {
-                    article.unread = false;
-                }
+                SystemTray.IsVisible = false;
+            }
+            else
+            {
+                SystemTray.IsVisible = true;
+            }
+            PivotItem myPivotItem =
+                (PivotItem)(PivotControl.ItemContainerGenerator.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
+
+            var wc = FindDescendantByName(myPivotItem, "WebContent") as WebBrowser;
+            if (wc != null)
+            {
+                wc.FontSize = 26;
             }
         }
     }

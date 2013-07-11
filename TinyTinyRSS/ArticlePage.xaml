@@ -11,10 +11,10 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape"
+    OrientationChanged="PhoneApplicationPage_OrientationChanged"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True"
-    BackKeyPress="PhoneApplicationPage_BackKeyPress">
+    shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <local:StringToVisibilityConverter x:Key="LengthConverter" />
     </phone:PhoneApplicationPage.Resources>
@@ -23,10 +23,9 @@
     </shell:SystemTray.ProgressIndicator>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" UnloadedPivotItem="PivotControl_UnloadedPivotItem" LoadingPivotItem="PivotControl_LoadingPivotItem">
+        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadingPivotItem="PivotControl_LoadingPivotItem">
             <phone:Pivot.Title>
-                <TextBlock Name="Counter" HorizontalAlignment="Stretch" TextWrapping="NoWrap" TextAlignment="Right" Width="{Binding ReducedMaxWidth, Source={StaticResource ResolutionHelper}}" Margin="0,-10,0,0"/>
-                
+                <TextBlock Name="Counter" HorizontalAlignment="Stretch" TextWrapping="NoWrap" MaxWidth="1280" TextAlignment="Right" Margin="0,-10,0,0"/>
             </phone:Pivot.Title>
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
@@ -46,7 +45,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="Headline" Grid.Row="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}" MaxWidth="{Binding MaxWidth, Source={StaticResource ResolutionHelper}}"/>
+                            <TextBlock x:Name="Headline" Grid.Row="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
                             <TextBlock x:Name="Author" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Visibility="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top">
                                 <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/FeedIcon.png" Stretch="Fill" Height="16" Width="16"/>

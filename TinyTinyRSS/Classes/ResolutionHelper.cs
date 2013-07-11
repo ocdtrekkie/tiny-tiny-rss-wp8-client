@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.Phone.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace TinyTinyRSS.Classes
 {
@@ -64,15 +66,17 @@ namespace TinyTinyRSS.Classes
             {
                 switch (CurrentResolution)
                 {
-                    case Resolutions.HD720p: return 720 - 48;
-                    case Resolutions.WVGA: return 480 - 48;
-                    case Resolutions.WXGA: return 768 - 48;
-                    default: return 480;
+                    case Resolutions.HD720p:
+                        return 720 - 48;
+                    case Resolutions.WVGA:
+                        return 480 - 48;
+                    case Resolutions.WXGA:
+                       return 768 - 48;
+                    default:
+                        return 480 - 48;
                 }
             }
         }
-
-
 
         public int ButtonSize
         {
@@ -85,6 +89,49 @@ namespace TinyTinyRSS.Classes
                     case Resolutions.WXGA: return 350;
                     default: return 200;
                 }
+            }
+        }
+
+        internal static double GetWidthForOrientation(PageOrientation orientation)
+        {
+            switch (CurrentResolution)
+            {
+                case Resolutions.HD720p:
+                    if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
+                    {
+                        return 1280 - 150;
+                    }
+                    else
+                    {
+                        return 720 - 48;
+                    }
+                case Resolutions.WVGA:
+                    if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
+                    {
+                        return 800 - 150;
+                    }
+                    else
+                    {
+                        return 480 - 48;
+                    }
+                case Resolutions.WXGA:
+                    if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
+                    {
+                        return 1280 - 150;
+                    }
+                    else
+                    {
+                        return 768 - 48;
+                    }
+                default:
+                    if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
+                    {
+                        return 800 - 150;
+                    }
+                    else
+                    {
+                        return 480 - 48;
+                    }
             }
         }
     }

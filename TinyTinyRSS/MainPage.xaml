@@ -32,7 +32,7 @@
                             <TextBlock Text="{Binding Key}"
                                        Foreground="{StaticResource PhoneAccentBrush}"                                       
                                        FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                                       FontSize="28" Padding="6" Width="Auto"
+                                       FontSize="36" Padding="6" Width="Auto"
                                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
                         </Border>
                     </DataTemplate>
@@ -71,7 +71,7 @@
                         <Button Grid.Column="1" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Starred" Text="{Binding LocalizedResources.StarredFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
-                        <Button Grid.Column="2" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
+                        <Button Grid.Column="2" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
                             <TextBlock TextAlignment="Center" x:Name="Archived" Text="{Binding LocalizedResources.ArchivedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                         </Button>
                         <Button Grid.Column="0" Grid.Row="1" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
