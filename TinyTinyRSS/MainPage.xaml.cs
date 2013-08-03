@@ -17,6 +17,7 @@ using System.Collections.ObjectModel;
 using TinyTinyRSSInterface.Classes;
 using System.Windows.Data;
 using TinyTinyRSS.Classes;
+using CaledosLab.Portable.Logging;
 
 namespace TinyTinyRSS
 {
@@ -32,20 +33,32 @@ namespace TinyTinyRSS
         public MainPage()
         {
             InitializeComponent();
-            BuildLocalizedApplicationBar();           
+            BuildLocalizedApplicationBar();
             this.Loaded += PageLoaded;
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+            SystemTray.ProgressIndicator.IsIndeterminate = true;
             validConnection = await TtRssInterface.getInterface().CheckLogin();
             if (validConnection)
             {
+                await TtRssInterface.getInterface().getCounters();
                 await UpdateSpecialFeeds();
+                await UpdateAllFeedsList(false);
             }
             else
             {
                 MessageBox.Show(AppResources.NoConnection);
+            }
+            try
+            {
+                SystemTray.ProgressIndicator.IsIndeterminate = false;
+            }
+            catch (NullReferenceException nre)
+            {
+                Logger.WriteLine("NRE probably cause page is not there anymore.");
+                Logger.WriteLine(nre);
             }
         }
 
@@ -115,24 +128,21 @@ namespace TinyTinyRSS
             }
             else if (sender.Equals(this.refreshAppBarButton))
             {
+                if (!validConnection)
+                    return;
+                SystemTray.ProgressIndicator.IsIndeterminate = true;
+                await TtRssInterface.getInterface().getCounters();
                 if (MainPivot.SelectedItem == AllFeedsPivot)
                 {
-                    await UpdateAllFeedsList();
+                    await UpdateAllFeedsList(true);
                 }
                 else
                 {
                     await UpdateSpecialFeeds();
                 }
+                SystemTray.ProgressIndicator.IsIndeterminate = false;
             }
         }
-
-        private async void Pivot_LoadingPivotItem(object sender, PivotItemEventArgs e)
-        {
-            if (e.Item == AllFeedsPivot && FeedListDataSource == null)
-            {
-                await UpdateAllFeedsList();
-            }
-         }
 
         private Category getCategoryById(List<Category> categories, int id)
         {
@@ -157,10 +167,9 @@ namespace TinyTinyRSS
             NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + selected.feed.id, UriKind.Relative));
         }
 
-        private async Task<bool> UpdateAllFeedsList()
+        private async Task<bool> UpdateAllFeedsList(bool refresh)
         {
-            SystemTray.ProgressIndicator.IsIndeterminate = true;
-            List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds();
+            List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
             theFeeds.Sort();
             List<Category> categories = await TtRssInterface.getInterface().getCategories();
 
@@ -175,7 +184,6 @@ namespace TinyTinyRSS
 
             FeedListDataSource = new List<KeyedList<string, ExtendedFeed>>(groupedFeeds);
             AllFeedsList.DataContext = FeedListDataSource;
-            SystemTray.ProgressIndicator.IsIndeterminate = false;
             return true;
         }
 
@@ -186,43 +194,50 @@ namespace TinyTinyRSS
             int unread = await TtRssInterface.getInterface().getUnReadCount();
             if (unread != 0)
             {
-                Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + " (" + unread + ")";
+                Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
             }
             else
             {
                 Fresh.Text = AppResources.FreshFeeds;
             }
             // Starred
-            List<Headline> headlinesS = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Starred);
-            if (headlinesS.Count != 0)
+            int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
+            if (starredCount != 0)
             {
-                Starred.Text = AppResources.StarredFeeds + Environment.NewLine + " (" + headlinesS.Count + ")";
+                    Starred.Text = AppResources.StarredFeeds + Environment.NewLine + "(" + starredCount + ")";
             }
             else
             {
                 Starred.Text = AppResources.StarredFeeds;
             }
             // Archived
-            List<Headline> headlinesA = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Archived);
-            if (headlinesA.Count != 0)
+            int archCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Archived);
+            if (archCount != 0)
             {
-                Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + " (" + headlinesA.Count + ")";
+                Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + "(" + archCount + ")";
             }
             else
             {
                 Archived.Text = AppResources.ArchivedFeeds;
             }
             // Published
-            List<Headline> headlinesP = await TtRssInterface.getInterface().getHeadlines((int)FeedId.Published);
-            if (headlinesP.Count != 0)
+            int publishedCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Published);
+            if (publishedCount != 0)
             {
-                Published.Text = AppResources.PublishedFeeds + Environment.NewLine + " (" + headlinesP.Count + ")";
+                Published.Text = AppResources.PublishedFeeds + Environment.NewLine + "(" + publishedCount + ")";
             }
             else
             {
                 Published.Text = AppResources.PublishedFeeds;
             }
+            
             return true;
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            Logger.WriteLine("NavigatedTo ArticlePage.");
         }
     }
 }

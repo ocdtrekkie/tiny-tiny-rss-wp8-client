@@ -7,12 +7,19 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using TinyTinyRSS.Resources;
+using TinyTinyRSS.Interface;
 using TinyTinyRSSInterface;
+using System.IO.IsolatedStorage;
+using System.IO;
+using CaledosLab.Portable.Logging;
 
 namespace TinyTinyRSS
 {
     public partial class App : Application
     {
+        // LogFile Name
+        private string LogFile = "logfile.txt";
+        
         /// <summary>
         /// Bietet einen einfachen Zugriff auf den Stammframe der Phone-Anwendung.
         /// </summary>
@@ -27,12 +34,6 @@ namespace TinyTinyRSS
             // Globaler Handler für nicht abgefangene Ausnahmen.
             UnhandledException += Application_UnhandledException;
 
-
-            // Load Settings to initially.
-            string egal = ConnectionSettings.getInstance().username;
-            egal = ConnectionSettings.getInstance().server;
-            egal = ConnectionSettings.getInstance().password;
-            bool egal2 = ConnectionSettings.getInstance().markRead;
 
             // Standard-XAML-Initialisierung
             InitializeComponent();
@@ -66,8 +67,43 @@ namespace TinyTinyRSS
 
         // Code, der beim Starten der Anwendung ausgeführt werden soll (z. B. über "Start")
         // Dieser Code wird beim Reaktivieren der Anwendung nicht ausgeführt
-        private void Application_Launching(object sender, LaunchingEventArgs e)
+        private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            // init logger
+            using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+
+                if (!storage.FileExists(LogFile))
+                {
+                    storage.CreateFile(LogFile);
+                }
+                using (IsolatedStorageFileStream fs = storage.OpenFile(LogFile, FileMode.Open))
+                {
+                    using (StreamReader reader = new StreamReader(fs))
+                    {
+                        Logger.Load(reader);
+                    }
+                }
+            }
+            // Initial login
+            await TtRssInterface.getInterface().CheckLogin();
+        }
+
+        /// <summary>
+        /// Closes the logger.
+        /// </summary>
+        private void FinalizeLogging()
+        {
+            using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                using (IsolatedStorageFileStream fs = storage.CreateFile(LogFile))
+                {
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+                        Logger.Save(writer);
+                    }
+                }
+            }
         }
 
         // Code, der ausgeführt werden soll, wenn die Anwendung aktiviert wird (in den Vordergrund gebracht wird)
@@ -81,13 +117,14 @@ namespace TinyTinyRSS
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            
         }
 
         // Code, der beim Schließen der Anwendung ausgeführt wird (z. B. wenn der Benutzer auf "Zurück" klickt)
         // Dieser Code wird beim Deaktivieren der Anwendung nicht ausgeführt
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            // Sicherstellen, dass der erforderliche Anwendungszustand hier beibehalten wird
+            FinalizeLogging();
         }
 
         // Code, der bei einem Navigationsfehler ausgeführt wird
@@ -98,11 +135,14 @@ namespace TinyTinyRSS
                 // Navigationsfehler. Unterbrechen und Debugger öffnen
                 Debugger.Break();
             }
+            FinalizeLogging();
         }
 
         // Code, der bei nicht behandelten Ausnahmen ausgeführt wird
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            Logger.WriteLine(e.ExceptionObject);
+            FinalizeLogging();
             if (Debugger.IsAttached)
             {
                 // Eine nicht behandelte Ausnahme ist aufgetreten. Unterbrechen und Debugger öffnen

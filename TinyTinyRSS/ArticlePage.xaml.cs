@@ -17,6 +17,12 @@ using System.Windows.Media;
 using TinyTinyRSS.Resources;
 using TinyTinyRSSInterface.Classes;
 using Microsoft.Phone.Tasks;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.IO.IsolatedStorage;
+using Microsoft.Xna.Framework.Media;
+using System.Windows.Resources;
+using CaledosLab.Portable.Logging;
 
 namespace TinyTinyRSS
 {
@@ -25,38 +31,32 @@ namespace TinyTinyRSS
         private int feedId;
         private ObservableCollection<WrappedArticle> ArticlesCollection;
         private int TotalCount;
+        private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
-        private ApplicationBarMenuItem publishAppBarMenu; //, archiveAppBarMenu;
+        private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu; //, archiveAppBarMenu;
 
         public ArticlePage()
         {
             InitializeComponent();
-            Counter.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
+            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
+            _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+            _moreArticles = false;
+            _moreArticlesLoading = false;
             BuildLocalizedApplicationBar();
             this.Loaded += PageLoaded;
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            PivotControl.DataContext = ArticlesCollection;            
-            List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId);
-            if (headlines.Count == 0)
-            {
-                MessageBox.Show("No Articles found here.");
-                NavigationService.GoBack();
-            }
-            else
-            {
-                TotalCount = headlines.Count;
-                headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
-            }
+            PivotControl.DataContext = ArticlesCollection;
+            await LoadHeadlines(false);
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
+            Logger.WriteLine("NavigatedTo ArticlePage.");
             string feed = "";
             if (NavigationContext.QueryString.TryGetValue("feed", out feed))
             {
@@ -66,56 +66,46 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
-            SystemTray.ProgressIndicator.IsIndeterminate = true;
+            SetProgressBar(true);
             int selectedIndex = PivotControl.SelectedIndex;
-            Counter.Text = (selectedIndex + 1) + "/" + TotalCount;
+            Counter.Text = Helper.AppendPlus(_moreArticles, (selectedIndex + 1) + "/" + TotalCount);
+            
             WrappedArticle item = ArticlesCollection[selectedIndex];
             if (item.Article == null)
             {
-                Article article = await TtRssInterface.getInterface().getArticle(item.Headline.id);
-                item.Article = article;
+                Task<Article> articleTask = TtRssInterface.getInterface().getArticle(item.Headline.id);
+                item.Article = await articleTask;                                   
             }
             setHtml(item.Article.content);
+            var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
+            if (icon != null)
+            {
+                icon.Source = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id).icon;
+            } 
             UpdateLocalizedApplicationBar(item.Article);
-            SystemTray.ProgressIndicator.IsIndeterminate = false;
+            SetProgressBar(false);
             if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
             {
                 bool success = await TtRssInterface.getInterface().updateArticle(item.Article.id, UpdateField.Unread, UpdateMode.False);
                 if (success)
                 {
                     item.Article.unread = false;
+                    item.Headline.unread = false;
                     UpdateLocalizedApplicationBar(item.Article);
                 }
             }  
-        } 
+        }
 
         private void setHtml(string content)
         {
             PivotItem myPivotItem =
                 (PivotItem)(PivotControl.ItemContainerGenerator.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
 
-            var wc = FindDescendantByName(myPivotItem, "WebContent") as WebBrowser;
+            var wc = Helper.FindDescendantByName(myPivotItem, "WebContent") as WebBrowser;
             if (wc != null)
             {
                 wc.NavigateToString(content);
             }
-        }
-
-        public static FrameworkElement FindDescendantByName(FrameworkElement element, string name)
-        {
-            if (element == null || string.IsNullOrWhiteSpace(name)) { return null; }
-
-            if (name.Equals(element.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                return element;
-            }
-            var childCount = VisualTreeHelper.GetChildrenCount(element);
-            for (int i = 0; i < childCount; i++)
-            {
-                var result = FindDescendantByName((VisualTreeHelper.GetChild(element, i) as FrameworkElement), name);
-                if (result != null) { return result; }
-            }
-            return null;
         }
 
         private void UpdateLocalizedApplicationBar(Article article)
@@ -172,6 +162,11 @@ namespace TinyTinyRSS
             publishAppBarMenu.Text = AppResources.TooglePublishAppBarButtonText;
             publishAppBarMenu.Click += AppBarButton_Click;
             ApplicationBar.MenuItems.Add(publishAppBarMenu);
+
+            showUnreadOnlyAppBarMenu = new ApplicationBarMenuItem();
+            showUnreadOnlyAppBarMenu.Text = _showUnreadOnly ? AppResources.ShowAllArticles : AppResources.ShowOnlyUnreadArticles;
+            showUnreadOnlyAppBarMenu.Click += AppBarButton_Click;
+            ApplicationBar.MenuItems.Add(showUnreadOnlyAppBarMenu);
         }
 
         private async void AppBarButton_Click(object sender, EventArgs e)
@@ -204,6 +199,13 @@ namespace TinyTinyRSS
             {
                 field = UpdateField.Unread;
             }
+            else if (sender == showUnreadOnlyAppBarMenu)
+            {
+                _showUnreadOnly = !_showUnreadOnly;
+                showUnreadOnlyAppBarMenu.Text = _showUnreadOnly ? AppResources.ShowAllArticles : AppResources.ShowOnlyUnreadArticles;
+                await LoadHeadlines(true);
+                return;
+            }
             else
             {
                 return;
@@ -223,8 +225,9 @@ namespace TinyTinyRSS
                 else
                 {
                     TotalCount--;
-                    ArticlesCollection.RemoveAt(PivotControl.SelectedIndex);
                 }
+                ArticlesCollection.RemoveAt(PivotControl.SelectedIndex);
+                TtRssInterface.getInterface().removeHeadlineFromCache(feedId, ArticlesCollection[PivotControl.SelectedIndex].Headline);
             }
         }
 
@@ -238,24 +241,128 @@ namespace TinyTinyRSS
             }
         }
 
+        /// <summary>
+        /// If Orientation is changed set the correct width of the counter textblock and turn on or off System Tray.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PhoneApplicationPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
         {
-            Counter.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
+            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             if (Orientation.Equals(PageOrientation.LandscapeLeft) || Orientation.Equals(PageOrientation.LandscapeRight))
             {
                 SystemTray.IsVisible = false;
+                PivotHeader.Margin = new Thickness(0);
+                MyProgressBar.Visibility = Visibility.Visible;
+                MyProgressBarText.Visibility = Visibility.Visible;
             }
             else
             {
                 SystemTray.IsVisible = true;
+                PivotHeader.Margin = new Thickness(0,-20,0,0);
+                MyProgressBar.Visibility = Visibility.Collapsed;
+                MyProgressBarText.Visibility = Visibility.Collapsed;
             }
-            PivotItem myPivotItem =
-                (PivotItem)(PivotControl.ItemContainerGenerator.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
+        }
 
-            var wc = FindDescendantByName(myPivotItem, "WebContent") as WebBrowser;
-            if (wc != null)
+        /// <summary>
+        /// Get's the headlines of the shown feed from tt-rss. 
+        /// Depending on the settings, may only unread articles are loaded.
+        /// </summary>
+        /// <returns>true, cause void Tasks don't work.</returns>
+        private async Task<bool> LoadHeadlines(bool forceRefresh)
+        {
+            SetProgressBar(true);
+            bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+            if (_IsSpecial() && ApplicationBar.MenuItems.Contains(showUnreadOnlyAppBarMenu))
             {
-                wc.FontSize = 26;
+                ApplicationBar.MenuItems.Remove(showUnreadOnlyAppBarMenu);
+            }
+            ArticlesCollection.Clear();
+            Counter.Text = "";
+            List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(forceRefresh, feedId, unReadOnly, 0);
+            if (headlines.Count == 0)
+            {
+                MessageBox.Show("No Articles found here.");
+                NavigationService.GoBack();
+            }
+            else
+            {
+                TotalCount = headlines.Count;
+                _moreArticles = TotalCount == 30;
+                headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+            }
+            SetProgressBar(false);
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the shown feed is a special on (archived, unread, etc.)
+        /// </summary>
+        /// <returns>True if feedId is in between -4 and 1</returns>
+        private bool _IsSpecial()
+        {
+            return feedId > -4 && feedId < 1;
+        }
+
+        /// <summary>
+        /// When a pivot item is loaded check if you need o load more articles, cause of lazy loading.
+        /// </summary>
+        private async void PivotControl_LoadedPivotItem(object sender, PivotItemEventArgs e)
+        {
+            if (_moreArticles && PivotControl.SelectedIndex == TotalCount - 1)
+            {
+                SetProgressBar(true, true);
+                bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(false, feedId, unReadOnly, TotalCount);
+                if (headlines.Count == 0)
+                {
+                    _moreArticles = false;
+                }
+                else
+                {
+                    TotalCount = TotalCount + headlines.Count;
+                    _moreArticles = headlines.Count == 30;
+                    headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+                }
+                _moreArticlesLoading = false;
+                SetProgressBar(false);
+            }
+        }
+
+        private void SetProgressBar(bool on)
+        {
+            SetProgressBar(on, false);
+        }
+
+        private void SetProgressBar(bool on, bool setText)
+        {
+            if (setText)
+            {
+                _moreArticlesLoading = true;
+            }
+            if (_moreArticlesLoading && !on)
+            {
+                return;
+            }
+            if (Orientation.Equals(PageOrientation.LandscapeLeft) || Orientation.Equals(PageOrientation.LandscapeRight))
+            {
+                MyProgressBar.IsIndeterminate = on;
+                MyProgressBarText.Text = setText ? AppResources.LoadMoreArticles : "";
+            }
+            else
+            {
+                SystemTray.ProgressIndicator.IsIndeterminate = on;
+                SystemTray.ProgressIndicator.Text = setText ? AppResources.LoadMoreArticles : "";
+            }
+        }
+
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!_IsSpecial() && ArticlesCollection.Count > 0)
+            {
+                Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
+                theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
             }
         }
     }

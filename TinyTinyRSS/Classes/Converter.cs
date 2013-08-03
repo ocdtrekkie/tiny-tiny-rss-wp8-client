@@ -7,16 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using TinyTinyRSS.Interface.Classes;
 
 namespace TinyTinyRSS.Classes
 {
-    public class StringToVisibilityConverter : IValueConverter
+    /// <summary>
+    /// If author is null or empty, put date in first row.
+    /// </summary>
+    public class StringToColumnConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
         System.Globalization.CultureInfo culture)
         {
             var strValue = value as String;
-            return string.IsNullOrEmpty(strValue) ? Visibility.Collapsed : Visibility.Visible;
+            return string.IsNullOrEmpty(strValue) ? 0 : 1;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

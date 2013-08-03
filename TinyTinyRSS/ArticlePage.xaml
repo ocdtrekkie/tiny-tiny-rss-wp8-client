@@ -14,18 +14,31 @@
     SupportedOrientations="PortraitOrLandscape"
     OrientationChanged="PhoneApplicationPage_OrientationChanged"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    BackKeyPress="PhoneApplicationPage_BackKeyPress">
     <phone:PhoneApplicationPage.Resources>
-        <local:StringToVisibilityConverter x:Key="LengthConverter" />
+        <local:StringToColumnConverter x:Key="LengthConverter" /> 
     </phone:PhoneApplicationPage.Resources>
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="true" IsVisible="True" />
     </shell:SystemTray.ProgressIndicator>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadingPivotItem="PivotControl_LoadingPivotItem">
+        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadedPivotItem="PivotControl_LoadedPivotItem" LoadingPivotItem="PivotControl_LoadingPivotItem">
             <phone:Pivot.Title>
-                <TextBlock Name="Counter" HorizontalAlignment="Stretch" TextWrapping="NoWrap" MaxWidth="1280" TextAlignment="Right" Margin="0,-10,0,0"/>
+                <Grid HorizontalAlignment="Stretch" Name="PivotHeader" Margin="0,-20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="MyProgressBar" Visibility="Collapsed" Background="{StaticResource PhoneBackgroundBrush}"/>
+                    <TextBlock Name="MyProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="16"/>
+                    <TextBlock Name="Counter" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap" TextAlignment="Right"/>
+                </Grid>
             </phone:Pivot.Title>
             <phone:Pivot.HeaderTemplate>
                 <DataTemplate>
@@ -40,16 +53,21 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="Headline" Grid.Row="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
-                            <TextBlock x:Name="Author" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Visibility="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top">
-                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Source="/Assets/FeedIcon.png" Stretch="Fill" Height="16" Width="16"/>
-                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" Margin="5,0,0,0"/>
+                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
+                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Visibility="{Binding Path=Headline.formattedDate, Converter={StaticResource LengthConverter}}" Margin="0,0,5,0"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
+                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
                             </StackPanel>
                         </Grid>
                         <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->

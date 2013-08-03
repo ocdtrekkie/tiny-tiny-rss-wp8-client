@@ -15,6 +15,7 @@ using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using System.Threading.Tasks;
 using TinyTinyRSSInterface;
+using CaledosLab.Portable.Logging;
 
 namespace TinyTinyRSS
 {
@@ -54,6 +55,7 @@ namespace TinyTinyRSS
             ServerField.Text = ConnectionSettings.getInstance().server;
             PasswdField.Text = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
+            ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
         }
 
         private async void AppBarButton_Click(object sender, EventArgs e)
@@ -66,6 +68,7 @@ namespace TinyTinyRSS
                     ConnectionSettings.getInstance().server = ServerField.Text;
                     ConnectionSettings.getInstance().password = PasswdField.Text;
                     ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+                    ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
                     NavigationService.GoBack(); // Reload Page!?
                 }
                 else
@@ -82,8 +85,7 @@ namespace TinyTinyRSS
         private async Task<bool> TestSettings()
         {
             MyProgressbar.Visibility = Visibility.Visible;
-            MyProgressbar.IsIndeterminate = true;
-           
+            MyProgressbar.IsIndeterminate = true;           
 
             // Try to fix some common mistakes when entering an url.
             string server = ServerField.Text;
@@ -103,6 +105,7 @@ namespace TinyTinyRSS
             if (error.Length == 0)
             {
                 TestButton.Content = AppResources.SuccessfulConnection;
+                ErrorMessage.Text = "";
                 MyProgressbar.Visibility = Visibility.Collapsed;
                 MyProgressbar.IsIndeterminate = false;
                 return true;
@@ -130,9 +133,10 @@ namespace TinyTinyRSS
             await TestSettings();
         }
 
-        private void CheckboxChanged(object sender, RoutedEventArgs e)
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
-            ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+            base.OnNavigatedTo(e);
+            Logger.WriteLine("NavigatedTo ArticlePage.");
         }
     }
 }

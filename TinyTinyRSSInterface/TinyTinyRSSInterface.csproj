@@ -84,8 +84,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\Category.cs" />
+    <Compile Include="Classes\Config.cs" />
+    <Compile Include="Classes\Counters.cs" />
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Feed.cs" />
+    <Compile Include="Classes\InterfaceHelper.cs" />
     <Compile Include="Classes\SimpleResponseParser.cs" />
     <Compile Include="Classes\FeedId.cs" />
     <Compile Include="HttpExtensions.cs" />
@@ -107,6 +110,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\FeedIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CaledosLab.Portable.Logging\CaledosLab.Portable.Logging.csproj">
+      <Project>{9E0BE204-58E7-4517-999E-679792FDBFCF}</Project>
+      <Name>CaledosLab.Portable.Logging</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />

@@ -99,7 +99,7 @@ namespace TinyTinyRSS.Classes
                 case Resolutions.HD720p:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 1280 - 150;
+                        return 1280 - 125;
                     }
                     else
                     {
@@ -108,7 +108,7 @@ namespace TinyTinyRSS.Classes
                 case Resolutions.WVGA:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 800 - 150;
+                        return 800 - 125;
                     }
                     else
                     {
@@ -117,7 +117,7 @@ namespace TinyTinyRSS.Classes
                 case Resolutions.WXGA:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 1280 - 150;
+                        return 1280 - 125;
                     }
                     else
                     {
@@ -126,7 +126,7 @@ namespace TinyTinyRSS.Classes
                 default:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 800 - 150;
+                        return 800 - 125;
                     }
                     else
                     {

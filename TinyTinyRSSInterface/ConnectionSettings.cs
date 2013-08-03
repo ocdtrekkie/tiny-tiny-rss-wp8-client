@@ -14,12 +14,14 @@ namespace TinyTinyRSSInterface
         public static string _serverKey = "Server";
         public static string _usernameKey = "Username";
         public static string _passwordKey = "Password";
+        public static string _showUnreadOnlyKey = "ShowUnreadOnly";
 
         private static ConnectionSettings instance;
         private string _server;
         private string _username;
         private string _password;
         private string _markRead;
+        private string _unreadOnly;
 
         private ConnectionSettings()
         {
@@ -108,6 +110,23 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool showUnreadOnly
+        {
+            get
+            {
+                if (_unreadOnly == null)
+                {
+                    _unreadOnly = ReadSetting(_showUnreadOnlyKey);
+                }
+                return _unreadOnly.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_showUnreadOnlyKey, value.ToString());
+                _unreadOnly = value.ToString();
             }
         }
 

@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace TinyTinyRSS.Interface.Classes
 {
@@ -25,6 +30,25 @@ namespace TinyTinyRSS.Interface.Classes
         public string author {get; set;}
         public int score { get; set; }
 
+        public string formattedDate
+        {
+            get
+            {
+                if (updated > 0)
+                {
+                    DateTime updatedDate = TimeReturnUnix2DateUtc(updated).ToLocalTime();
+                    string monthDay = updatedDate.ToString(CultureInfo.CurrentCulture.DateTimeFormat.MonthDayPattern, CultureInfo.CurrentCulture);
+                    string fullMonth = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[updatedDate.Month-1];
+                    string shortMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(updatedDate.Month);
+                    return monthDay.Replace(fullMonth, shortMonth) + " " + updatedDate.ToString("t", CultureInfo.CurrentCulture);
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
         public override string ToString()
         {
             return "Artikel: \"" + title + "\" von " + author + " aus Feed '" + feed_title + "' ("+ TimeReturnUnix2DateUtc(updated).ToLocalTime().ToString() + ").";
@@ -36,11 +60,6 @@ namespace TinyTinyRSS.Interface.Classes
             var universalTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             // Rückgabe des DateTime Objektes
             return universalTime.AddSeconds(utime);
-        }
-
-        public string getFormattedDate()
-        {
-            return TimeReturnUnix2DateUtc(updated).ToLocalTime().ToString();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace TinyTinyRSS.Interface.Classes
 {
@@ -27,6 +28,14 @@ namespace TinyTinyRSS.Interface.Classes
             else
             {
                 return byUnread;
+            }
+        }
+
+        public BitmapImage icon
+        {
+            get
+            {
+                return InterfaceHelper.getIcon(id);
             }
         }
     }

@@ -210,4 +210,36 @@
     <value>Uncategorized</value>
     <comment>Name of Uncategorized Category</comment>
   </data>
+  <data name="LoadMoreArticles" xml:space="preserve">
+    <value>...loading more Articles</value>
+    <comment>Message shown in SystemTray when more articles are loaded.</comment>
+  </data>
+  <data name="MarkReadSettings" xml:space="preserve">
+    <value>Mark Articles read automatically</value>
+    <comment>Label for checkbox in settings to mark articles read automatically.</comment>
+  </data>
+  <data name="PasswordSettings" xml:space="preserve">
+    <value>Password</value>
+    <comment>Label for textfield password in settings.</comment>
+  </data>
+  <data name="ServerSetting" xml:space="preserve">
+    <value>Server</value>
+    <comment>Label for textfield server in settings.</comment>
+  </data>
+  <data name="ShowAllArticles" xml:space="preserve">
+    <value>Show all Articles</value>
+    <comment>AppBarMenu Text to show all articles.</comment>
+  </data>
+  <data name="ShowOnlyUnreadArticles" xml:space="preserve">
+    <value>Show only unread Articles</value>
+    <comment>AppBarMenu Text to show only unread articles.</comment>
+  </data>
+  <data name="UnreadOnlySettings" xml:space="preserve">
+    <value>Show only unread Articles from Feeds</value>
+    <comment>Label for checkbox in settings to show only unread articles from feeds.</comment>
+  </data>
+  <data name="UserNameSettings" xml:space="preserve">
+    <value>Username</value>
+    <comment>Label for textfield username in settings.</comment>
+  </data>
 </root>

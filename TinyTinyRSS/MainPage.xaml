@@ -48,9 +48,9 @@
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivotsteuerelement-->
-        <phone:Pivot Name="MainPivot" Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" LoadingPivotItem="Pivot_LoadingPivotItem">
+        <phone:Pivot Name="MainPivot" Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}">
             <!--Pivotelement eins-->
-            <phone:PivotItem>
+            <phone:PivotItem x:Name="SpecialFeedsPivot">
                 <phone:PivotItem.Header>
                     <TextBlock FontSize="36" Text="{Binding LocalizedResources.SpecialFeeds, Source={StaticResource LocalizedStrings}}"/>
                 </phone:PivotItem.Header>
@@ -106,11 +106,13 @@
                         <DataTemplate>
                             <Grid HorizontalAlignment="Stretch" Margin="0,0,5,0">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="26" Margin="0,5" Grid.Column="0"/>
-                                <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="26" Margin="0,5" Grid.Column="1" TextAlignment="Right" VerticalAlignment="Center"/>
+                                <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0"/>
+                                <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="26" Margin="5" Grid.Column="1"/>
+                                <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="26" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center"/>
                             </Grid>
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
