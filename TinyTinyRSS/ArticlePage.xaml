@@ -64,7 +64,7 @@
                             </Grid.RowDefinitions>
                             <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
                             <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
-                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Visibility="{Binding Path=Headline.formattedDate, Converter={StaticResource LengthConverter}}" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
                                 <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>

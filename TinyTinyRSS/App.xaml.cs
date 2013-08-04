@@ -12,6 +12,7 @@ using TinyTinyRSSInterface;
 using System.IO.IsolatedStorage;
 using System.IO;
 using CaledosLab.Portable.Logging;
+using Microsoft.Phone.Tasks;
 
 namespace TinyTinyRSS
 {
@@ -69,21 +70,28 @@ namespace TinyTinyRSS
         // Dieser Code wird beim Reaktivieren der Anwendung nicht ausgeführt
         private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            // init logger
-            using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+            try
             {
-
-                if (!storage.FileExists(LogFile))
+                // init logger
+                using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
                 {
-                    storage.CreateFile(LogFile);
-                }
-                using (IsolatedStorageFileStream fs = storage.OpenFile(LogFile, FileMode.Open))
-                {
-                    using (StreamReader reader = new StreamReader(fs))
+                    if (storage.FileExists(LogFile))
                     {
-                        Logger.Load(reader);
+                        storage.DeleteFile(LogFile);
+                    }
+                    storage.CreateFile(LogFile);
+                    using (IsolatedStorageFileStream fs = storage.OpenFile(LogFile, FileMode.Open))
+                    {
+                        using (StreamReader reader = new StreamReader(fs))
+                        {
+                            Logger.Load(reader);
+                        }
                     }
                 }
+            }
+            catch (IsolatedStorageException ex)
+            {
+                // yeah we can't log the error.
             }
             // Initial login
             await TtRssInterface.getInterface().CheckLogin();
@@ -104,6 +112,47 @@ namespace TinyTinyRSS
                     }
                 }
             }
+            //if (ConnectionSettings.getInstance().logExists)
+            //{
+            //    MessageBoxResult result =
+            //        MessageBox.Show("E-Mail log?",
+            //        "Error happened last time", MessageBoxButton.OKCancel);
+
+            //    if (result == MessageBoxResult.OK)
+            //    {
+            //        sendErrorMail();
+            //        ConnectionSettings.getInstance().logExists = false;
+            //    }
+            //}
+        }
+
+        private void sendErrorMail()
+        {
+            Logger.WriteLine("Begin Send via email");
+
+            string Subject = "TT-RSS LOG";
+
+            try
+            {
+                EmailComposeTask mail = new EmailComposeTask();
+                mail.Subject = Subject;
+                mail.To = "prasse.stefan@gmx.de";
+                mail.Body = Logger.GetStoredLog();
+
+                if (mail.Body.Length > 32000) // max 32K 
+                {
+                    mail.Body = mail.Body.Substring(mail.Body.Length - 32000);
+                }
+
+                mail.Show();
+            }
+            catch
+            {
+                MessageBox.Show("unable to create the email message");
+                Logger.WriteLine("unable to create the email message");
+            }
+
+            Logger.WriteLine("End Send via email");
         }
 
         // Code, der ausgeführt werden soll, wenn die Anwendung aktiviert wird (in den Vordergrund gebracht wird)
@@ -135,6 +184,8 @@ namespace TinyTinyRSS
                 // Navigationsfehler. Unterbrechen und Debugger öffnen
                 Debugger.Break();
             }
+            Logger.WriteLine(e.Exception.Message);
+            ConnectionSettings.getInstance().logExists = true;
             FinalizeLogging();
         }
 
@@ -142,6 +193,7 @@ namespace TinyTinyRSS
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             Logger.WriteLine(e.ExceptionObject);
+            ConnectionSettings.getInstance().logExists = true;
             FinalizeLogging();
             if (Debugger.IsAttached)
             {

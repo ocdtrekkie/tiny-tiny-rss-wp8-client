@@ -15,6 +15,7 @@ namespace TinyTinyRSSInterface
         public static string _usernameKey = "Username";
         public static string _passwordKey = "Password";
         public static string _showUnreadOnlyKey = "ShowUnreadOnly";
+        public static string _logExistsKey = "ErrorLogExists";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -22,6 +23,7 @@ namespace TinyTinyRSSInterface
         private string _password;
         private string _markRead;
         private string _unreadOnly;
+        private string _logExists;
 
         private ConnectionSettings()
         {
@@ -110,6 +112,23 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool logExists
+        {
+            get
+            {
+                if (_logExists == null)
+                {
+                    _logExists = ReadSetting(_logExistsKey);
+                }
+                return _logExists.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_logExistsKey, value.ToString());
+                _logExists = value.ToString();
             }
         }
 

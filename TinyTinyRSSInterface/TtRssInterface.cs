@@ -16,6 +16,8 @@ using CaledosLab.Portable.Logging;
 namespace TinyTinyRSS.Interface
 {
     public class TtRssInterface  {
+        public const int INITIALHEADLINECOUNT = 20;
+        public const int ADDITIONALHEADLINECOUNT = 5;
 
         private static TtRssInterface instance;
         private string sessionId;
@@ -66,7 +68,7 @@ namespace TinyTinyRSS.Interface
                 Response response = await SendRequestAsync(server, login);
                 Session session = ParseContentOrError<Session>(response);
                 sessionId = session.session_id;
-                Config = await getConfig(false);
+                //Config = await getConfig(false);
                 return "";
             }
             catch (TtRssException e)
@@ -124,6 +126,9 @@ namespace TinyTinyRSS.Interface
             string request = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getCounters\"}";
             ResponseArray response = await SendRequestArrayAsync(null, request);
             List<Counter> counters = ParseContentOrError<Counter>(response);
+            GlobalCounter.Clear();
+            CategoryCounter.Clear();
+            FeedCounter.Clear();
             foreach (Counter c in counters)
             {
                 int parsedId;
@@ -174,7 +179,32 @@ namespace TinyTinyRSS.Interface
             return CategoryCounter[feedId];
         }
 
-        public async Task<List<Headline>> getHeadlines(bool forceRefresh, int id, bool unreadOnly, int skip)
+        public async Task<List<Headline>> loadMoreHeadlines(int id, bool unreadOnly, int skip)
+        {
+            if (!HeadlineDictionary.ContainsKey(id))
+            {
+                Logger.WriteLine("LoadMoreHeadlines called for an id without Headlines. ID: " + id);
+                return null;
+            }
+            List<Headline> existing = HeadlineDictionary[id];
+            string view_mode;
+            if (unreadOnly)
+            {
+                view_mode = "unread";
+            }
+            else
+            {
+                view_mode = "all_articles";
+            }
+
+            string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":"+ ADDITIONALHEADLINECOUNT + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + "}";
+            ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
+            List<Headline> additional = ParseContentOrError<Headline>(unreadItems);
+            existing.AddRange(additional);
+            return additional;
+        }
+
+        public async Task<List<Headline>> getHeadlines(bool forceRefresh, int id, bool unreadOnly)
         {
             if (forceRefresh || !HeadlineDictionary.ContainsKey(id))
             {
@@ -192,7 +222,7 @@ namespace TinyTinyRSS.Interface
                     view_mode = "all_articles";
                 }
 
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":30,\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + "}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + INITIALHEADLINECOUNT + ",\"skip\":" + 0 + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + "}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 if (HeadlineDictionary.ContainsKey(id))
@@ -215,7 +245,12 @@ namespace TinyTinyRSS.Interface
                 string getArticle = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getArticle\",\"article_id\":" + id + "}";
                 ResponseArray articleResp = await SendRequestArrayAsync(null, getArticle);
                 Article article = ParseContentOrError<Article>(articleResp)[0];
-                ArticleCache.Add(id, article);
+                try
+                {
+                    ArticleCache.Add(id, article);
+                } catch {
+                    Logger.WriteLine("Got Article twice. First won.");
+                }
             }
             else
             {
@@ -363,6 +398,7 @@ namespace TinyTinyRSS.Interface
             Stream requestStream = await request.GetRequestStreamAsync();
             requestStream.Write(postBytes, 0, postBytes.Length);
             requestStream.Close();
+            
             HttpWebResponse httpResponse = (HttpWebResponse) await request.GetResponseAsync();
             using (var sr = new StreamReader(httpResponse.GetResponseStream()))
             {

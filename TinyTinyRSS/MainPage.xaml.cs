@@ -18,6 +18,7 @@ using TinyTinyRSSInterface.Classes;
 using System.Windows.Data;
 using TinyTinyRSS.Classes;
 using CaledosLab.Portable.Logging;
+using Microsoft.Phone.Tasks;
 
 namespace TinyTinyRSS
 {
@@ -237,7 +238,7 @@ namespace TinyTinyRSS
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Logger.WriteLine("NavigatedTo ArticlePage.");
+            Logger.WriteLine("NavigatedTo MainPage.");
         }
     }
 }
