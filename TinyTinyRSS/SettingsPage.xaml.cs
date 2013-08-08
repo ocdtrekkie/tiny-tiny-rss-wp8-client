@@ -53,7 +53,7 @@ namespace TinyTinyRSS
         {
             UsernameField.Text = ConnectionSettings.getInstance().username;
             ServerField.Text = ConnectionSettings.getInstance().server;
-            PasswdField.Text = ConnectionSettings.getInstance().password;
+            PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
         }
@@ -66,7 +66,7 @@ namespace TinyTinyRSS
                 {
                     ConnectionSettings.getInstance().username = UsernameField.Text;
                     ConnectionSettings.getInstance().server = ServerField.Text;
-                    ConnectionSettings.getInstance().password = PasswdField.Text;
+                    ConnectionSettings.getInstance().password = PasswdField.Password;
                     ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
                     ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
                     NavigationService.GoBack(); // Reload Page!?
@@ -101,7 +101,7 @@ namespace TinyTinyRSS
                 server = string.Concat(server, "api/");
             }
             ServerField.Text = server;
-            string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Text);
+            string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
             if (error.Length == 0)
             {
                 TestButton.Content = AppResources.SuccessfulConnection;
@@ -137,6 +137,14 @@ namespace TinyTinyRSS
         {
             base.OnNavigatedTo(e);
             Logger.WriteLine("NavigatedTo ArticlePage.");
+        }
+
+        private void PasswdField_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (!TestButton.Content.Equals(AppResources.TestConnectionSettingsButton))
+            {
+                TestButton.Content = AppResources.TestConnectionSettingsButton;
+            }
         }
     }
 }

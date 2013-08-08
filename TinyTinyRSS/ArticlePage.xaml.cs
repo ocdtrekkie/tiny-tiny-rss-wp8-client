@@ -23,6 +23,7 @@ using System.IO.IsolatedStorage;
 using Microsoft.Xna.Framework.Media;
 using System.Windows.Resources;
 using CaledosLab.Portable.Logging;
+using System.Windows.Controls.Primitives;
 
 namespace TinyTinyRSS
 {
@@ -40,7 +41,7 @@ namespace TinyTinyRSS
             InitializeComponent();
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
-            
+
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _moreArticles = false;
             _moreArticlesLoading = false;
@@ -51,7 +52,7 @@ namespace TinyTinyRSS
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
             PivotControl.DataContext = ArticlesCollection;
-            await LoadHeadlines(false);
+            await LoadHeadlines();
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -67,37 +68,46 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
-            SetProgressBar(true);
-            int selectedIndex = PivotControl.SelectedIndex;
-            Counter.Text = Helper.AppendPlus(_moreArticles, (selectedIndex + 1) + "/" + TotalCount);
-            
-            WrappedArticle item = ArticlesCollection[selectedIndex];
-            if (item.Article == null)
+            try
             {
-                item.Article = await TtRssInterface.getInterface().getArticle(item.Headline.id);                              
+                SetProgressBar(true);
+                int selectedIndex = PivotControl.SelectedIndex;
+                Counter.Text = Helper.AppendPlus(_moreArticles, (selectedIndex + 1) + "/" + TotalCount);
+
+                WrappedArticle item = ArticlesCollection[selectedIndex];
+                Scrollbar.Value = selectedIndex;
+                if (item.Article == null)
+                {
+                    item.Article = await TtRssInterface.getInterface().getArticle(item.Headline.id, false);
+                }
+                setHtml(item.Article.content);
+                var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
+                if (icon != null)
+                {
+                    Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
+                    if (articlesFeed != null)
+                    {
+                        icon.Source = articlesFeed.icon;
+                    }
+                }
+                UpdateLocalizedApplicationBar(item.Article);
+                SetProgressBar(false);
+                if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
+                {
+                    bool success = await TtRssInterface.getInterface().updateArticle(item.Article.id, UpdateField.Unread, UpdateMode.False);
+                    if (success)
+                    {
+                        item.Article.unread = false;
+                        item.Headline.unread = false;
+                        UpdateLocalizedApplicationBar(item.Article);
+                    }
+                }
             }
-            setHtml(item.Article.content);
-            var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
-            if (icon != null)
-            {   
-                Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
-                if(articlesFeed!=null)
-                {
-                    icon.Source = articlesFeed.icon;
-                }
-            } 
-            UpdateLocalizedApplicationBar(item.Article);
-            SetProgressBar(false);
-            if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
+            catch (TtRssException ex)
             {
-                bool success = await TtRssInterface.getInterface().updateArticle(item.Article.id, UpdateField.Unread, UpdateMode.False);
-                if (success)
-                {
-                    item.Article.unread = false;
-                    item.Headline.unread = false;
-                    UpdateLocalizedApplicationBar(item.Article);
-                }
-            }  
+                SetProgressBar(false);
+                checkException(ex);
+            }
         }
 
         private void setHtml(string content)
@@ -109,6 +119,10 @@ namespace TinyTinyRSS
             if (wc != null)
             {
                 wc.NavigateToString(content);
+            }
+            else
+            {
+                Logger.WriteLine("WebBrowser not found");
             }
         }
 
@@ -176,23 +190,15 @@ namespace TinyTinyRSS
         private async void AppBarButton_Click(object sender, EventArgs e)
         {
             UpdateField field;
-            Article current = ArticlesCollection[PivotControl.SelectedIndex].Article;
-            bool remove = false;
+            int selectedIndex = PivotControl.SelectedIndex;
+            Article current = ArticlesCollection[selectedIndex].Article;
             if (sender == publishAppBarMenu)
             {
                 field = UpdateField.Published;
-                if (feedId == (int) FeedId.Published)
-                {
-                    remove = true;
-                }
-            }            
+            }
             else if (sender == toggleStarAppBarButton)
             {
                 field = UpdateField.Starred;
-                if (feedId == (int)FeedId.Starred)
-                {
-                    remove = true;
-                }
             }
             else if (sender == toogleReadAppBarButton)
             {
@@ -202,36 +208,30 @@ namespace TinyTinyRSS
             {
                 _showUnreadOnly = !_showUnreadOnly;
                 showUnreadOnlyAppBarMenu.Text = _showUnreadOnly ? AppResources.ShowAllArticles : AppResources.ShowOnlyUnreadArticles;
-                await LoadHeadlines(true);
+                await LoadHeadlines();
                 return;
             }
             else
             {
                 return;
             }
-            bool success = await TtRssInterface.getInterface().updateArticle(current.id, field, UpdateMode.Toggle);
-            if (success)
+            try
             {
-                ArticlesCollection[PivotControl.SelectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id);
-                UpdateLocalizedApplicationBar(ArticlesCollection[PivotControl.SelectedIndex].Article);
+                bool success = await TtRssInterface.getInterface().updateArticle(current.id, field, UpdateMode.Toggle);
+                if (success)
+                {
+                    ArticlesCollection[selectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id, true);
+                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                }
             }
-            if (remove)
+            catch (TtRssException ex)
             {
-                //if (TotalCount == 1)
-                //{
-                //    NavigationService.GoBack();
-                //}
-                //else
-                //{
-                //    TotalCount--;
-                //}
-                //ArticlesCollection.RemoveAt(PivotControl.SelectedIndex);
-                TtRssInterface.getInterface().removeHeadlineFromCache(feedId, ArticlesCollection[PivotControl.SelectedIndex].Headline);
+                checkException(ex);
             }
         }
 
         private void openExt_Click(object sender, EventArgs e)
-        { 
+        {
             if (sender == openExtAppBarButton)
             {
                 WebBrowserTask wbt = new WebBrowserTask();
@@ -258,7 +258,7 @@ namespace TinyTinyRSS
             else
             {
                 SystemTray.IsVisible = true;
-                PivotHeader.Margin = new Thickness(0,-20,0,0);
+                PivotHeader.Margin = new Thickness(0, -20, 0, 0);
                 MyProgressBar.Visibility = Visibility.Collapsed;
                 MyProgressBarText.Visibility = Visibility.Collapsed;
             }
@@ -269,29 +269,46 @@ namespace TinyTinyRSS
         /// Depending on the settings, may only unread articles are loaded.
         /// </summary>
         /// <returns>true, cause void Tasks don't work.</returns>
-        private async Task<bool> LoadHeadlines(bool forceRefresh)
+        private async Task<bool> LoadHeadlines()
         {
-            SetProgressBar(true);
-            bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-            if (_IsSpecial() && ApplicationBar.MenuItems.Contains(showUnreadOnlyAppBarMenu))
+            try
             {
-                ApplicationBar.MenuItems.Remove(showUnreadOnlyAppBarMenu);
+                SetProgressBar(true);
+                bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+                if (_IsSpecial() && ApplicationBar.MenuItems.Contains(showUnreadOnlyAppBarMenu))
+                {
+                    ApplicationBar.MenuItems.Remove(showUnreadOnlyAppBarMenu);
+                }
+                ArticlesCollection.Clear();
+                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0);
+                if (headlines.Count == 0)
+                {
+                    MessageBox.Show("No Articles found here.");
+                    NavigationService.GoBack();
+                }
+                else
+                {
+                    TotalCount = headlines.Count;
+                    _moreArticles = TotalCount == TtRssInterface.INITIALHEADLINECOUNT;
+                    if (_moreArticles)
+                    {
+                        Scrollbar.Maximum = TotalCount + 1;
+                    }
+                    else
+                    {
+                        Scrollbar.Maximum = TotalCount;
+                    }
+                    headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+                }
             }
-            ArticlesCollection.Clear();
-            Counter.Text = "";
-            List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(forceRefresh, feedId, unReadOnly);
-            if (headlines.Count == 0)
+            catch (TtRssException ex)
             {
-                MessageBox.Show("No Articles found here.");
-                NavigationService.GoBack();
+                checkException(ex);
             }
-            else
+            finally
             {
-                TotalCount = headlines.Count;
-                _moreArticles = TotalCount == TtRssInterface.INITIALHEADLINECOUNT;
-                headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+                SetProgressBar(false);
             }
-            SetProgressBar(false);
             return true;
         }
 
@@ -311,22 +328,40 @@ namespace TinyTinyRSS
         {
             if (_moreArticles && PivotControl.SelectedIndex <= TotalCount - 1 && PivotControl.SelectedIndex >= TotalCount - 3 && !_moreArticlesLoading)
             {
-                _moreArticlesLoading = true;
-                SetProgressBar(true, true);
-                bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-                List<Headline> headlines = await TtRssInterface.getInterface().loadMoreHeadlines(feedId, unReadOnly, TotalCount);
-                if (headlines.Count == 0)
+                try
                 {
-                    _moreArticles = false;
-                }
-                else
-                {
-                    TotalCount = TotalCount + headlines.Count;
-                    _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
-                    headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
-                }
-                _moreArticlesLoading = false;
-                SetProgressBar(false);
+                        _moreArticlesLoading = true;
+                        SetProgressBar(true, true);                    
+                        bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+                        List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, TotalCount);
+                        if (headlines.Count == 0)
+                        {
+                            _moreArticles = false;
+                        }
+                        else
+                        {
+                            TotalCount = TotalCount + headlines.Count;
+                            _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
+                            if (_moreArticles)
+                            {
+                                Scrollbar.Maximum = TotalCount + 1;
+                            }
+                            else
+                            {
+                                Scrollbar.Maximum = TotalCount;
+                            }
+                            headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+                        }
+                    }
+                    catch (TtRssException ex)
+                    {
+                       checkException(ex);
+                    }
+                    finally
+                    {
+                        _moreArticlesLoading = false;
+                        SetProgressBar(false);
+                    }
             }
         }
 
@@ -357,14 +392,29 @@ namespace TinyTinyRSS
         {
             if (!_IsSpecial() && ArticlesCollection.Count > 0)
             {
-                Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
-                if (theFeed != null)
+                try
                 {
-                    theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
+                    Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
+                    if (theFeed != null)
+                    {
+                        theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
+                    }
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
                 }
             }
         }
 
-        public bool _moreLoading { get; set; }
+        private void checkException(TtRssException ex)
+        {
+            if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
+            {
+                MessageBox.Show(AppResources.NoConnection);
+            }
+        }
+
+        private bool _moreLoading { get; set; }
     }
 }

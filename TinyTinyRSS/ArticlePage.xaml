@@ -30,6 +30,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -38,6 +39,7 @@
                     <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="MyProgressBar" Visibility="Collapsed" Background="{StaticResource PhoneBackgroundBrush}"/>
                     <TextBlock Name="MyProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="16"/>
                     <TextBlock Name="Counter" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap" TextAlignment="Right"/>
+                    <ScrollBar Name="Scrollbar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ViewportSize="0.5" Foreground="{StaticResource PhoneBackgroundBrush}" Maximum="-1" />
                 </Grid>
             </phone:Pivot.Title>
             <phone:Pivot.HeaderTemplate>

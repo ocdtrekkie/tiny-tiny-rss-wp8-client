@@ -40,26 +40,37 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            SystemTray.ProgressIndicator.IsIndeterminate = true;
-            validConnection = await TtRssInterface.getInterface().CheckLogin();
-            if (validConnection)
-            {
-                await TtRssInterface.getInterface().getCounters();
-                await UpdateSpecialFeeds();
-                await UpdateAllFeedsList(false);
-            }
-            else
-            {
-                MessageBox.Show(AppResources.NoConnection);
-            }
             try
             {
-                SystemTray.ProgressIndicator.IsIndeterminate = false;
+                SystemTray.ProgressIndicator.IsIndeterminate = true;
+                validConnection = await TtRssInterface.getInterface().CheckLogin();
+                if (validConnection)
+                {
+                    await TtRssInterface.getInterface().getCounters();
+                    await UpdateSpecialFeeds();
+                    await UpdateAllFeedsList(false);
+                }
+                else
+                {
+                    MessageBox.Show(AppResources.NoConnection);
+                }
+                
             }
-            catch (NullReferenceException nre)
+            catch (TtRssException ex)
             {
-                Logger.WriteLine("NRE probably cause page is not there anymore.");
-                Logger.WriteLine(nre);
+                checkException(ex);
+            }
+            finally
+            {
+                try
+                {
+                    SystemTray.ProgressIndicator.IsIndeterminate = false;
+                }
+                catch (NullReferenceException nre)
+                {
+                    Logger.WriteLine("NRE probably cause page is not there anymore.");
+                    Logger.WriteLine(nre);
+                }
             }
         }
 
@@ -67,13 +78,13 @@ namespace TinyTinyRSS
         {
             // ApplicationBar der Seite einer neuen Instanz von ApplicationBar zuweisen
             ApplicationBar = new ApplicationBar();
-                
+
             // Eine neue Schaltfläche erstellen und als Text die lokalisierte Zeichenfolge aus AppResources zuweisen.
             settingsAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/feature.settings.png", UriKind.Relative));
             settingsAppBarButton.Text = AppResources.SettingsAppBarButtonText;
             settingsAppBarButton.Click += AppBarButton_Click;
             ApplicationBar.Buttons.Add(settingsAppBarButton);
-            
+
             refreshAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/refresh.png", UriKind.Relative));
             refreshAppBarButton.Text = AppResources.RefreshAppBarButtonText;
             refreshAppBarButton.Click += AppBarButton_Click;
@@ -108,7 +119,7 @@ namespace TinyTinyRSS
                 else if (sender == Published.Parent)
                 {
                     NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + (int)FeedId.Published, UriKind.Relative));
-                }            
+                }
             }
             else
             {
@@ -130,16 +141,25 @@ namespace TinyTinyRSS
             else if (sender.Equals(this.refreshAppBarButton))
             {
                 if (!validConnection)
-                    return;
+                {
+                    
+                }                    
                 SystemTray.ProgressIndicator.IsIndeterminate = true;
-                await TtRssInterface.getInterface().getCounters();
-                if (MainPivot.SelectedItem == AllFeedsPivot)
+                try
                 {
-                    await UpdateAllFeedsList(true);
+                    await TtRssInterface.getInterface().getCounters();
+                    if (MainPivot.SelectedItem == AllFeedsPivot)
+                    {
+                        await UpdateAllFeedsList(true);
+                    }
+                    else
+                    {
+                        await UpdateSpecialFeeds();
+                    }
                 }
-                else
+                catch (TtRssException ex)
                 {
-                    await UpdateSpecialFeeds();
+                    checkException(ex);
                 }
                 SystemTray.ProgressIndicator.IsIndeterminate = false;
             }
@@ -170,21 +190,28 @@ namespace TinyTinyRSS
 
         private async Task<bool> UpdateAllFeedsList(bool refresh)
         {
-            List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
-            theFeeds.Sort();
-            List<Category> categories = await TtRssInterface.getInterface().getCategories();
+            try
+            {
+                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
+                theFeeds.Sort();
+                List<Category> categories = await TtRssInterface.getInterface().getCategories();
 
-            List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
-            theFeeds.ForEach(x => extendedFeeds.Add(new ExtendedFeed(x, getCategoryById(categories, x.cat_id))));
+                List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
+                theFeeds.ForEach(x => extendedFeeds.Add(new ExtendedFeed(x, getCategoryById(categories, x.cat_id))));
 
-            var groupedFeeds =
-                from feed in extendedFeeds
-                orderby feed.cat.combined
-                group feed by feed.cat.combined into feedByTitle
-                select new KeyedList<string, ExtendedFeed>(feedByTitle);
+                var groupedFeeds =
+                    from feed in extendedFeeds
+                    orderby feed.cat.combined
+                    group feed by feed.cat.combined into feedByTitle
+                    select new KeyedList<string, ExtendedFeed>(feedByTitle);
 
-            FeedListDataSource = new List<KeyedList<string, ExtendedFeed>>(groupedFeeds);
-            AllFeedsList.DataContext = FeedListDataSource;
+                FeedListDataSource = new List<KeyedList<string, ExtendedFeed>>(groupedFeeds);
+                AllFeedsList.DataContext = FeedListDataSource;
+            }
+            catch (TtRssException ex)
+            {
+                checkException(ex);
+            }
             return true;
         }
 
@@ -192,47 +219,62 @@ namespace TinyTinyRSS
         {
             // Counters
             // Unread
-            int unread = await TtRssInterface.getInterface().getUnReadCount();
-            if (unread != 0)
+            try
             {
-                Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
-            }
-            else
-            {
-                Fresh.Text = AppResources.FreshFeeds;
-            }
-            // Starred
-            int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
-            if (starredCount != 0)
-            {
+                int unread = await TtRssInterface.getInterface().getUnReadCount();
+                if (unread != 0)
+                {
+                    Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
+                }
+                else
+                {
+                    Fresh.Text = AppResources.FreshFeeds;
+                }
+                // Starred
+                int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
+                if (starredCount != 0)
+                {
                     Starred.Text = AppResources.StarredFeeds + Environment.NewLine + "(" + starredCount + ")";
+                }
+                else
+                {
+                    Starred.Text = AppResources.StarredFeeds;
+                }
+                // Archived
+                int archCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Archived);
+                if (archCount != 0)
+                {
+                    Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + "(" + archCount + ")";
+                }
+                else
+                {
+                    Archived.Text = AppResources.ArchivedFeeds;
+                }
+                // Published
+                int publishedCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Published);
+                if (publishedCount != 0)
+                {
+                    Published.Text = AppResources.PublishedFeeds + Environment.NewLine + "(" + publishedCount + ")";
+                }
+                else
+                {
+                    Published.Text = AppResources.PublishedFeeds;
+                }
             }
-            else
+            catch (TtRssException ex)
             {
-                Starred.Text = AppResources.StarredFeeds;
+                checkException(ex);
             }
-            // Archived
-            int archCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Archived);
-            if (archCount != 0)
-            {
-                Archived.Text = AppResources.ArchivedFeeds + Environment.NewLine + "(" + archCount + ")";
-            }
-            else
-            {
-                Archived.Text = AppResources.ArchivedFeeds;
-            }
-            // Published
-            int publishedCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Published);
-            if (publishedCount != 0)
-            {
-                Published.Text = AppResources.PublishedFeeds + Environment.NewLine + "(" + publishedCount + ")";
-            }
-            else
-            {
-                Published.Text = AppResources.PublishedFeeds;
-            }
-            
+
             return true;
+        }
+
+        private void checkException(TtRssException ex)
+        {
+            if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
+            {
+                MessageBox.Show(AppResources.NoConnection);
+            }
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
