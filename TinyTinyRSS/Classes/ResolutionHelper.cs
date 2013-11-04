@@ -54,7 +54,7 @@ namespace TinyTinyRSS.Classes
                 {
                     case Resolutions.HD720p: return 720 - 24;
                     case Resolutions.WVGA: return 480 - 24;
-                    case Resolutions.WXGA: return 768 - 24;
+                    case Resolutions.WXGA: return 768 - 80;
                     default: return 480;
                 }
             }
@@ -99,11 +99,11 @@ namespace TinyTinyRSS.Classes
                 case Resolutions.HD720p:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 1280 - 125;
+                        return 800 - 125;
                     }
                     else
                     {
-                        return 720 - 48;
+                        return 480 - 48;
                     }
                 case Resolutions.WVGA:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
@@ -117,11 +117,11 @@ namespace TinyTinyRSS.Classes
                 case Resolutions.WXGA:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
                     {
-                        return 1280 - 125;
+                        return 800 - 125;
                     }
                     else
                     {
-                        return 768 - 48;
+                        return 480 - 48;
                     }
                 default:
                     if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))

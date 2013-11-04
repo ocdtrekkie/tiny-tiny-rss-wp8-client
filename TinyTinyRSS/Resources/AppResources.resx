@@ -164,9 +164,9 @@
   <data name="SuccessfulConnection" xml:space="preserve">
     <value>Connection Successful</value>
   </data>
-  <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
-    <comment>Headline of settings page.</comment>
+  <data name="SettingsConnectionHead" xml:space="preserve">
+    <value>Connection</value>
+    <comment>Headline of connection settings page.</comment>
   </data>
   <data name="NoConnection" xml:space="preserve">
     <value>No connection could be established. Check your settings.</value>
@@ -241,5 +241,53 @@
   <data name="UserNameSettings" xml:space="preserve">
     <value>Username</value>
     <comment>Label for textfield username in settings.</comment>
+  </data>
+  <data name="NoArticlesMessage" xml:space="preserve">
+    <value>No Articles found here.</value>
+    <comment>Message to show, when ArticleView has nothing to display.</comment>
+  </data>
+  <data name="SettingsAboutButtonSendLog" xml:space="preserve">
+    <value>Compose E-Mail</value>
+    <comment>Button Text to create the mail.</comment>
+  </data>
+  <data name="SettingsAboutHead" xml:space="preserve">
+    <value>About</value>
+    <comment>Headline of About page in Settings</comment>
+  </data>
+  <data name="SettingsAboutRadioActualLog" xml:space="preserve">
+    <value>Log-File of this session</value>
+    <comment>Option to send the logs of this session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioLastLog" xml:space="preserve">
+    <value>Log-File of last session</value>
+    <comment>Option to send the logs of last session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioNoLog" xml:space="preserve">
+    <value>Attach no logs</value>
+    <comment>Option to send no log with mail.</comment>
+  </data>
+  <data name="SettingsAboutText" xml:space="preserve">
+    <value>Here you can send me an E-Mail with your feedback. If you encountered an error you could also send a log file.</value>
+    <comment>Message to invite people sending logs.</comment>
+  </data>
+  <data name="SettingsHead" xml:space="preserve">
+    <value>Settings</value>
+    <comment>Headline of settings page.</comment>
+  </data>
+  <data name="SettingsSortDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="SettingsSortLabel" xml:space="preserve">
+    <value>Sort Order</value>
+  </data>
+  <data name="SettingsSortNew" xml:space="preserve">
+    <value>Newest First</value>
+  </data>
+  <data name="SettingsSortOld" xml:space="preserve">
+    <value>Oldest First</value>
+  </data>
+  <data name="MarkAllArticlesRead" xml:space="preserve">
+    <value>Mark All as Read</value>
+    <comment>AppMenu Entry to mark all articles of a feed as read.</comment>
   </data>
 </root>

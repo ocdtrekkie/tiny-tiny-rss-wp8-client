@@ -20,6 +20,8 @@ namespace TinyTinyRSS
     {
         // LogFile Name
         private string LogFile = "logfile.txt";
+        // Error LogFile Name
+        public const string ErrorLogFile = "logfileToSend.txt";
         
         /// <summary>
         /// Bietet einen einfachen Zugriff auf den Stammframe der Phone-Anwendung.
@@ -35,12 +37,11 @@ namespace TinyTinyRSS
             // Globaler Handler für nicht abgefangene Ausnahmen.
             UnhandledException += Application_UnhandledException;
 
+            // Phone-spezifische Initialisierung
+            InitializePhoneApplication();
 
             // Standard-XAML-Initialisierung
             InitializeComponent();
-
-            // Phone-spezifische Initialisierung
-            InitializePhoneApplication();
 
             // Initialisierung der Sprachanzeige
             InitializeLanguage();
@@ -77,9 +78,13 @@ namespace TinyTinyRSS
                 {
                     if (storage.FileExists(LogFile))
                     {
+                        if (ConnectionSettings.getInstance().logExists)
+                        {
+                            storage.CopyFile(LogFile, ErrorLogFile, true);
+                        }
                         storage.DeleteFile(LogFile);
                     }
-                    storage.CreateFile(LogFile);
+                    storage.CreateFile(LogFile).Close();
                     using (IsolatedStorageFileStream fs = storage.OpenFile(LogFile, FileMode.Open))
                     {
                         using (StreamReader reader = new StreamReader(fs))
@@ -89,7 +94,7 @@ namespace TinyTinyRSS
                     }
                 }
             }
-            catch (IsolatedStorageException ex)
+            catch
             {
                 // yeah we can't log the error.
             }
@@ -112,47 +117,6 @@ namespace TinyTinyRSS
                     }
                 }
             }
-            //if (ConnectionSettings.getInstance().logExists)
-            //{
-            //    MessageBoxResult result =
-            //        MessageBox.Show("E-Mail log?",
-            //        "Error happened last time", MessageBoxButton.OKCancel);
-
-            //    if (result == MessageBoxResult.OK)
-            //    {
-            //        sendErrorMail();
-            //        ConnectionSettings.getInstance().logExists = false;
-            //    }
-            //}
-        }
-
-        private void sendErrorMail()
-        {
-            Logger.WriteLine("Begin Send via email");
-
-            string Subject = "TT-RSS LOG";
-
-            try
-            {
-                EmailComposeTask mail = new EmailComposeTask();
-                mail.Subject = Subject;
-                mail.To = "prasse.stefan@gmx.de";
-                mail.Body = Logger.GetStoredLog();
-
-                if (mail.Body.Length > 32000) // max 32K 
-                {
-                    mail.Body = mail.Body.Substring(mail.Body.Length - 32000);
-                }
-
-                mail.Show();
-            }
-            catch
-            {
-                MessageBox.Show("unable to create the email message");
-                Logger.WriteLine("unable to create the email message");
-            }
-
-            Logger.WriteLine("End Send via email");
         }
 
         // Code, der ausgeführt werden soll, wenn die Anwendung aktiviert wird (in den Vordergrund gebracht wird)

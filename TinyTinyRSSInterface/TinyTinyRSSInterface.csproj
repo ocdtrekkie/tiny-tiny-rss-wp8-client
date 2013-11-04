@@ -89,6 +89,7 @@
     <Compile Include="Classes\Enums.cs" />
     <Compile Include="Classes\Feed.cs" />
     <Compile Include="Classes\InterfaceHelper.cs" />
+    <Compile Include="Classes\LimitedSizeDictionary.cs" />
     <Compile Include="Classes\SimpleResponseParser.cs" />
     <Compile Include="Classes\FeedId.cs" />
     <Compile Include="HttpExtensions.cs" />

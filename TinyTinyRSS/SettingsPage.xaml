@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -12,48 +13,79 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
-    
+
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--TitlePanel enthält den Namen der Anwendung und den Seitentitel-->
-        <StackPanel Grid.Row="0">
-            <TextBlock Text="{Binding LocalizedResources.ApplicationTitle, Mode=OneWay, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="{Binding LocalizedResources.Settings, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
-
-        <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<Grid.RowDefinitions>
-        		<RowDefinition Height="Auto"/>
-        		<RowDefinition Height="Auto"/>
-        		<RowDefinition Height="Auto"/>
-        		<RowDefinition Height="Auto"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-        	</Grid.RowDefinitions>
-        	<Grid.ColumnDefinitions>
-        		<ColumnDefinition Width="Auto"/>
-        		<ColumnDefinition/>
-        	</Grid.ColumnDefinitions>
-            <TextBlock HorizontalAlignment="Left" Margin="0,23,0,22" TextWrapping="Wrap" Text="{Binding LocalizedResources.ServerSetting, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
-        	<TextBox x:Name="ServerField" TextWrapping="Wrap" VerticalAlignment="Center" InputScope="Url" Grid.Column="1" Margin="0" Height="72" TextChanged="ConnectionSettingsChanged"/>
-            <TextBlock HorizontalAlignment="Left" Margin="0,28,0,17" Grid.Row="1" TextWrapping="Wrap" Text="{Binding LocalizedResources.UserNameSettings, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
-        	<TextBox x:Name="UsernameField" Grid.Column="1" Height="72" Margin="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" InputScope="Default" TextChanged="ConnectionSettingsChanged"/>
-            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding LocalizedResources.PasswordSettings, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Grid.Row="2" Height="Auto" Width="Auto"/>
-            <PasswordBox x:Name="PasswdField" Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Center" Height="72" PasswordChanged="PasswdField_PasswordChanged"/>
-            <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Height="72" Grid.Row="3" Background="{StaticResource PhoneAccentBrush}" Content="{Binding LocalizedResources.TestConnectionSettingsButton, Source={StaticResource LocalizedStrings}}" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
-            <ProgressBar Name="MyProgressbar" Grid.Row="4" Grid.ColumnSpan="2" Visibility="Collapsed" />
-            <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="12" />
-            <CheckBox x:Name="MarkReadCheckbox" Content="{Binding LocalizedResources.MarkReadSettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="6" Grid.ColumnSpan="2"/>
-            <CheckBox x:Name="ShowUnreadOnlyCheckbox" Content="{Binding LocalizedResources.UnreadOnlySettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="7" Grid.ColumnSpan="2"/>
-        </Grid>
+        <phone:Pivot Name="MainPivot" Title="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}">
+            <!--Pivotelement eins-->
+            <phone:PivotItem x:Name="SettingsPivot">
+                <phone:PivotItem.Header>
+                    <TextBlock Text="{Binding LocalizedResources.SettingsConnectionHead, Source={StaticResource LocalizedStrings}}"/>
+                </phone:PivotItem.Header>
+                <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
+                <Grid x:Name="ContentPanel" Margin="12,0,12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,23,0,22" TextWrapping="Wrap" Text="{Binding LocalizedResources.ServerSetting, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+                    <TextBox x:Name="ServerField" TextWrapping="Wrap" VerticalAlignment="Center" InputScope="Url" Grid.Column="1" Margin="0" Height="72" TextChanged="ConnectionSettingsChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,28,0,17" Grid.Row="1" TextWrapping="Wrap" Text="{Binding LocalizedResources.UserNameSettings, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Height="Auto" Width="Auto"/>
+                    <TextBox x:Name="UsernameField" Grid.Column="1" Height="72" Margin="0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Center" InputScope="Default" TextChanged="ConnectionSettingsChanged"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding LocalizedResources.PasswordSettings, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Center" Grid.Row="2" Height="Auto" Width="Auto"/>
+                    <PasswordBox x:Name="PasswdField" Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Center" Height="72" PasswordChanged="PasswdField_PasswordChanged"/>
+                    <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Height="72" Grid.Row="3" Background="{StaticResource PhoneAccentBrush}" Content="{Binding LocalizedResources.TestConnectionSettingsButton, Source={StaticResource LocalizedStrings}}" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
+                    <ProgressBar Name="MyProgressbar" Grid.Row="4" Grid.ColumnSpan="2" Visibility="Collapsed" />
+                    <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="12" />
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem x:Name="OtherSettingsPivot">
+                <phone:PivotItem.Header>
+                    <TextBlock Text="{Binding LocalizedResources.SettingsHead, Source={StaticResource LocalizedStrings}}"/>
+                </phone:PivotItem.Header>
+                <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
+                <Grid x:Name="OtherContentPanel" Margin="12,0,12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox x:Name="MarkReadCheckbox" Content="{Binding LocalizedResources.MarkReadSettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2"/>
+                    <CheckBox x:Name="ShowUnreadOnlyCheckbox" Content="{Binding LocalizedResources.UnreadOnlySettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2"/>
+                    <TextBlock x:Name="SortLabel" Text="{Binding LocalizedResources.SettingsSortLabel, Source={StaticResource LocalizedStrings}}" Grid.Column="0" Grid.Row="2" />
+                    <toolkit:ListPicker x:Name="SortBox" Grid.Column="1" Grid.Row="2">
+                        <toolkit:ListPickerItem Name="SortDefault" Content="{Binding LocalizedResources.SettingsSortDefault, Source={StaticResource LocalizedStrings}}" />
+                        <toolkit:ListPickerItem Name="SortNewFirst" Content="{Binding LocalizedResources.SettingsSortNew, Source={StaticResource LocalizedStrings}}" />
+                        <toolkit:ListPickerItem Name="SortOldFirst" Content="{Binding LocalizedResources.SettingsSortOld, Source={StaticResource LocalizedStrings}}" />
+                    </toolkit:ListPicker>
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem x:Name="AboutPivot">
+                <phone:PivotItem.Header>
+                    <TextBlock Text="{Binding LocalizedResources.SettingsAboutHead, Source={StaticResource LocalizedStrings}}"/>
+                </phone:PivotItem.Header>
+                <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
+                <StackPanel x:Name="AboutContent" Margin="12,0,12,0" Orientation="Vertical">
+                    <TextBlock Name="AboutText" Text="{Binding LocalizedResources.SettingsAboutText, Source={StaticResource LocalizedStrings}}"/>
+                    <RadioButton Name="AboutRadio0" Content="{Binding LocalizedResources.SettingsAboutRadioNoLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup" IsChecked="true"/>
+                    <RadioButton Name="AboutRadio1" Content="{Binding LocalizedResources.SettingsAboutRadioActualLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>
+                    <RadioButton Name="AboutRadio2" Content="{Binding LocalizedResources.SettingsAboutRadioLastLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>
+                    <Button Name="AboutSendButton" Content="{Binding LocalizedResources.SettingsAboutButtonSendLog, Source={StaticResource LocalizedStrings}}" Click="AboutSendButton_Click"/>
+                </StackPanel>
+            </phone:PivotItem>
+        </phone:Pivot>
     </Grid>
 
 </phone:PhoneApplicationPage>

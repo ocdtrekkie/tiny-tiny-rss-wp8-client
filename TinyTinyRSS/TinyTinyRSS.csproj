@@ -143,6 +143,8 @@
     </None>
     <None Include="TinyTinyRSS_2013_07_28_16_10_28.sap" />
     <None Include="TinyTinyRSS_2013_07_28_16_34_18.sap" />
+    <None Include="TinyTinyRSS_2013_08_20_21_11_08.sap" />
+    <None Include="TinyTinyRSS_2013_08_20_21_42_32.sap" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />

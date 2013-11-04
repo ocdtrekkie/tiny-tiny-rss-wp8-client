@@ -15,6 +15,7 @@ namespace TinyTinyRSSInterface
         public static string _usernameKey = "Username";
         public static string _passwordKey = "Password";
         public static string _showUnreadOnlyKey = "ShowUnreadOnly";
+        public static string _sortOrderKey = "SortOrder";
         public static string _logExistsKey = "ErrorLogExists";
 
         private static ConnectionSettings instance;
@@ -23,6 +24,7 @@ namespace TinyTinyRSSInterface
         private string _password;
         private string _markRead;
         private string _unreadOnly;
+        private string _sortOrder;
         private string _logExists;
 
         private ConnectionSettings()
@@ -146,6 +148,25 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_showUnreadOnlyKey, value.ToString());
                 _unreadOnly = value.ToString();
+            }
+        }
+
+        public int sortOrder
+        {
+            get
+            {
+                if (_sortOrder == null)
+                {
+                    _sortOrder = ReadSetting(_sortOrderKey);
+                    if (_sortOrder.Equals(""))
+                        _sortOrder = "0";
+                }
+                return int.Parse(_sortOrder);
+            }
+            set
+            {
+                SaveSetting(_sortOrderKey, value.ToString());
+                _sortOrder = value.ToString();
             }
         }
 

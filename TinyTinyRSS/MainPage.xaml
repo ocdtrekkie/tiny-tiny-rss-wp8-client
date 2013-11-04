@@ -52,7 +52,7 @@
             <!--Pivotelement eins-->
             <phone:PivotItem x:Name="SpecialFeedsPivot">
                 <phone:PivotItem.Header>
-                    <TextBlock FontSize="36" Text="{Binding LocalizedResources.SpecialFeeds, Source={StaticResource LocalizedStrings}}"/>
+                    <TextBlock Text="{Binding LocalizedResources.SpecialFeeds, Source={StaticResource LocalizedStrings}}"/>
                 </phone:PivotItem.Header>
                 <ScrollViewer>
                     <Grid VerticalAlignment="Top">
@@ -66,19 +66,19 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Button Grid.Column="0" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
-                            <TextBlock TextAlignment="Center" x:Name="Fresh" Text="{Binding LocalizedResources.FreshFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                            <TextBlock TextAlignment="Center" x:Name="Fresh" Text="{Binding LocalizedResources.FreshFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Foreground="White"/>
                         </Button>
                         <Button Grid.Column="1" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
-                            <TextBlock TextAlignment="Center" x:Name="Starred" Text="{Binding LocalizedResources.StarredFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                            <TextBlock TextAlignment="Center" x:Name="Starred" Text="{Binding LocalizedResources.StarredFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Foreground="White"/>
                         </Button>
                         <Button Grid.Column="2" Grid.Row="0" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
-                            <TextBlock TextAlignment="Center" x:Name="Archived" Text="{Binding LocalizedResources.ArchivedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                            <TextBlock TextAlignment="Center" x:Name="Archived" Text="{Binding LocalizedResources.ArchivedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Foreground="White"/>
                         </Button>
                         <Button Grid.Column="0" Grid.Row="1" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}" Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
-                            <TextBlock TextAlignment="Center" x:Name="Published" Text="{Binding LocalizedResources.PublishedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                            <TextBlock TextAlignment="Center" x:Name="Published" Text="{Binding LocalizedResources.PublishedFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Foreground="White"/>
                         </Button>
                         <Button Grid.Column="1" Grid.Row="1" BorderThickness="0" Background="{StaticResource PhoneAccentBrush}"  Click="Button_Click" Height="{Binding ActualWidth, ElementName=gridCol, Mode=OneWay}">
-                            <TextBlock TextAlignment="Center" x:Name="All" Text="{Binding LocalizedResources.AllFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                            <TextBlock TextAlignment="Center" x:Name="All" Text="{Binding LocalizedResources.AllFeeds, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Foreground="White"/>
                         </Button>
                     </Grid>
                 </ScrollViewer>
@@ -86,7 +86,7 @@
             <!-- Pivotelement zwei -->
             <phone:PivotItem Name="AllFeedsPivot">
                 <phone:PivotItem.Header>
-                    <TextBlock FontSize="36" Text="{Binding LocalizedResources.AllFeedsTitle, Source={StaticResource LocalizedStrings}}"/>
+                    <TextBlock Text="{Binding LocalizedResources.AllFeedsTitle, Source={StaticResource LocalizedStrings}}"/>
                 </phone:PivotItem.Header>
                 <phone:LongListSelector x:Name="AllFeedsList" 
                                         ItemsSource="{Binding}" 
@@ -119,14 +119,6 @@
                 </phone:LongListSelector>
             </phone:PivotItem>            
         </phone:Pivot>
-
-        <!--Auskommentieren, um ein Ausrichtungsraster anzuzeigen und sicherzustellen, dass Ihre Steuerelemente
-            an den allgemeinen Grenzen ausgerichtet sind.  Das Bild hat oben einen Rand von -32 px wegen
-            der Taskleiste. Legen Sie dies auf 0 fest (oder entfernen Sie den Rand komplett),
-            wenn die Taskleiste ausgeblendet wird.
-
-            Entfernen Sie vor dem Versand dieses XAML und das Bild selbst.-->
-        <!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="800" Width="480" Margin="0,-32,0,0" Grid.Row="0" IsHitTestVisible="False" />-->
     </Grid>
 
 </phone:PhoneApplicationPage>

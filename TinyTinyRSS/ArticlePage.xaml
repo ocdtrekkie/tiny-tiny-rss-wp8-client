@@ -24,7 +24,7 @@
     </shell:SystemTray.ProgressIndicator>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadedPivotItem="PivotControl_LoadedPivotItem" LoadingPivotItem="PivotControl_LoadingPivotItem">
+        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadingPivotItem="PivotControl_LoadingPivotItem">
             <phone:Pivot.Title>
                 <Grid HorizontalAlignment="Stretch" Name="PivotHeader" Margin="0,-20,0,0">
                     <Grid.RowDefinitions>
@@ -39,7 +39,7 @@
                     <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="MyProgressBar" Visibility="Collapsed" Background="{StaticResource PhoneBackgroundBrush}"/>
                     <TextBlock Name="MyProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="16"/>
                     <TextBlock Name="Counter" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap" TextAlignment="Right"/>
-                    <ScrollBar Name="Scrollbar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ViewportSize="0.5" Foreground="{StaticResource PhoneBackgroundBrush}" Maximum="-1" />
+                    <ScrollBar Name="Scrollbar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ViewportSize="1" Foreground="{StaticResource PhoneBackgroundBrush}" Maximum="-1" Minimum="1" SmallChange="1" Value="1" />
                 </Grid>
             </phone:Pivot.Title>
             <phone:Pivot.HeaderTemplate>

@@ -19,6 +19,8 @@ using System.Windows.Data;
 using TinyTinyRSS.Classes;
 using CaledosLab.Portable.Logging;
 using Microsoft.Phone.Tasks;
+using System.IO.IsolatedStorage;
+using System.IO;
 
 namespace TinyTinyRSS
 {

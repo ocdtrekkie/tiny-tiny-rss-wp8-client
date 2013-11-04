@@ -24,7 +24,7 @@ namespace TinyTinyRSS.Interface
         private static TtRssInterface instance;
         private string sessionId;
         private Dictionary<int, Feed> FeedDictionary;
-        private Dictionary<int, Article> ArticleCache;
+        private LimitedSizeDictionary<int, Article> ArticleCache;
         private Dictionary<int, int> GlobalCounter;
         private Dictionary<int, int> FeedCounter;
         private Dictionary<int, int> CategoryCounter;
@@ -34,7 +34,7 @@ namespace TinyTinyRSS.Interface
         private TtRssInterface()
         {
             FeedDictionary = new Dictionary<int, Feed>();
-            ArticleCache = new Dictionary<int, Article>();
+            ArticleCache = new LimitedSizeDictionary<int, Article>(20);
             GlobalCounter = new Dictionary<int, int>();
             FeedCounter = new Dictionary<int, int>();
             CategoryCounter = new Dictionary<int, int>();
@@ -125,6 +125,7 @@ namespace TinyTinyRSS.Interface
                 Response unreadResp = await SendRequestAsync(null, unreadReq);
                 UnreadCount unread = ParseContentOrError<UnreadCount>(unreadResp);
                 return unread.unread;
+                //return GlobalCounter[0]; this one only reads "new" unread articles.
             }
             catch (TtRssException e)
             {
@@ -147,7 +148,7 @@ namespace TinyTinyRSS.Interface
                     int parsedId;
                     if (c.id.Equals("global-unread"))
                     {
-                        GlobalCounter.Add(0, c.counter);
+                        GlobalCounter.Add(0, await getUnReadCount()); // The one of getCounters does not count "old" articles
                     }
                     else if (c.id.Equals("subscribed-feeds"))
                     {
@@ -182,6 +183,10 @@ namespace TinyTinyRSS.Interface
 
         public async Task<int> getCountForFeed(bool forceUpdate, int feedId)
         {
+            if (feedId == (int)FeedId.Fresh)
+            {
+                feedId = (int) FeedId.All;
+            }
             if (forceUpdate || !FeedCounter.ContainsKey(feedId))
             {
                 await getCounters();
@@ -198,17 +203,32 @@ namespace TinyTinyRSS.Interface
             return CategoryCounter[feedId];
         }
 
-        public async Task<List<Headline>> getHeadlines(int id, bool unreadOnly, int skip)
+        public async Task<List<Headline>> getHeadlines(int id, bool unreadOnly, int skip, int sortOrder)
         {
+            string view_mode = "all_articles";
+            int limit = INITIALHEADLINECOUNT;
+            string sort;
+            if (unreadOnly)
+                view_mode = "unread";
+            switch (sortOrder)
+            {
+                case 1: 
+                    sort = "feed_dates";
+                    break;
+                case 2: 
+                    sort = "date_reverse";
+                    break;
+                default:
+                    sort = "";
+                    break;
+            }
+            if (skip > 0)
+            {
+                limit = ADDITIONALHEADLINECOUNT;
+            }
             try
             {
-                string view_mode = "all_articles";
-                int limit = INITIALHEADLINECOUNT;
-                if (unreadOnly)
-                    view_mode = "unread";
-                if (skip > 0)
-                    limit = ADDITIONALHEADLINECOUNT;
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + "}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + ", \"order_by\":\"" + sort + "\"}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 return headlines;
@@ -272,11 +292,11 @@ namespace TinyTinyRSS.Interface
             }
         }
 
-        public async Task<bool> updateArticle(int id, UpdateField field, UpdateMode mode)
+        public async Task<bool> updateArticles(IEnumerable<int> ids, UpdateField field, UpdateMode mode)
         {
             try
             {
-                string updateOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"updateArticle\",\"article_ids\":" + id + ",\"mode\":" + (int)mode + ",\"field\":" + (int)field + "}";
+                string updateOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"updateArticle\",\"article_ids\":\"" + string.Join(",", ids.Select(n => n.ToString()).ToArray()) + "\",\"mode\":" + (int)mode + ",\"field\":" + (int)field + "}";
                 Response response = await SendRequestAsync(null, updateOp);
                 if (response.content.ToString().Contains("OK"))
                 {

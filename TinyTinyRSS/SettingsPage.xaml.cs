@@ -16,6 +16,8 @@ using TinyTinyRSS.Interface.Classes;
 using System.Threading.Tasks;
 using TinyTinyRSSInterface;
 using CaledosLab.Portable.Logging;
+using Microsoft.Phone.Tasks;
+using System.IO;
 
 namespace TinyTinyRSS
 {
@@ -56,6 +58,7 @@ namespace TinyTinyRSS
             PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
+            SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
         }
 
         private async void AppBarButton_Click(object sender, EventArgs e)
@@ -68,6 +71,7 @@ namespace TinyTinyRSS
                     ConnectionSettings.getInstance().server = ServerField.Text;
                     ConnectionSettings.getInstance().password = PasswdField.Password;
                     ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+                    ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
                     ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
                     NavigationService.GoBack(); // Reload Page!?
                 }
@@ -145,6 +149,58 @@ namespace TinyTinyRSS
             {
                 TestButton.Content = AppResources.TestConnectionSettingsButton;
             }
+        }
+
+        private void AboutSendButton_Click(object sender, RoutedEventArgs e)
+        {
+            //http://www.geekchamp.com/marketplace/components/livemailmessage
+            Logger.WriteLine("Begin Send via email");
+
+            string Subject = "TT-RSS WP8 App Feedback";
+
+            try
+            {
+                EmailComposeTask mail = new EmailComposeTask();
+                mail.Subject = Subject;
+                mail.To = "stefan@thescientist.eu";
+                if (AboutRadio1.IsChecked.HasValue && AboutRadio1.IsChecked.Value)
+                {
+                    mail.Body = Logger.GetStoredLog();
+                }
+                else if (AboutRadio2.IsChecked.HasValue && AboutRadio2.IsChecked.Value)
+                {
+                    using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+                    {
+                        if (storage.FileExists(App.ErrorLogFile))
+                        {
+                            using (IsolatedStorageFileStream fs = storage.OpenFile(App.ErrorLogFile, FileMode.Open))
+                            {
+                                using (StreamReader reader = new StreamReader(fs))
+                                {
+                                    mail.Body = reader.ReadToEnd();
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    mail.Body = "Give me some information.";
+                }
+                if (mail.Body.Length > 31000) // max 31K 
+                {
+                    mail.Body = mail.Body.Substring(mail.Body.Length - 32000);
+                }
+
+                mail.Show();
+            }
+            catch
+            {
+                MessageBox.Show("unable to create the email message");
+                Logger.WriteLine("unable to create the email message");
+            }
+
+            Logger.WriteLine("End Send via email");
         }
     }
 }
