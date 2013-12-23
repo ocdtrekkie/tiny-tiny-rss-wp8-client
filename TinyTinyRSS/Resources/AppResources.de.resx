@@ -122,7 +122,7 @@
     <comment>Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</comment>
   </data>
   <data name="ResourceLanguage" xml:space="preserve">
-    <value>en-US</value>
+    <value>de</value>
     <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
@@ -130,110 +130,110 @@
     <comment>Application Name</comment>
   </data>
   <data name="SpecialFeeds" xml:space="preserve">
-    <value>Special Feeds</value>
+    <value>Spezial Feeds</value>
     <comment>Title of Special Feeds Panel</comment>
   </data>
   <data name="ArchivedFeeds" xml:space="preserve">
-    <value>Archived Articles</value>
+    <value>Archivierte Artikel</value>
     <comment>Text for Special Feed "Archived"</comment>
   </data>
   <data name="CancelAppBarButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Abbrechen</value>
     <comment>Text for AppBarButton Cancel in Settings</comment>
   </data>
   <data name="FreshFeeds" xml:space="preserve">
-    <value>Fresh Articles</value>
+    <value>Neue Artikel</value>
     <comment>Text for Special Feed "Fresh"</comment>
   </data>
   <data name="PublishedFeeds" xml:space="preserve">
-    <value>Published Articles</value>
+    <value>Veröffentlichte Artikel</value>
     <comment>Text for Special Feed "Published"</comment>
   </data>
   <data name="RefreshAppBarButtonText" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Erneuern</value>
     <comment>Text for AppBarButton "Refresh" (Feed counters) </comment>
   </data>
   <data name="SaveAppBarButtonText" xml:space="preserve">
-    <value>Apply</value>
+    <value>Speichern</value>
     <comment>Text for AppBar Button Save (Settings)</comment>
   </data>
   <data name="SettingsAppBarButtonText" xml:space="preserve">
-    <value>Settings</value>
+    <value>Einstellungen</value>
   </data>
   <data name="StarredFeeds" xml:space="preserve">
-    <value>Starred Articles</value>
+    <value>Favoriten</value>
     <comment>Text of Special Feed "Starred Articles"</comment>
   </data>
   <data name="TestConnectionSettingsButton" xml:space="preserve">
-    <value>Test Connection</value>
+    <value>Prüfe Verbindung</value>
     <comment>Text for Button to test connection in settings.</comment>
   </data>
   <data name="FailedConnection" xml:space="preserve">
-    <value>Connection Failed</value>
+    <value>Verbindung fehlgeschlagen</value>
     <comment>Text to display if connection to server failed.</comment>
   </data>
   <data name="SuccessfulConnection" xml:space="preserve">
-    <value>Connection Successful</value>
+    <value>Verbindung erfolgreich</value>
     <comment>Info Text if test of connection was successful (in Settings)</comment>
   </data>
   <data name="SettingsConnectionHead" xml:space="preserve">
-    <value>Connection</value>
+    <value>Verbindung</value>
     <comment>Headline of connection settings page.</comment>
   </data>
   <data name="NoConnection" xml:space="preserve">
-    <value>No connection could be established. Check your settings.</value>
+    <value>Es konnte keine Verbindung hergestellt werden. Überprüfe deine Einstellungen.</value>
     <comment>Text for MessageBox if Server could not be reached.</comment>
   </data>
   <data name="OpenExtAppBarButtonText" xml:space="preserve">
-    <value>Open in Browser</value>
+    <value>In Browser öffnen</value>
     <comment>Text for AppBarButton to open article in Browser</comment>
   </data>
   <data name="StarAppBarButtonText" xml:space="preserve">
-    <value>Star Article</value>
+    <value>Artikel favorisieren</value>
     <comment>Text of AppBarButton "Star Article"</comment>
   </data>
   <data name="ToogleArchiveAppBarButtonText" xml:space="preserve">
-    <value>Toggle Archived</value>
+    <value>Archiviert-Status wechseln</value>
     <comment>Text for AppBarOption to toggle Archived state of Article</comment>
   </data>
   <data name="TooglePublishAppBarButtonText" xml:space="preserve">
-    <value>Toggle Published</value>
+    <value>Veröffentlicht-Status wechseln</value>
     <comment>Text for AppBarOption to toggle Published state of Article</comment>
   </data>
   <data name="UnStarAppBarButtonText" xml:space="preserve">
-    <value>Unstar Article</value>
+    <value>Favorit entfernen</value>
     <comment>Text of AppBarButton to unstar an article</comment>
   </data>
   <data name="MarkReadAppBarButtonText" xml:space="preserve">
-    <value>Mark Read</value>
+    <value>Markiere als gelesen</value>
     <comment>Text for AppBarButton Mark as read</comment>
   </data>
   <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
-    <value>Mark Unread</value>
+    <value>Markiere als ungelesen</value>
     <comment>Text for AppBar Button Mark as Unread</comment>
   </data>
   <data name="AllFeedsTitle" xml:space="preserve">
-    <value>All Feeds</value>
+    <value>Alle Feeds</value>
     <comment>Title for All Feeds Pivot Item at Start Page.</comment>
   </data>
   <data name="Categories" xml:space="preserve">
-    <value>Categories</value>
+    <value>Kategorien</value>
     <comment>Headline for Categories View on Main Page</comment>
   </data>
   <data name="Uncategorized" xml:space="preserve">
-    <value>Uncategorized</value>
+    <value>Unkategorisiert</value>
     <comment>Name of Uncategorized Category</comment>
   </data>
   <data name="LoadMoreArticles" xml:space="preserve">
-    <value>...loading more Articles</value>
+    <value>... lade weitere Artikel</value>
     <comment>Message shown in SystemTray when more articles are loaded.</comment>
   </data>
   <data name="MarkReadSettings" xml:space="preserve">
-    <value>Mark Articles read automatically</value>
+    <value>Markiere Artikel automatisch als gelesen</value>
     <comment>Label for checkbox in settings to mark articles read automatically.</comment>
   </data>
   <data name="PasswordSettings" xml:space="preserve">
-    <value>Password</value>
+    <value>Passwort</value>
     <comment>Label for textfield password in settings.</comment>
   </data>
   <data name="ServerSetting" xml:space="preserve">
@@ -241,91 +241,91 @@
     <comment>Label for textfield server in settings.</comment>
   </data>
   <data name="ShowAllArticles" xml:space="preserve">
-    <value>Show all Articles</value>
+    <value>Zeige alle Artikel</value>
     <comment>AppBarMenu Text to show all articles.</comment>
   </data>
   <data name="ShowOnlyUnreadArticles" xml:space="preserve">
-    <value>Show only unread Articles</value>
+    <value>Zeige nur ungelesene Artikel</value>
     <comment>AppBarMenu Text to show only unread articles.</comment>
   </data>
   <data name="UnreadOnlySettings" xml:space="preserve">
-    <value>Show only unread Articles from Feeds</value>
+    <value>Zeige nur ungelesene Artikel der Feeds</value>
     <comment>Label for checkbox in settings to show only unread articles from feeds.</comment>
   </data>
   <data name="UserNameSettings" xml:space="preserve">
-    <value>Username</value>
+    <value>Nutzername</value>
     <comment>Label for textfield username in settings.</comment>
   </data>
   <data name="NoArticlesMessage" xml:space="preserve">
-    <value>No Articles found here.</value>
+    <value>Keine Artikel gefunden.</value>
     <comment>Message to show, when ArticleView has nothing to display.</comment>
   </data>
   <data name="SettingsAboutButtonSendLog" xml:space="preserve">
-    <value>Compose E-Mail</value>
+    <value>E-Mail verfassen</value>
     <comment>Button Text to create the mail.</comment>
   </data>
   <data name="SettingsAboutHead" xml:space="preserve">
-    <value>About</value>
+    <value>Impressum</value>
     <comment>Headline of About page in Settings</comment>
   </data>
   <data name="SettingsAboutRadioActualLog" xml:space="preserve">
-    <value>Log-File of this session</value>
+    <value>Log-Datei dieser Sitzung</value>
     <comment>Option to send the logs of this session with mail.</comment>
   </data>
   <data name="SettingsAboutRadioLastLog" xml:space="preserve">
-    <value>Log-File of last session</value>
+    <value>Log-Datei der letzten Sitzung</value>
     <comment>Option to send the logs of last session with mail.</comment>
   </data>
   <data name="SettingsAboutRadioNoLog" xml:space="preserve">
-    <value>Attach no logs</value>
+    <value>Kein Log anhängen</value>
     <comment>Option to send no log with mail.</comment>
   </data>
   <data name="SettingsAboutText" xml:space="preserve">
-    <value>Use the following button to send me an E-Mail with your feedback. If you encountered an error it would be nice if you could attach a log file.</value>
+    <value>Nutze den folgenden Button, um mir dein Feedback per Mail zu schicken. Im Falle eines Fehlers hänge bitte auch die entsprechende Log-Datei an.</value>
     <comment>Message to invite people sending logs.</comment>
   </data>
   <data name="SettingsHead" xml:space="preserve">
-    <value>Settings</value>
+    <value>Einstellungen</value>
     <comment>Headline of settings page.</comment>
   </data>
   <data name="SettingsSortDefault" xml:space="preserve">
-    <value>Default</value>
+    <value>Standard</value>
     <comment>Text for Sort option Default in Settings</comment>
   </data>
   <data name="SettingsSortLabel" xml:space="preserve">
-    <value>Sort Order</value>
+    <value>Sortierung</value>
     <comment>Text of Label for Sort options in Settings</comment>
   </data>
   <data name="SettingsSortNew" xml:space="preserve">
-    <value>Newest First</value>
+    <value>Neuste zuerst</value>
     <comment>Text for Sort option Newest first in Settings</comment>
   </data>
   <data name="SettingsSortOld" xml:space="preserve">
-    <value>Oldest First</value>
+    <value>Älteste zuerst</value>
     <comment>Text for Sort option OldestFirst in Settings</comment>
   </data>
   <data name="MarkAllArticlesRead" xml:space="preserve">
-    <value>Mark All as Read</value>
+    <value>Alle gelesen markieren</value>
     <comment>AppMenu Entry to mark all articles of a feed as read.</comment>
   </data>
   <data name="LoginProgress" xml:space="preserve">
-    <value>Updating feeds...</value>
+    <value>Aktualisiere Feeds ...</value>
     <comment>Progressbar message for initial login</comment>
   </data>
   <data name="RecentlyReadFeed" xml:space="preserve">
-    <value>Recently Read</value>
+    <value>Kürzlich gelesen</value>
     <comment>Text of button to show recently read feeds.</comment>
   </data>
   <data name="AllFeedsSpecialFeed" xml:space="preserve">
-    <value>All Feeds</value>
+    <value>Alle Feeds</value>
     <comment>Text for special Feed "All Feeds"</comment>
   </data>
   <data name="AppBarSortLabel" xml:space="preserve">
-    <value>Sort: </value>
+    <value>Sortierung: </value>
     <comment>Label for sort options in appbar</comment>
   </data>
   <data name="SettingsAboutAuthor" xml:space="preserve">
-    <value>Author: </value>
+    <value>Autor: </value>
     <comment>Label for author field in about pane of settings</comment>
   </data>
   <data name="SettingsAboutVersion" xml:space="preserve">
@@ -333,7 +333,7 @@
     <comment>Label for version field in about pane of settings</comment>
   </data>
   <data name="UnexpectedErrorMessage" xml:space="preserve">
-    <value>Sorry, an unexpected error occured. The app will close now.</value>
+    <value>Entschuldige, ein unerwarteter Fehler ist aufgetreten. Die App wird geschlossen.</value>
     <comment>Text for MessageBox when app is closed through  an unexpected error.</comment>
   </data>
 </root>

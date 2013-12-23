@@ -16,5 +16,24 @@ namespace TinyTinyRSS.Classes
         {
             this.Headline = head;
         }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj != null) && (obj.GetType() == typeof(Microsoft.Phone.Controls.PanoramaItem)))
+            {
+                Microsoft.Phone.Controls.PanoramaItem thePanoItem = (Microsoft.Phone.Controls.PanoramaItem)obj;
+
+                return base.Equals(thePanoItem.Header);
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

@@ -203,7 +203,7 @@ namespace TinyTinyRSS.Interface
             return CategoryCounter[feedId];
         }
 
-        public async Task<List<Headline>> getHeadlines(int id, bool unreadOnly, int skip, int sortOrder)
+        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder)
         {
             string view_mode = "all_articles";
             int limit = INITIALHEADLINECOUNT;
@@ -228,7 +228,7 @@ namespace TinyTinyRSS.Interface
             }
             try
             {
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)id + ", \"order_by\":\"" + sort + "\"}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\"}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 return headlines;
@@ -303,6 +303,22 @@ namespace TinyTinyRSS.Interface
                     return true;
                 }
                 return false;
+            }
+            catch (TtRssException e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<bool> markAllArticlesRead(int feedId)
+        {
+            try
+            {
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"skip\":" + 0 + ", \"view_mode\":\"unread\", \"feed_id\":" + (int)feedId + "}";
+                ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
+                List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
+                List<int> ids = headlines.Select(n => n.id).ToList<int>();
+                return await updateArticles(ids, UpdateField.Unread, UpdateMode.False);
             }
             catch (TtRssException e)
             {

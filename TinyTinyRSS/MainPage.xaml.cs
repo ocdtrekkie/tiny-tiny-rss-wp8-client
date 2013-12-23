@@ -37,6 +37,10 @@ namespace TinyTinyRSS
         {
             InitializeComponent();
             BuildLocalizedApplicationBar();
+            if (SystemTray.GetProgressIndicator(this) == null)
+            {
+                SystemTray.SetProgressIndicator(this, new ProgressIndicator());
+            }
             this.Loaded += PageLoaded;
         }
 
@@ -45,12 +49,13 @@ namespace TinyTinyRSS
             try
             {
                 SystemTray.ProgressIndicator.IsIndeterminate = true;
+                SystemTray.ProgressIndicator.Text = AppResources.LoginProgress;
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
                 if (validConnection)
                 {
                     await TtRssInterface.getInterface().getCounters();
                     await UpdateSpecialFeeds();
-                    await UpdateAllFeedsList(false);
+                    await UpdateAllFeedsList(true);
                 }
                 else
                 {
@@ -66,6 +71,7 @@ namespace TinyTinyRSS
             {
                 try
                 {
+                    SystemTray.ProgressIndicator.Text = "";
                     SystemTray.ProgressIndicator.IsIndeterminate = false;
                 }
                 catch (NullReferenceException nre)
@@ -122,6 +128,10 @@ namespace TinyTinyRSS
                 {
                     NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + (int)FeedId.Published, UriKind.Relative));
                 }
+                else if (sender == Recent.Parent)
+                {
+                    NavigationService.Navigate(new Uri("/ArticlePage.xaml?feed=" + (int)FeedId.RecentlyRead, UriKind.Relative));
+                }
             }
             else
             {
@@ -144,7 +154,7 @@ namespace TinyTinyRSS
             {
                 if (!validConnection)
                 {
-                    
+                    validConnection = await TtRssInterface.getInterface().CheckLogin(); 
                 }                    
                 SystemTray.ProgressIndicator.IsIndeterminate = true;
                 try

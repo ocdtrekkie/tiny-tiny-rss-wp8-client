@@ -18,6 +18,7 @@ using TinyTinyRSSInterface;
 using CaledosLab.Portable.Logging;
 using Microsoft.Phone.Tasks;
 using System.IO;
+using System.Reflection;
 
 namespace TinyTinyRSS
 {
@@ -29,9 +30,10 @@ namespace TinyTinyRSS
         public SettingsPage()
         {
             InitializeComponent();
-            BuildLocalizedApplicationBar();
-            
+            BuildLocalizedApplicationBar();            
             SetFields();
+            this.AppVersion.Text = AppResources.SettingsAboutVersion + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            this.AppAuthor.Text = AppResources.SettingsAboutAuthor + "Stefan Prasse";
         }
 
         private void BuildLocalizedApplicationBar()

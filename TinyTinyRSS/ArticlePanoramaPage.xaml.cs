@@ -27,20 +27,21 @@ using System.Windows.Controls.Primitives;
 
 namespace TinyTinyRSS
 {
-    public partial class ArticlePage : PhoneApplicationPage
+    public partial class ArticlePanoramaPage : PhoneApplicationPage
     {
         private int feedId;
-        private ObservableCollection<WrappedArticle> ArticlesCollection;
+        private ObservableCollection<object> ArticlesCollection;
         private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
         private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu, markAllReadMenu, sort1AppBarMenu, sort2AppBarMenu;
         private int _sortOrder;
 
-        public ArticlePage()
+        public ArticlePanoramaPage()
         {
             InitializeComponent();
-            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
-            ArticlesCollection = new ObservableCollection<WrappedArticle>();
+            PanoramaHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
+            ArticlesCollection = new ObservableCollection<object>();
+
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = false;
@@ -51,7 +52,7 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            PivotControl.DataContext = ArticlesCollection;
+            PanoramaControl.DataContext = ArticlesCollection;
             await LoadHeadlines();
         }
 
@@ -71,8 +72,8 @@ namespace TinyTinyRSS
             try
             {
                 SetProgressBar(true);
-                int selectedIndex = PivotControl.SelectedIndex;
-                WrappedArticle item = ArticlesCollection[selectedIndex];
+                int selectedIndex = PanoramaControl.SelectedIndex;                
+                WrappedArticle item = (WrappedArticle) ArticlesCollection[selectedIndex];
 
                 updateCount();
 
@@ -113,10 +114,6 @@ namespace TinyTinyRSS
                 }
                 await LoadMoreHeadlines();
             }
-            //catch (OutOfMemoryException oom)
-            //{
-            //    Logger.WriteLine(oom);
-            //}
             catch (TtRssException ex)
             {
                 SetProgressBar(false);
@@ -126,10 +123,10 @@ namespace TinyTinyRSS
 
         private void setHtml(string content)
         {
-            PivotItem myPivotItem =
-                (PivotItem)(PivotControl.ItemContainerGenerator.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
+            PanoramaItem myPivotItem =
+                (PanoramaItem)(PanoramaControl.ItemContainerGenerator.ContainerFromItem(PanoramaControl.Items[PanoramaControl.SelectedIndex]));
 
-            var wc = Helper.FindDescendantByName(myPivotItem, "WebContent") as WebBrowser;
+            var wc = Helper.FindDescendantByName(myPivotItem, "PanoramaWebContent") as WebBrowser;
             if (wc != null)
             {
                 wc.NavigateToString(content);
@@ -142,27 +139,27 @@ namespace TinyTinyRSS
 
         private async void updateCount()
         {
-            int actual = PivotControl.SelectedIndex + 1;
+            int actual = PanoramaControl.SelectedIndex + 1;
             if (_IsSpecial() || _showUnreadOnly)
             {
                 int max = await TtRssInterface.getInterface().getCountForFeed(false, feedId);
-                Counter.Text = actual + "/" + max;
-                Scrollbar.Maximum = max;
+                PanoramaCounter.Text = actual + "/" + max;
+                PanoramaScrollbar.Maximum = max;
             }
             else
             {
                 string max = Helper.AppendPlus(_moreArticles, ArticlesCollection.Count + "");
-                Counter.Text =  actual + "/" + max;
+                PanoramaCounter.Text = actual + "/" + max;
                 if (_moreArticles)
                 {
-                    Scrollbar.Maximum = ArticlesCollection.Count + 1;
+                    PanoramaScrollbar.Maximum = ArticlesCollection.Count + 1;
                 }
                 else
                 {
-                    Scrollbar.Maximum = ArticlesCollection.Count;
+                    PanoramaScrollbar.Maximum = ArticlesCollection.Count;
                 }
             }
-            Scrollbar.Value = actual;
+            PanoramaScrollbar.Value = actual;
         }
 
         private void UpdateLocalizedApplicationBar(Article article)
@@ -244,8 +241,8 @@ namespace TinyTinyRSS
         private async void AppBarButton_Click(object sender, EventArgs e)
         {
             UpdateField field;
-            int selectedIndex = PivotControl.SelectedIndex;
-            Article current = ArticlesCollection[selectedIndex].Article;
+            int selectedIndex = PanoramaControl.SelectedIndex;
+            Article current = ((WrappedArticle) ArticlesCollection[selectedIndex]).Article;
             if (sender == publishAppBarMenu)
             {
                 field = UpdateField.Published;
@@ -260,15 +257,14 @@ namespace TinyTinyRSS
             }
             else if (sender == markAllReadMenu)
             {
-                SetProgressBar(true);
-                bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                List<int> ids = ArticlesCollection.Cast<WrappedArticle>().Where(a => a.Headline.unread).Select(n => n.Headline.id).ToList<int>();
+                bool success = await TtRssInterface.getInterface().updateArticles(ids, UpdateField.Unread, UpdateMode.False);
                 if (success)
                 {
-                    (from a in ArticlesCollection where a.Headline.unread select a).ToList().ForEach(a => a.Headline.unread = false);
-                    (from a in ArticlesCollection where a.Article != null && a.Article.unread select a).ToList().ForEach(a => a.Article.unread = false);
-                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    (from a in ArticlesCollection where a as WrappedArticle != null && ((WrappedArticle) a).Headline.unread select a).ToList().ForEach(a => ((WrappedArticle) a).Headline.unread = false);
+                    (from a in ArticlesCollection where a as WrappedArticle != null && ((WrappedArticle)a).Article != null && ((WrappedArticle)a).Article.unread select a).ToList().ForEach(a => ((WrappedArticle)a).Article.unread = false);
+                    UpdateLocalizedApplicationBar(((WrappedArticle) ArticlesCollection[selectedIndex]).Article);
                 }
-                SetProgressBar(false);
                 return;
             }
             else if (sender == showUnreadOnlyAppBarMenu)
@@ -309,8 +305,8 @@ namespace TinyTinyRSS
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
                 if (success)
                 {
-                    ArticlesCollection[selectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id, true);
-                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    ((WrappedArticle) ArticlesCollection[selectedIndex]).Article = await TtRssInterface.getInterface().getArticle(current.id, true);
+                    UpdateLocalizedApplicationBar(((WrappedArticle) ArticlesCollection[selectedIndex]).Article);
                 }
             }
             catch (TtRssException ex)
@@ -324,7 +320,7 @@ namespace TinyTinyRSS
             if (sender == openExtAppBarButton)
             {
                 WebBrowserTask wbt = new WebBrowserTask();
-                wbt.Uri = new Uri(ArticlesCollection[PivotControl.SelectedIndex].Article.link);
+                wbt.Uri = new Uri(((WrappedArticle) ArticlesCollection[PanoramaControl.SelectedIndex]).Article.link);
                 wbt.Show();
             }
         }
@@ -336,20 +332,20 @@ namespace TinyTinyRSS
         /// <param name="e"></param>
         private void PhoneApplicationPage_OrientationChanged(object sender, OrientationChangedEventArgs e)
         {
-            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
+            PanoramaHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             if (Orientation.Equals(PageOrientation.LandscapeLeft) || Orientation.Equals(PageOrientation.LandscapeRight))
             {
                 SystemTray.IsVisible = false;
-                PivotHeader.Margin = new Thickness(0);
-                MyProgressBar.Visibility = Visibility.Visible;
-                MyProgressBarText.Visibility = Visibility.Visible;
+                PanoramaHeader.Margin = new Thickness(0);
+                PanoramaMyProgressBar.Visibility = Visibility.Visible;
+                PanoramaMyProgressBarText.Visibility = Visibility.Visible;
             }
             else
             {
                 SystemTray.IsVisible = true;
-                PivotHeader.Margin = new Thickness(0, -20, 0, 0);
-                MyProgressBar.Visibility = Visibility.Collapsed;
-                MyProgressBarText.Visibility = Visibility.Collapsed;
+                PanoramaHeader.Margin = new Thickness(0, -20, 0, 0);
+                PanoramaMyProgressBar.Visibility = Visibility.Collapsed;
+                PanoramaMyProgressBarText.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -407,7 +403,7 @@ namespace TinyTinyRSS
         /// </summary>
         private async Task LoadMoreHeadlines()
         {
-            if (_moreArticles && !_moreArticlesLoading && PivotControl.SelectedIndex <= ArticlesCollection.Count - 1 && PivotControl.SelectedIndex >= ArticlesCollection.Count - 3)
+            if (_moreArticles && !_moreArticlesLoading && PanoramaControl.SelectedIndex <= ArticlesCollection.Count - 1 && PanoramaControl.SelectedIndex >= ArticlesCollection.Count - 3)
             {
                 try
                 {
@@ -417,7 +413,7 @@ namespace TinyTinyRSS
                         int skip = ArticlesCollection.Count;
                         if (feedId == (int)FeedId.Fresh)
                         {
-                            skip = ArticlesCollection.Count(e => e.Headline.unread);
+                            skip = ArticlesCollection.Cast<WrappedArticle>().Count(e => e.Headline.unread);
                         }
                         List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
                     
@@ -436,10 +432,10 @@ namespace TinyTinyRSS
                     {
                         checkException(ex);
                     }
-                    //catch (OutOfMemoryException oome)
-                    //{
-                    //    Logger.WriteLine(oome);
-                    //}                    
+                    catch (OutOfMemoryException oome)
+                    {
+                        Logger.WriteLine(oome);
+                    }                    
                     finally
                     {
                         _moreArticlesLoading = false;
@@ -461,8 +457,8 @@ namespace TinyTinyRSS
             }
             if (Orientation.Equals(PageOrientation.LandscapeLeft) || Orientation.Equals(PageOrientation.LandscapeRight))
             {
-                MyProgressBar.IsIndeterminate = on;
-                MyProgressBarText.Text = setText ? AppResources.LoadMoreArticles : "";
+                PanoramaMyProgressBar.IsIndeterminate = on;
+                PanoramaMyProgressBarText.Text = setText ? AppResources.LoadMoreArticles : "";
             }
             else
             {
@@ -480,7 +476,7 @@ namespace TinyTinyRSS
                     Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
                     if (theFeed != null)
                     {
-                        theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
+                        theFeed.unread = ArticlesCollection.Cast<WrappedArticle>().Count(x => x.Headline.unread);
                     }
                 }
                 catch (TtRssException ex)
@@ -504,19 +500,76 @@ namespace TinyTinyRSS
             switch (_sortOrder)
             {
                 case 1:
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortDefault);
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortOld);
+                    result.Add("Sort: " + AppResources.SettingsSortDefault);
+                    result.Add("Sort: " + AppResources.SettingsSortOld);
                     break;
                 case 2:
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortDefault);
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortNew);
+                    result.Add("Sort: " + AppResources.SettingsSortDefault);
+                    result.Add("Sort: " + AppResources.SettingsSortNew);
                     break;
                 default:
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortNew);
-                    result.Add(AppResources.AppBarSortLabel + AppResources.SettingsSortOld);
+                    result.Add("Sort: " + AppResources.SettingsSortNew);
+                    result.Add("Sort: " + AppResources.SettingsSortOld);
                     break;
             }
             return result;
+        }
+
+        private async void PanoramaControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                SetProgressBar(true);
+                int selectedIndex = PanoramaControl.SelectedIndex;
+                WrappedArticle item = (WrappedArticle) ArticlesCollection[selectedIndex];
+
+                updateCount();
+
+                if (item.Article == null)
+                {
+                    try
+                    {
+                        item.Article = await TtRssInterface.getInterface().getArticle(item.Headline.id, false);
+                    }
+                    catch (OutOfMemoryException oome)
+                    {
+                        Logger.WriteLine(oome);
+                    }
+                }
+                setHtml(item.Article.content);
+                PanoramaItem myPivotItem =
+                    (PanoramaItem)(PanoramaControl.ItemContainerGenerator.ContainerFromItem(PanoramaControl.Items[PanoramaControl.SelectedIndex]));
+
+                var icon = Helper.FindDescendantByName(myPivotItem, "Icon") as Image;
+                if (icon != null)
+                {
+                    Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
+                    if (articlesFeed != null)
+                    {
+                        icon.Source = articlesFeed.icon;
+                    }
+                }
+                UpdateLocalizedApplicationBar(item.Article);
+                SetProgressBar(false);
+                if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
+                {
+                    List<int> idList = new List<int>();
+                    idList.Add(item.Article.id);
+                    bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
+                    if (success)
+                    {
+                        item.Article.unread = false;
+                        item.Headline.unread = false;
+                        UpdateLocalizedApplicationBar(item.Article);
+                    }
+                }
+                await LoadMoreHeadlines();
+            }
+            catch (TtRssException ex)
+            {
+                SetProgressBar(false);
+                checkException(ex);
+            }
         }
     }
 }

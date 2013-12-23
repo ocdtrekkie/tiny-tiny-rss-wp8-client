@@ -11,6 +11,7 @@ namespace TinyTinyRSS.Interface.Classes
         Starred = -1,
         Published = -2,
         All = -4,
+        RecentlyRead = -6,
         Archived = 0
     }
 }

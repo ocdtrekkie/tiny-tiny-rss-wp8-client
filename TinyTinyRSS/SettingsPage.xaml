@@ -62,9 +62,13 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="MarkReadCheckbox" Content="{Binding LocalizedResources.MarkReadSettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2"/>
-                    <CheckBox x:Name="ShowUnreadOnlyCheckbox" Content="{Binding LocalizedResources.UnreadOnlySettings, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2"/>
-                    <TextBlock x:Name="SortLabel" Text="{Binding LocalizedResources.SettingsSortLabel, Source={StaticResource LocalizedStrings}}" Grid.Column="0" Grid.Row="2" />
+                    <CheckBox x:Name="MarkReadCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">
+                        <TextBlock Text="{Binding LocalizedResources.MarkReadSettings, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <CheckBox x:Name="ShowUnreadOnlyCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2">
+                        <TextBlock Text="{Binding LocalizedResources.UnreadOnlySettings, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                    </CheckBox>
+                    <TextBlock x:Name="SortLabel" Text="{Binding LocalizedResources.SettingsSortLabel, Source={StaticResource LocalizedStrings}}" Grid.Column="0" Grid.Row="2" FontSize="24" />
                     <toolkit:ListPicker x:Name="SortBox" Grid.Column="1" Grid.Row="2">
                         <toolkit:ListPickerItem Name="SortDefault" Content="{Binding LocalizedResources.SettingsSortDefault, Source={StaticResource LocalizedStrings}}" />
                         <toolkit:ListPickerItem Name="SortNewFirst" Content="{Binding LocalizedResources.SettingsSortNew, Source={StaticResource LocalizedStrings}}" />
@@ -78,7 +82,10 @@
                 </phone:PivotItem.Header>
                 <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
                 <StackPanel x:Name="AboutContent" Margin="12,0,12,0" Orientation="Vertical">
-                    <TextBlock Name="AboutText" Text="{Binding LocalizedResources.SettingsAboutText, Source={StaticResource LocalizedStrings}}"/>
+                    <TextBlock Text="{Binding LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" FontSize="34" FontWeight="Bold"/>
+                    <TextBlock Name="AppVersion"/>
+                    <TextBlock Name="AppAuthor" Margin="0,0,0,10"/>
+                    <TextBlock Name="AboutText" Text="{Binding LocalizedResources.SettingsAboutText, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     <RadioButton Name="AboutRadio0" Content="{Binding LocalizedResources.SettingsAboutRadioNoLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup" IsChecked="true"/>
                     <RadioButton Name="AboutRadio1" Content="{Binding LocalizedResources.SettingsAboutRadioActualLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>
                     <RadioButton Name="AboutRadio2" Content="{Binding LocalizedResources.SettingsAboutRadioLastLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>

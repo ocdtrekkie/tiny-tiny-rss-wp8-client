@@ -61,11 +61,11 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die All Articles ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die All Feeds ähnelt.
         /// </summary>
-        public static string AllFeeds {
+        public static string AllFeedsSpecialFeed {
             get {
-                return ResourceManager.GetString("AllFeeds", resourceCulture);
+                return ResourceManager.GetString("AllFeedsSpecialFeed", resourceCulture);
             }
         }
         
@@ -79,7 +79,16 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Tiny Tiny RSS ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sort:  ähnelt.
+        /// </summary>
+        public static string AppBarSortLabel {
+            get {
+                return ResourceManager.GetString("AppBarSortLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Tiny Tiny RSS Reader ähnelt.
         /// </summary>
         public static string ApplicationTitle {
             get {
@@ -142,6 +151,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Updating feeds... ähnelt.
+        /// </summary>
+        public static string LoginProgress {
+            get {
+                return ResourceManager.GetString("LoginProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Mark All as Read ähnelt.
         /// </summary>
         public static string MarkAllArticlesRead {
@@ -187,15 +205,6 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Unknown Author ähnelt.
-        /// </summary>
-        public static string NoAuthor {
-            get {
-                return ResourceManager.GetString("NoAuthor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die No connection could be established. Check your settings. ähnelt.
         /// </summary>
         public static string NoConnection {
@@ -228,6 +237,15 @@ namespace TinyTinyRSS.Resources {
         public static string PublishedFeeds {
             get {
                 return ResourceManager.GetString("PublishedFeeds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Recently Read ähnelt.
+        /// </summary>
+        public static string RecentlyReadFeed {
+            get {
+                return ResourceManager.GetString("RecentlyReadFeed", resourceCulture);
             }
         }
         
@@ -277,6 +295,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Author:  ähnelt.
+        /// </summary>
+        public static string SettingsAboutAuthor {
+            get {
+                return ResourceManager.GetString("SettingsAboutAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Compose E-Mail ähnelt.
         /// </summary>
         public static string SettingsAboutButtonSendLog {
@@ -322,11 +349,20 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Here you can send me an E-Mail with your feedback. If you encountered an error you could also send a log file. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Use the following button to send me an E-Mail with your feedback. If you encountered an error it would be nice if you could attach a log file. ähnelt.
         /// </summary>
         public static string SettingsAboutText {
             get {
                 return ResourceManager.GetString("SettingsAboutText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Version:  ähnelt.
+        /// </summary>
+        public static string SettingsAboutVersion {
+            get {
+                return ResourceManager.GetString("SettingsAboutVersion", resourceCulture);
             }
         }
         
@@ -480,6 +516,15 @@ namespace TinyTinyRSS.Resources {
         public static string Uncategorized {
             get {
                 return ResourceManager.GetString("Uncategorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sorry, an unexpected error occured. The app will close now. ähnelt.
+        /// </summary>
+        public static string UnexpectedErrorMessage {
+            get {
+                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
             }
         }
         

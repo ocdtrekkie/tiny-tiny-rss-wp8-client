@@ -63,7 +63,7 @@ namespace TinyTinyRSS
                 // die Leerlauferkennung der Anwendung deaktiviert wird.
                 // Vorsicht: Nur im Debugmodus verwenden. Eine Anwendung mit deaktivierter Benutzerleerlauferkennung wird weiterhin ausgeführt
                 // und verbraucht auch dann Akkuenergie, wenn der Benutzer das Handy nicht verwendet.
-                PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
+                //PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
         }
 
@@ -71,6 +71,7 @@ namespace TinyTinyRSS
         // Dieser Code wird beim Reaktivieren der Anwendung nicht ausgeführt
         private async void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            System.Threading.Tasks.Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
             try
             {
                 // init logger
@@ -99,7 +100,7 @@ namespace TinyTinyRSS
                 // yeah we can't log the error.
             }
             // Initial login
-            await TtRssInterface.getInterface().CheckLogin();
+            await loginTask;
         }
 
         /// <summary>
@@ -159,6 +160,7 @@ namespace TinyTinyRSS
             Logger.WriteLine(e.ExceptionObject);
             ConnectionSettings.getInstance().logExists = true;
             FinalizeLogging();
+            MessageBox.Show(AppResources.UnexpectedErrorMessage);
             if (Debugger.IsAttached)
             {
                 // Eine nicht behandelte Ausnahme ist aufgetreten. Unterbrechen und Debugger öffnen
