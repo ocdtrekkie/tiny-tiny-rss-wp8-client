@@ -17,6 +17,7 @@ namespace TinyTinyRSSInterface
         public static string _showUnreadOnlyKey = "ShowUnreadOnly";
         public static string _sortOrderKey = "SortOrder";
         public static string _logExistsKey = "ErrorLogExists";
+        public static string _progressBarAsCounterKey = "ProgressAsCntr";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -26,6 +27,7 @@ namespace TinyTinyRSSInterface
         private string _unreadOnly;
         private string _sortOrder;
         private string _logExists;
+        private string _progressAsCntr;
 
         private ConnectionSettings()
         {
@@ -114,6 +116,23 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool progressAsCntr
+        {
+            get
+            {
+                if (_progressAsCntr == null)
+                {
+                    _progressAsCntr = ReadSetting(_progressBarAsCounterKey);
+                }
+                return !_progressAsCntr.ToLower().Equals("false");
+            }
+            set
+            {
+                SaveSetting(_progressBarAsCounterKey, value.ToString());
+                _progressAsCntr = value.ToString();
             }
         }
 

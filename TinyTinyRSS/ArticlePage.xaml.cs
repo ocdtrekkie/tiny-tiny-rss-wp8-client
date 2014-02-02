@@ -34,7 +34,7 @@ namespace TinyTinyRSS
         private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
         private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu, markAllReadMenu, sort1AppBarMenu, sort2AppBarMenu;
-        private int _sortOrder;
+        private int _sortOrder; 
 
         public ArticlePage()
         {
@@ -45,6 +45,11 @@ namespace TinyTinyRSS
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = false;
             _moreArticlesLoading = false;
+            if (!ConnectionSettings.getInstance().progressAsCntr)
+            {
+                Scrollbar.Visibility = Visibility.Collapsed;
+                Counter.Visibility = Visibility.Visible;
+            }
             BuildLocalizedApplicationBar();
             this.Loaded += PageLoaded;
         }

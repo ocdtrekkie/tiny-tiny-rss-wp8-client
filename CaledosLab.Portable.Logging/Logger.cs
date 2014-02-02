@@ -105,5 +105,10 @@ namespace CaledosLab.Portable.Logging
 
             return sb.ToString();
         }
+
+        public static void ClearLog()
+        {
+            buffer.Clear();
+        }
     }
 }

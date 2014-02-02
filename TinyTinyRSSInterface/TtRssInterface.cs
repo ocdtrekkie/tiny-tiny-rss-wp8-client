@@ -24,7 +24,7 @@ namespace TinyTinyRSS.Interface
         private static TtRssInterface instance;
         private string sessionId;
         private Dictionary<int, Feed> FeedDictionary;
-        private LimitedSizeDictionary<int, Article> ArticleCache;
+        //private LimitedSizeDictionary<int, Article> ArticleCache;
         private Dictionary<int, int> GlobalCounter;
         private Dictionary<int, int> FeedCounter;
         private Dictionary<int, int> CategoryCounter;
@@ -34,7 +34,7 @@ namespace TinyTinyRSS.Interface
         private TtRssInterface()
         {
             FeedDictionary = new Dictionary<int, Feed>();
-            ArticleCache = new LimitedSizeDictionary<int, Article>(20);
+            //ArticleCache = new LimitedSizeDictionary<int, Article>(20);
             GlobalCounter = new Dictionary<int, int>();
             FeedCounter = new Dictionary<int, int>();
             CategoryCounter = new Dictionary<int, int>();
@@ -243,30 +243,31 @@ namespace TinyTinyRSS.Interface
         {
             try
             {
-                if (!ArticleCache.ContainsKey(id) || forceRefresh)
-                {
+                //if (!ArticleCache.ContainsKey(id) || forceRefresh)
+                //{
                     if (!forceRefresh)
                         Logger.WriteLine("ARTICLE not in Cache: " + id);
 
                     string getArticle = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getArticle\",\"article_id\":" + id + "}";
                     ResponseArray articleResp = await SendRequestArrayAsync(null, getArticle);
                     Article article = ParseContentOrError<Article>(articleResp)[0];
-                    if (forceRefresh)
-                        ArticleCache.Remove(id);
-                    try
-                    {
-                        ArticleCache.Add(id, article);
-                    }
-                    catch
-                    {
-                        Logger.WriteLine("Got Article twice. First won.");
-                    }
-                }
-                else
-                {
-                    Logger.WriteLine("ARTICLE got from Cache: " + id);
-                }
-                return ArticleCache[id];
+                    return article;
+                    //if (forceRefresh)
+                    //    //ArticleCache.Remove(id);
+                    //try
+                    //{
+                    //    //ArticleCache.Add(id, article);
+                    //}
+                    //catch
+                    //{
+                    //    Logger.WriteLine("Got Article twice. First won.");
+                    //}
+                //}
+                //else
+                //{
+                //    Logger.WriteLine("ARTICLE got from Cache: " + id);
+                //}
+                //return ArticleCache[id];
             }
             catch (TtRssException e)
             {

@@ -104,8 +104,8 @@
     <Compile Include="Classes\WebBrowserHelper.cs" />
     <Compile Include="Classes\ResolutionHelper.cs" />
     <Compile Include="Classes\WrappedArticle.cs" />
-    <Compile Include="ArticlePanoramaPage.xaml.cs">
-      <DependentUpon>ArticlePanoramaPage.xaml</DependentUpon>
+    <Compile Include="ArticlePageNew.xaml.cs">
+      <DependentUpon>ArticlePageNew.xaml</DependentUpon>
     </Compile>
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -130,7 +130,7 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ArticlePanoramaPage.xaml">
+    <Page Include="ArticlePageNew.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -149,6 +149,8 @@
     <None Include="Properties\WMAppManifest.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="TinyTinyRSS_2014_01_13_19_20_34.sap" />
+    <None Include="TinyTinyRSS_2014_01_13_19_40_00.sap" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />

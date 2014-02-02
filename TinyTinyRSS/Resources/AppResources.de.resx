@@ -336,4 +336,10 @@
     <value>Entschuldige, ein unerwarteter Fehler ist aufgetreten. Die App wird geschlossen.</value>
     <comment>Text for MessageBox when app is closed through  an unexpected error.</comment>
   </data>
+  <data name="SettingsMailException" xml:space="preserve">
+    <value>Entschuldige, ein Fehler trat auf beim Erstellen der E-Mail.</value>
+  </data>
+  <data name="SettingsScrollarAsCounter" xml:space="preserve">
+    <value>Nutze Scrollbar statt Zähler auf Artikelseite</value>
+  </data>
 </root>

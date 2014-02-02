@@ -394,6 +394,24 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Sorry there was an error creating the e-mail. ähnelt.
+        /// </summary>
+        public static string SettingsMailException {
+            get {
+                return ResourceManager.GetString("SettingsMailException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Use Scrollbar instead of Counter on Articlepage ähnelt.
+        /// </summary>
+        public static string SettingsScrollarAsCounter {
+            get {
+                return ResourceManager.GetString("SettingsScrollarAsCounter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Default ähnelt.
         /// </summary>
         public static string SettingsSortDefault {

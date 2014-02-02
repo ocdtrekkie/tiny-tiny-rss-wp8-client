@@ -60,6 +60,7 @@ namespace TinyTinyRSS
             PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
+            ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
         }
 
@@ -75,6 +76,7 @@ namespace TinyTinyRSS
                     ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
                     ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
                     ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
+                    ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
                     NavigationService.GoBack(); // Reload Page!?
                 }
                 else
@@ -142,7 +144,7 @@ namespace TinyTinyRSS
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Logger.WriteLine("NavigatedTo ArticlePage.");
+            Logger.WriteLine("NavigatedTo Settings.");
         }
 
         private void PasswdField_PasswordChanged(object sender, RoutedEventArgs e)
@@ -185,9 +187,9 @@ namespace TinyTinyRSS
                         }
                     }
                 }
-                else
+                if(mail.Body == null)
                 {
-                    mail.Body = "Give me some information.";
+                    mail.Body = "";
                 }
                 if (mail.Body.Length > 31000) // max 31K 
                 {
@@ -198,7 +200,7 @@ namespace TinyTinyRSS
             }
             catch
             {
-                MessageBox.Show("unable to create the email message");
+                MessageBox.Show(AppResources.SettingsMailException);
                 Logger.WriteLine("unable to create the email message");
             }
 

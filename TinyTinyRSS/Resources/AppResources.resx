@@ -336,4 +336,12 @@
     <value>Sorry, an unexpected error occured. The app will close now.</value>
     <comment>Text for MessageBox when app is closed through  an unexpected error.</comment>
   </data>
+  <data name="SettingsMailException" xml:space="preserve">
+    <value>Sorry there was an error creating the e-mail.</value>
+    <comment>Message to show, if feedback mail could not be created.</comment>
+  </data>
+  <data name="SettingsScrollarAsCounter" xml:space="preserve">
+    <value>Use Scrollbar instead of Counter on Articlepage</value>
+    <comment>Option in Settings to change between ScrollBar and Counter</comment>
+  </data>
 </root>

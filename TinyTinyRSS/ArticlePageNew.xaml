@@ -1,0 +1,137 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="TinyTinyRSS.ArticlePageNew"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:TinyTinyRSS.Classes"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape"
+    OrientationChanged="PhoneApplicationPage_OrientationChanged"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    BackKeyPress="PhoneApplicationPage_BackKeyPress">
+    <phone:PhoneApplicationPage.Resources>
+        <local:StringToColumnConverter x:Key="LengthConverter" />
+    </phone:PhoneApplicationPage.Resources>
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator IsIndeterminate="true" IsVisible="True" />
+    </shell:SystemTray.ProgressIndicator>
+    <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <phone:Pivot Name="PivotControl" LoadingPivotItem="PivotControl_LoadingPivotItem">
+            <phone:Pivot.Title>
+                <Grid HorizontalAlignment="Stretch" Name="PivotHeader" Margin="0,-20,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="MyProgressBar" Visibility="Collapsed" Background="{StaticResource PhoneBackgroundBrush}"/>
+                    <TextBlock Name="MyProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="16"/>
+                    <TextBlock Name="Counter" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed"/>
+                    <ScrollBar Name="Scrollbar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" ViewportSize="1" Foreground="{StaticResource PhoneBackgroundBrush}" Maximum="-1" Minimum="1" SmallChange="1" Value="1" />
+                </Grid>
+            </phone:Pivot.Title>
+            <phone:PivotItem>
+                <phone:PivotItem.Header>
+                    <TextBlock Height="0" FontSize="1"/>
+                </phone:PivotItem.Header>
+                <Grid Margin="0,-26, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="Headline0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
+                        <TextBlock x:Name="Author0" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="Time0" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                            <Image x:Name="Icon0" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="FeedUrl0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
+                        </StackPanel>
+                    </Grid>
+                    <phone:WebBrowser Name="WebContent0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0" BorderThickness="0,2,0,0" BorderBrush="#FFBBBBBB"/>
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem>
+                <phone:PivotItem.Header>
+                    <TextBlock Height="0" FontSize="1"/>
+                </phone:PivotItem.Header>
+                <Grid Margin="0,-26, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="Headline1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
+                        <TextBlock x:Name="Author1" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="Time1" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                            <Image x:Name="Icon1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="FeedUrl1" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
+                        </StackPanel>
+                    </Grid>
+                    <phone:WebBrowser Name="WebContent1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0" BorderThickness="0,2,0,0" BorderBrush="#FFBBBBBB"/>
+                </Grid>
+            </phone:PivotItem>
+            <phone:PivotItem>
+                <phone:PivotItem.Header>
+                    <TextBlock Height="0" FontSize="1"/>
+                </phone:PivotItem.Header>
+                <Grid Margin="0,-26, 0, 0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="Headline2" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
+                        <TextBlock x:Name="Author2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="Time02" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                            <Image x:Name="Icon2" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
+                            <TextBlock x:Name="FeedUrl2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
+                        </StackPanel>
+                    </Grid>
+                    <phone:WebBrowser Name="WebContent2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0" BorderThickness="0,2,0,0" BorderBrush="#FFBBBBBB"/>
+                </Grid>
+            </phone:PivotItem>
+        </phone:Pivot>
+    </Grid>
+</phone:PhoneApplicationPage>

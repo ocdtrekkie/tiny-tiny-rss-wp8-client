@@ -16,8 +16,10 @@ using Microsoft.Phone.Tasks;
 
 namespace TinyTinyRSS
 {
-    public partial class App : Application
-    {
+    public partial class App : Application {
+    
+        // TempFile Name
+        private string LogTempFile = "templogfile.txt";
         // LogFile Name
         private string LogFile = "logfile.txt";
         // Error LogFile Name
@@ -85,8 +87,8 @@ namespace TinyTinyRSS
                         }
                         storage.DeleteFile(LogFile);
                     }
-                    storage.CreateFile(LogFile).Close();
-                    using (IsolatedStorageFileStream fs = storage.OpenFile(LogFile, FileMode.Open))
+                    storage.CreateFile(LogTempFile).Close();
+                    using (IsolatedStorageFileStream fs = storage.OpenFile(LogTempFile, FileMode.Open))
                     {
                         using (StreamReader reader = new StreamReader(fs))
                         {
@@ -106,14 +108,28 @@ namespace TinyTinyRSS
         /// <summary>
         /// Closes the logger.
         /// </summary>
-        private void FinalizeLogging()
+        private void FinalizeLogging(bool temp)
         {
+            string fileToUse;
+            if (temp)
+            {
+                fileToUse = LogTempFile;
+            }
+            else
+            {
+                fileToUse = LogFile;
+            }
             using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
             {
-                using (IsolatedStorageFileStream fs = storage.CreateFile(LogFile))
+                if (!storage.FileExists(fileToUse))
+                {
+                    storage.CreateFile(fileToUse).Close(); 
+                }
+                using (IsolatedStorageFileStream fs = storage.OpenFile(fileToUse, FileMode.Append))
                 {
                     using (StreamWriter writer = new StreamWriter(fs))
                     {
+                        ConnectionSettings.getInstance().logExists = true;
                         Logger.Save(writer);
                     }
                 }
@@ -124,21 +140,35 @@ namespace TinyTinyRSS
         // Dieser Code wird beim ersten Starten der Anwendung nicht ausgeführt
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            
+            using (IsolatedStorageFile storage = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                if (storage.FileExists(LogTempFile))
+                {
+                    using (IsolatedStorageFileStream fs = storage.OpenFile(LogTempFile, FileMode.Open))
+                    {
+                        using (StreamReader reader = new StreamReader(fs))
+                        {
+                            Logger.Load(reader);
+                        }
+                    }
+                }
+            }
         }
 
         // Code, der ausgeführt werden soll, wenn die Anwendung deaktiviert wird (in den Hintergrund gebracht wird)
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
-            
+            FinalizeLogging(true);
+            Logger.ClearLog();
         }
 
         // Code, der beim Schließen der Anwendung ausgeführt wird (z. B. wenn der Benutzer auf "Zurück" klickt)
         // Dieser Code wird beim Deaktivieren der Anwendung nicht ausgeführt
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            FinalizeLogging();
+            FinalizeLogging(false);
+            Logger.ClearLog();
         }
 
         // Code, der bei einem Navigationsfehler ausgeführt wird
@@ -151,15 +181,14 @@ namespace TinyTinyRSS
             }
             Logger.WriteLine(e.Exception.Message);
             ConnectionSettings.getInstance().logExists = true;
-            FinalizeLogging();
+            FinalizeLogging(false);
         }
 
         // Code, der bei nicht behandelten Ausnahmen ausgeführt wird
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
             Logger.WriteLine(e.ExceptionObject);
-            ConnectionSettings.getInstance().logExists = true;
-            FinalizeLogging();
+            FinalizeLogging(false);
             MessageBox.Show(AppResources.UnexpectedErrorMessage);
             if (Debugger.IsAttached)
             {
