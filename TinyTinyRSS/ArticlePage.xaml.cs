@@ -29,8 +29,8 @@ namespace TinyTinyRSS
 {
     public partial class ArticlePage : PhoneApplicationPage
     {
-        private int feedId;
-        private ObservableCollection<WrappedArticle> ArticlesCollection;
+        private int feedId, _selectedIndex;
+        private Collection<WrappedArticle> ArticlesCollection;
         private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
         private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu, markAllReadMenu, sort1AppBarMenu, sort2AppBarMenu;
@@ -45,6 +45,7 @@ namespace TinyTinyRSS
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = false;
             _moreArticlesLoading = false;
+            _selectedIndex = 0;
             if (!ConnectionSettings.getInstance().progressAsCntr)
             {
                 Scrollbar.Visibility = Visibility.Collapsed;
@@ -56,8 +57,9 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            PivotControl.DataContext = ArticlesCollection;
+            Logger.WriteLine("load headlines");
             await LoadHeadlines();
+            Logger.WriteLine("load headlines ready");
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -73,11 +75,16 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
+            Logger.WriteLine("loading pivot");
+            if (ArticlesCollection.Count <= _selectedIndex)
+            {
+                return;
+            }
             try
             {
                 SetProgressBar(true);
-                int selectedIndex = PivotControl.SelectedIndex;
-                WrappedArticle item = ArticlesCollection[selectedIndex];
+                WrappedArticle item = ArticlesCollection[_selectedIndex];
+                e.Item.DataContext = item;
 
                 updateCount();
 
@@ -118,10 +125,6 @@ namespace TinyTinyRSS
                 }
                 await LoadMoreHeadlines();
             }
-            //catch (OutOfMemoryException oom)
-            //{
-            //    Logger.WriteLine(oom);
-            //}
             catch (TtRssException ex)
             {
                 SetProgressBar(false);
@@ -157,7 +160,7 @@ namespace TinyTinyRSS
             else
             {
                 string max = Helper.AppendPlus(_moreArticles, ArticlesCollection.Count + "");
-                Counter.Text =  actual + "/" + max;
+                Counter.Text = actual + "/" + max;
                 if (_moreArticles)
                 {
                     Scrollbar.Maximum = ArticlesCollection.Count + 1;
@@ -197,7 +200,7 @@ namespace TinyTinyRSS
 
         private void BuildLocalizedApplicationBar()
         {
-            // ApplicationBar der Seite einer neuen Instanz von ApplicationBar zuweisen
+             //ApplicationBar der Seite einer neuen Instanz von ApplicationBar zuweisen
             ApplicationBar = new ApplicationBar();
 
             toogleReadAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/mail-read.png", UriKind.Relative));
@@ -416,40 +419,40 @@ namespace TinyTinyRSS
             {
                 try
                 {
-                        _moreArticlesLoading = true;
-                        SetProgressBar(true, true);                    
-                        bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-                        int skip = ArticlesCollection.Count;
-                        if (feedId == (int)FeedId.Fresh)
-                        {
-                            skip = ArticlesCollection.Count(e => e.Headline.unread);
-                        }
-                        List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
-                    
-                        if (headlines.Count == 0)
-                        {
-                            _moreArticles = false;
-                        }
-                        else
-                        {
-                            _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
-                            headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
-                            updateCount();
-                        }
-                    }
-                    catch (TtRssException ex)
+                    _moreArticlesLoading = true;
+                    SetProgressBar(true, true);
+                    bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+                    int skip = ArticlesCollection.Count;
+                    if (feedId == (int)FeedId.Fresh)
                     {
-                        checkException(ex);
+                        skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }
-                    //catch (OutOfMemoryException oome)
-                    //{
-                    //    Logger.WriteLine(oome);
-                    //}                    
-                    finally
+                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
+
+                    if (headlines.Count == 0)
                     {
-                        _moreArticlesLoading = false;
-                        SetProgressBar(false);
+                        _moreArticles = false;
                     }
+                    else
+                    {
+                        _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
+                        headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
+                        updateCount();
+                    }
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
+                //catch (OutOfMemoryException oome)
+                //{
+                //    Logger.WriteLine(oome);
+                //}                    
+                finally
+                {
+                    _moreArticlesLoading = false;
+                    SetProgressBar(false);
+                }
             }
         }
 

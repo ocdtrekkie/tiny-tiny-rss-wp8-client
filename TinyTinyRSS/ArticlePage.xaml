@@ -18,6 +18,35 @@
     BackKeyPress="PhoneApplicationPage_BackKeyPress">
     <phone:PhoneApplicationPage.Resources>
         <local:StringToColumnConverter x:Key="LengthConverter" /> 
+        <DataTemplate x:Key="PivotTemplate">
+            <Grid Margin="0,-26, 0, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
+                    <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                    <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
+                        <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
+                    </StackPanel>
+                </Grid>
+                <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->
+                <phone:WebBrowser Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0" BorderThickness="0,2,0,0" BorderBrush="#FFBBBBBB"/>
+                <!--</ScrollViewer>-->
+            </Grid>
+        </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
     <shell:SystemTray.ProgressIndicator>
         <shell:ProgressIndicator IsIndeterminate="true" IsVisible="True" />
@@ -47,37 +76,12 @@
                     <TextBlock Height="0" FontSize="1"/>
                 </DataTemplate>
             </phone:Pivot.HeaderTemplate>
-            <phone:Pivot.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,-26, 0, 0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="24" Text="{Binding Headline.title}"/>
-                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
-                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="24" MaxWidth="24" Margin="0,0,5,0"/>
-                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}"/>
-                            </StackPanel>
-                        </Grid>
-                        <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->
-                        <phone:WebBrowser Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0" BorderThickness="0,2,0,0" BorderBrush="#FFBBBBBB"/>
-                        <!--</ScrollViewer>-->
-                    </Grid>
-                </DataTemplate>
-            </phone:Pivot.ItemTemplate>
+            <phone:PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}">
+            </phone:PivotItem>
+            <phone:PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}">
+            </phone:PivotItem>
+            <phone:PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}">
+            </phone:PivotItem>
         </phone:Pivot>      
     </Grid>
 </phone:PhoneApplicationPage>
