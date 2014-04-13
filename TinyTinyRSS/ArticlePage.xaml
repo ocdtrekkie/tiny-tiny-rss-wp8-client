@@ -53,7 +53,7 @@
     </shell:SystemTray.ProgressIndicator>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadingPivotItem="PivotControl_LoadingPivotItem">
+        <phone:Pivot Name="PivotControl" ItemsSource="{Binding}" LoadingPivotItem="PivotControl_LoadingPivotItem" UnloadedPivotItem="resetPivot">
             <phone:Pivot.Title>
                 <Grid HorizontalAlignment="Stretch" Name="PivotHeader" Margin="0,-20,0,0">
                     <Grid.RowDefinitions>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 
 namespace TinyTinyRSS.Classes
@@ -17,23 +18,12 @@ namespace TinyTinyRSS.Classes
             this.Headline = head;
         }
 
-        public override bool Equals(object obj)
+        public async Task<Article> getContent()
         {
-            if ((obj != null) && (obj.GetType() == typeof(Microsoft.Phone.Controls.PanoramaItem)))
-            {
-                Microsoft.Phone.Controls.PanoramaItem thePanoItem = (Microsoft.Phone.Controls.PanoramaItem)obj;
-
-                return base.Equals(thePanoItem.Header);
+            if(Article==null) {
+            Article = await TtRssInterface.getInterface().getArticle(Headline.id, false);
             }
-            else
-            {
-                return base.Equals(obj);
-            }
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            return Article;
         }
     }
 }

@@ -34,10 +34,11 @@ namespace TinyTinyRSS
         private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
         private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu, markAllReadMenu, sort1AppBarMenu, sort2AppBarMenu;
-        private int _sortOrder; 
+        private int _sortOrder, _lastPivotIndex; 
 
         public ArticlePage()
         {
+            this.Loaded += PageLoaded;
             InitializeComponent();
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -46,13 +47,13 @@ namespace TinyTinyRSS
             _moreArticles = false;
             _moreArticlesLoading = false;
             _selectedIndex = 0;
+            _lastPivotIndex = -1;
             if (!ConnectionSettings.getInstance().progressAsCntr)
             {
                 Scrollbar.Visibility = Visibility.Collapsed;
                 Counter.Visibility = Visibility.Visible;
             }
             BuildLocalizedApplicationBar();
-            this.Loaded += PageLoaded;
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
@@ -60,6 +61,7 @@ namespace TinyTinyRSS
             Logger.WriteLine("load headlines");
             await LoadHeadlines();
             Logger.WriteLine("load headlines ready");
+            PivotControl_LoadingPivotItem(null, new PivotItemEventArgs(Item0));
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -82,24 +84,30 @@ namespace TinyTinyRSS
             }
             try
             {
+                if (PivotControl.SelectedIndex == 0 && _lastPivotIndex == -1)
+                {
+                    _lastPivotIndex = 0;
+                    _selectedIndex=0;
+                }
+                else if (forwardNavigated())
+                {
+                    _selectedIndex = positiveMod(_selectedIndex + 1, ArticlesCollection.Count);             
+                }
+                else
+                {
+                    _selectedIndex = positiveMod(_selectedIndex - 1, ArticlesCollection.Count);
+                }
                 SetProgressBar(true);
+                updateCount();
+                PivotItem next = (PivotItem) PivotControl.Items[positiveMod(PivotControl.SelectedIndex + 1, 3)];
+                PivotItem prev = (PivotItem)PivotControl.Items[positiveMod(PivotControl.SelectedIndex - 1, 3)];
+
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
                 e.Item.DataContext = item;
 
-                updateCount();
-
-                if (item.Article == null)
-                {
-                    try
-                    {
-                        item.Article = await TtRssInterface.getInterface().getArticle(item.Headline.id, false);
-                    }
-                    catch (OutOfMemoryException oome)
-                    {
-                        Logger.WriteLine(oome);
-                    }
-                }
-                setHtml(item.Article.content);
+                Article article = await item.getContent();
+                
+                setHtml(article.content);
                 var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
                 if (icon != null)
                 {
@@ -109,21 +117,23 @@ namespace TinyTinyRSS
                         icon.Source = articlesFeed.icon;
                     }
                 }
-                UpdateLocalizedApplicationBar(item.Article);
+                UpdateLocalizedApplicationBar(article);
                 SetProgressBar(false);
-                if (ConnectionSettings.getInstance().markRead && item.Article != null && item.Article.unread)
+                if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
                 {
                     List<int> idList = new List<int>();
-                    idList.Add(item.Article.id);
+                    idList.Add(article.id);
                     bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
                     if (success)
                     {
-                        item.Article.unread = false;
+                        article.unread = false;
                         item.Headline.unread = false;
-                        UpdateLocalizedApplicationBar(item.Article);
+                        UpdateLocalizedApplicationBar(article);
                     }
                 }
                 await LoadMoreHeadlines();
+                next.DataContext = ArticlesCollection[positiveMod(_selectedIndex + 1, ArticlesCollection.Count)];
+                prev.DataContext = ArticlesCollection[positiveMod(_selectedIndex - 1, ArticlesCollection.Count)];
             }
             catch (TtRssException ex)
             {
@@ -150,7 +160,7 @@ namespace TinyTinyRSS
 
         private async void updateCount()
         {
-            int actual = PivotControl.SelectedIndex + 1;
+            int actual = _selectedIndex + 1;
             if (_IsSpecial() || _showUnreadOnly)
             {
                 int max = await TtRssInterface.getInterface().getCountForFeed(false, feedId);
@@ -252,8 +262,8 @@ namespace TinyTinyRSS
         private async void AppBarButton_Click(object sender, EventArgs e)
         {
             UpdateField field;
-            int selectedIndex = PivotControl.SelectedIndex;
-            Article current = ArticlesCollection[selectedIndex].Article;
+            int selectedIndex = _selectedIndex;
+            Article current = await ArticlesCollection[selectedIndex].getContent();
             if (sender == publishAppBarMenu)
             {
                 field = UpdateField.Published;
@@ -332,7 +342,7 @@ namespace TinyTinyRSS
             if (sender == openExtAppBarButton)
             {
                 WebBrowserTask wbt = new WebBrowserTask();
-                wbt.Uri = new Uri(ArticlesCollection[PivotControl.SelectedIndex].Article.link);
+                wbt.Uri = new Uri(ArticlesCollection[_selectedIndex].Article.link);
                 wbt.Show();
             }
         }
@@ -415,7 +425,7 @@ namespace TinyTinyRSS
         /// </summary>
         private async Task LoadMoreHeadlines()
         {
-            if (_moreArticles && !_moreArticlesLoading && PivotControl.SelectedIndex <= ArticlesCollection.Count - 1 && PivotControl.SelectedIndex >= ArticlesCollection.Count - 3)
+            if (_moreArticles && !_moreArticlesLoading && _selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count-3)
             {
                 try
                 {
@@ -525,6 +535,50 @@ namespace TinyTinyRSS
                     break;
             }
             return result;
+        }
+
+        private bool forwardNavigated()
+        {
+            // fw: 0-1,1-2,2-0
+            // bw: 2-1,1-0,0-2
+            int actual = PivotControl.SelectedIndex;
+            int last = _lastPivotIndex;
+            _lastPivotIndex = actual;
+            if (actual != 2 && last != 2 && last > actual)
+            {
+                return false;
+            }
+            else if (actual == 2 && last == 0)
+            {
+                return false;
+            }
+            else if (actual == 1 && last == 2)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private int positiveMod(int x, int m)
+        {
+            int r = x % m;
+            return r < 0 ? r + m : r;
+        }
+
+        private void resetPivot(object sender, PivotItemEventArgs e)
+        {
+            var wc = Helper.FindDescendantByName(e.Item, "WebContent") as WebBrowser;
+            if (wc != null)
+            {
+                wc.NavigateToString("");
+            }
+            else
+            {
+                Logger.WriteLine("WebBrowser not found");
+            }
         }
     }
 }
