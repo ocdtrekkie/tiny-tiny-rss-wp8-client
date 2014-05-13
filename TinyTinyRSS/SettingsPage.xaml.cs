@@ -97,7 +97,8 @@ namespace TinyTinyRSS
 
             // Try to fix some common mistakes when entering an url.
             string server = ServerField.Text;
-            if(!server.StartsWith("http://")) {
+            if (!server.StartsWith("http://") && !server.StartsWith("https://"))
+            {
                 server = string.Concat("http://", server);
             }
             if (!server.EndsWith("/"))

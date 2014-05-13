@@ -21,14 +21,20 @@
           <SmallImageURI IsRelative="true" IsResource="false">Assets\Tiles\IconicTileSmall.png</SmallImageURI>
           <Count>0</Count>
           <IconImageURI IsRelative="true" IsResource="false">Assets\Tiles\IconicTileMediumLarge.png</IconImageURI>
-          <Title></Title>
-          <Message></Message>
-          <BackgroundColor></BackgroundColor>
-          <HasLarge>false</HasLarge>
-          <LargeContent1></LargeContent1>
-          <LargeContent2></LargeContent2>
-          <LargeContent3></LargeContent3>
-          <DeviceLockImageURI IsRelative="true" IsResource="false"></DeviceLockImageURI>
+          <Title>Tiny Tiny RSS</Title>
+          <Message>
+          </Message>
+          <BackgroundColor>
+          </BackgroundColor>
+          <HasLarge>False</HasLarge>
+          <LargeContent1>
+          </LargeContent1>
+          <LargeContent2>
+          </LargeContent2>
+          <LargeContent3>
+          </LargeContent3>
+          <DeviceLockImageURI IsRelative="true" IsResource="false">
+          </DeviceLockImageURI>
         </TemplateIconic>
       </PrimaryToken>
     </Tokens>
