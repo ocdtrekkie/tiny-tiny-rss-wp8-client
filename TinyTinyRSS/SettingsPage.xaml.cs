@@ -191,9 +191,9 @@ namespace TinyTinyRSS
                 {
                     mail.Body = "";
                 }
-                if (mail.Body.Length > 31000) // max 31K 
+                if (mail.Body.Length > 16000) // max 64K 
                 {
-                    mail.Body = mail.Body.Substring(mail.Body.Length - 32000);
+                    mail.Body = mail.Body.Substring(mail.Body.Length - 16000);
                 }
 
                 mail.Show();

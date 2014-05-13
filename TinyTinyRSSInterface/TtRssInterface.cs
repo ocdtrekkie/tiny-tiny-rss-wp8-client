@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using TinyTinyRSSInterface.Classes;
 using CaledosLab.Portable.Logging;
+using System.Runtime.CompilerServices;
 
 namespace TinyTinyRSS.Interface
 {
     public class TtRssInterface
     {
         public const int INITIALHEADLINECOUNT = 20;
-        public const int ADDITIONALHEADLINECOUNT = 5;
+        public const int ADDITIONALHEADLINECOUNT = 10;
         public const string NONETWORKERROR = "HTTP Response is null.";
 
         private static TtRssInterface instance;
@@ -175,6 +176,10 @@ namespace TinyTinyRSS.Interface
                 }
                 return counters.Count;
             }
+            catch (ArgumentException e)
+            {
+                return FeedCounter.Count;
+            }
             catch (TtRssException e)
             {
                 throw e;
@@ -183,15 +188,19 @@ namespace TinyTinyRSS.Interface
 
         public async Task<int> getCountForFeed(bool forceUpdate, int feedId)
         {
-            if (feedId == (int)FeedId.Fresh)
+            try
             {
-                feedId = (int) FeedId.All;
+                if (forceUpdate || !FeedCounter.ContainsKey(feedId))
+                {
+                    await getCounters();
+                }
+                return FeedCounter[feedId];
             }
-            if (forceUpdate || !FeedCounter.ContainsKey(feedId))
+            catch (KeyNotFoundException e)
             {
-                await getCounters();
+                Logger.WriteLine(e.StackTrace);
+                return 0;
             }
-            return FeedCounter[feedId];
         }
 
         public async Task<int> getCountForCategory(bool forceUpdate, int feedId)
@@ -243,31 +252,10 @@ namespace TinyTinyRSS.Interface
         {
             try
             {
-                //if (!ArticleCache.ContainsKey(id) || forceRefresh)
-                //{
-                    if (!forceRefresh)
-                        Logger.WriteLine("ARTICLE not in Cache: " + id);
-
-                    string getArticle = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getArticle\",\"article_id\":" + id + "}";
-                    ResponseArray articleResp = await SendRequestArrayAsync(null, getArticle);
-                    Article article = ParseContentOrError<Article>(articleResp)[0];
-                    return article;
-                    //if (forceRefresh)
-                    //    //ArticleCache.Remove(id);
-                    //try
-                    //{
-                    //    //ArticleCache.Add(id, article);
-                    //}
-                    //catch
-                    //{
-                    //    Logger.WriteLine("Got Article twice. First won.");
-                    //}
-                //}
-                //else
-                //{
-                //    Logger.WriteLine("ARTICLE got from Cache: " + id);
-                //}
-                //return ArticleCache[id];
+                string getArticle = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getArticle\",\"article_id\":" + id + "}";
+                ResponseArray articleResp = await SendRequestArrayAsync(null, getArticle);
+                Article article = ParseContentOrError<Article>(articleResp)[0];
+                return article;
             }
             catch (TtRssException e)
             {
@@ -395,8 +383,6 @@ namespace TinyTinyRSS.Interface
                 await Login(false);
             }
             requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
-            Logger.WriteLine("API call: " + requestUrl);
-
             try
             {
                 if (server == null)
@@ -422,7 +408,6 @@ namespace TinyTinyRSS.Interface
                     {
                         throw new TtRssException(NONETWORKERROR);
                     }
-                    Logger.WriteLine("API Response: " + responseString);
                     Response obj = JsonConvert.DeserializeObject<Response>(responseString);
                     if (obj != null)
                     {
@@ -442,54 +427,77 @@ namespace TinyTinyRSS.Interface
 
         public async Task<ResponseArray> SendRequestArrayAsync(string server, string requestUrl)
         {
-            if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
-            {
-                await Login(false);
-            }
-            requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
-            Logger.WriteLine("API call: " + requestUrl);
-            if (server == null)
-            {
-                server = ConnectionSettings.getInstance().server;
-            }
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server);
-            byte[] postBytes = Encoding.UTF8.GetBytes(requestUrl);
-            request.Method = HttpMethod.Post;
-            request.ContentType = "application/json; charset=UTF-8";
-            request.Accept = "application/json";
-            request.ContentLength = postBytes.Length;
+            return await SendRequestArrayAsync(server, requestUrl, false);
+        }
 
-            Stream requestStream = await request.GetRequestStreamAsync();
-            requestStream.Write(postBytes, 0, postBytes.Length);
-            requestStream.Close();
-
-            HttpWebResponse httpResponse = (HttpWebResponse)await request.GetResponseAsync();
-            using (var sr = new StreamReader(httpResponse.GetResponseStream()))
+        public async Task<ResponseArray> SendRequestArrayAsync(string server, string requestUrl, bool second)
+        {
+            bool retry = false;
+            try
             {
-                string responseString = sr.ReadToEnd();
-                if (responseString.Length == 0)
+                if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
                 {
-                    throw new TtRssException(NONETWORKERROR);
+                    await Login(false);
                 }
-                Logger.WriteLine("API Response: " + responseString);
-                try
+                requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
+                if (server == null)
                 {
-                    ResponseArray obj = JsonConvert.DeserializeObject<ResponseArray>(responseString);
-                    if (obj != null)
+                    server = ConnectionSettings.getInstance().server;
+                }
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server);
+                byte[] postBytes = Encoding.UTF8.GetBytes(requestUrl);
+                request.Method = HttpMethod.Post;
+                request.ContentType = "application/json; charset=UTF-8";
+                request.Accept = "application/json";
+                request.ContentLength = postBytes.Length;
+
+                Stream requestStream = await request.GetRequestStreamAsync();
+                requestStream.Write(postBytes, 0, postBytes.Length);
+                requestStream.Close();
+
+                HttpWebResponse httpResponse = (HttpWebResponse)await request.GetResponseAsync();
+                using (var sr = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    string responseString = sr.ReadToEnd();
+                    if (responseString.Length == 0)
                     {
-                        return obj;
+                        throw new TtRssException(NONETWORKERROR);
                     }
-                    else
+                    try
                     {
-                        throw new TtRssException("Error occured: JSON Deserialization returned null.");
+                        ResponseArray obj = JsonConvert.DeserializeObject<ResponseArray>(responseString);
+                        if (obj != null)
+                        {
+                            return obj;
+                        }
+                        else
+                        {
+                            throw new TtRssException("Error occured: JSON Deserialization returned null.");
+                        }
+                    }
+                    catch (JsonSerializationException e)
+                    {
+                        Response response = JsonConvert.DeserializeObject<Response>(responseString);
+                        Error error = response.getContent<Error>();
+                        throw new TtRssException("Error occured: " + error.error, e);
                     }
                 }
-                catch (JsonSerializationException e)
+            }
+            catch (NullReferenceException ex)
+            {
+                if (!second)
                 {
-                    Response response = JsonConvert.DeserializeObject<Response>(responseString);
-                    Error error = response.getContent<Error>();
-                    throw new TtRssException("Error occured: " + error.error, e);
+                    retry = true;
                 }
+            }
+            if (retry)
+            {
+                return await SendRequestArrayAsync(server, requestUrl, true);
+            }
+            else
+            {
+                Logger.WriteLine("NullReferenceException twice in SendRequestArrayAsync.");
+                return null;
             }
         }
 

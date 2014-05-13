@@ -77,7 +77,6 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
-            Logger.WriteLine("loading pivot");
             if (ArticlesCollection.Count <= _selectedIndex)
             {
                 return;
@@ -98,7 +97,7 @@ namespace TinyTinyRSS
                     _selectedIndex = positiveMod(_selectedIndex - 1, ArticlesCollection.Count);
                 }
                 SetProgressBar(true);
-                updateCount();
+                updateCount(false);
                 PivotItem next = (PivotItem) PivotControl.Items[positiveMod(PivotControl.SelectedIndex + 1, 3)];
                 PivotItem prev = (PivotItem)PivotControl.Items[positiveMod(PivotControl.SelectedIndex - 1, 3)];
 
@@ -158,12 +157,16 @@ namespace TinyTinyRSS
             }
         }
 
-        private async void updateCount()
+        private async void updateCount(bool force)
         {
             int actual = _selectedIndex + 1;
             if (_IsSpecial() || _showUnreadOnly)
             {
-                int max = await TtRssInterface.getInterface().getCountForFeed(false, feedId);
+                if (feedId == (int)FeedId.RecentlyRead)
+                {
+                    feedId = (int) FeedId.All;
+                }
+                int max = await TtRssInterface.getInterface().getCountForFeed(force, feedId);
                 Counter.Text = actual + "/" + max;
                 Scrollbar.Maximum = max;
             }
@@ -292,8 +295,19 @@ namespace TinyTinyRSS
             else if (sender == showUnreadOnlyAppBarMenu)
             {
                 _showUnreadOnly = !_showUnreadOnly;
+                Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
                 showUnreadOnlyAppBarMenu.Text = _showUnreadOnly ? AppResources.ShowAllArticles : AppResources.ShowOnlyUnreadArticles;
                 await LoadHeadlines();
+                _lastPivotIndex = -1;
+                if (PivotControl.SelectedIndex == 0)
+                {
+                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs(Item0));
+                }
+                else
+                {
+                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
+                }
+                updateCount(_showUnreadOnly);
                 return;
             }
             else if (sender == sort1AppBarMenu || sender == sort2AppBarMenu)
@@ -310,10 +324,21 @@ namespace TinyTinyRSS
                 {
                     _sortOrder = 2;
                 }
+                Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
                 List<string> options = getSortOptions();
                 sort1AppBarMenu.Text = options[0];
                 sort2AppBarMenu.Text = options[1];
                 await LoadHeadlines();
+                _lastPivotIndex = -1;
+                if (PivotControl.SelectedIndex == 0)
+                {
+                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs(Item0));
+                }
+                else
+                {
+                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
+                }
+                updateCount(_showUnreadOnly);
                 return;
             }
             else
@@ -397,7 +422,7 @@ namespace TinyTinyRSS
                 {
                     headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
                     _moreArticles = headlines.Count == TtRssInterface.INITIALHEADLINECOUNT;
-                    updateCount();
+                    updateCount(false);
                 }
             }
             catch (TtRssException ex)
@@ -433,7 +458,7 @@ namespace TinyTinyRSS
                     SetProgressBar(true, true);
                     bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                     int skip = ArticlesCollection.Count;
-                    if (feedId == (int)FeedId.Fresh)
+                    if (feedId == (int)FeedId.Fresh || _showUnreadOnly)
                     {
                         skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }
@@ -447,7 +472,7 @@ namespace TinyTinyRSS
                     {
                         _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
                         headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
-                        updateCount();
+                        updateCount(false);
                     }
                 }
                 catch (TtRssException ex)

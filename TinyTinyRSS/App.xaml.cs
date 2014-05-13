@@ -130,6 +130,12 @@ namespace TinyTinyRSS
                     using (StreamWriter writer = new StreamWriter(fs))
                     {
                         ConnectionSettings.getInstance().logExists = true;
+                        Logger.WriteLine("Last Settings:");
+                        Logger.WriteLine("Mark read:" + ConnectionSettings.getInstance().markRead);
+                        Logger.WriteLine("Progress as Cntr:" + ConnectionSettings.getInstance().progressAsCntr);
+                        Logger.WriteLine("Sort Order:" + ConnectionSettings.getInstance().sortOrder);
+                        Logger.WriteLine("show Unread Only:" + ConnectionSettings.getInstance().showUnreadOnly);
+                        Logger.WriteLine("Log exists:" + ConnectionSettings.getInstance().logExists);
                         Logger.Save(writer);
                     }
                 }
@@ -149,6 +155,7 @@ namespace TinyTinyRSS
                         using (StreamReader reader = new StreamReader(fs))
                         {
                             Logger.Load(reader);
+                            Logger.WriteLine("App reactivated");
                         }
                     }
                 }
@@ -159,6 +166,7 @@ namespace TinyTinyRSS
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            Logger.WriteLine("App suspended");
             FinalizeLogging(true);
             Logger.ClearLog();
         }
