@@ -207,5 +207,17 @@ namespace TinyTinyRSS
 
             Logger.WriteLine("End Send via email");
         }
+
+        /// <summary>
+        /// Button listener that opens the webpage of this project.
+        /// </summary>
+        /// <param name="sender">default method argument</param>
+        /// <param name="e">default method argument</param>
+        private void ProjectPageButton_Click(object sender, RoutedEventArgs e)
+        {
+            WebBrowserTask wbt = new WebBrowserTask();
+            wbt.Uri = new Uri("https://www.thescientist.eu/tt-rss-reader-for-wp-8/");
+            wbt.Show();
+        }
     }
 }

@@ -342,4 +342,8 @@
   <data name="SettingsScrollarAsCounter" xml:space="preserve">
     <value>Nutze Scrollbar statt Zähler auf Artikelseite</value>
   </data>
+  <data name="SettingsAboutButtonProjectWeb" xml:space="preserve">
+    <value>Projekt Website</value>
+    <comment>Label für Button der Projekt website aufruft.</comment>
+  </data>
 </root>

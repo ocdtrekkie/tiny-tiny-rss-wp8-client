@@ -344,4 +344,8 @@
     <value>Use Scrollbar instead of Counter on Articlepage</value>
     <comment>Option in Settings to change between ScrollBar and Counter</comment>
   </data>
+  <data name="SettingsAboutButtonProjectWeb" xml:space="preserve">
+    <value>Project Website</value>
+    <comment>Label for button that links to the project website</comment>
+  </data>
 </root>

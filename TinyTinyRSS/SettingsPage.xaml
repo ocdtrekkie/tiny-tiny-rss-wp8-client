@@ -94,6 +94,7 @@
                     <RadioButton Name="AboutRadio1" Content="{Binding LocalizedResources.SettingsAboutRadioActualLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>
                     <RadioButton Name="AboutRadio2" Content="{Binding LocalizedResources.SettingsAboutRadioLastLog, Source={StaticResource LocalizedStrings}}" GroupName="LogGroup"/>
                     <Button Name="AboutSendButton" Content="{Binding LocalizedResources.SettingsAboutButtonSendLog, Source={StaticResource LocalizedStrings}}" Click="AboutSendButton_Click"/>
+                    <Button Name="ProjectPageButton" Content="{Binding LocalizedResources.SettingsAboutButtonProjectWeb, Source={StaticResource LocalizedStrings}}" Click="ProjectPageButton_Click"/>
                 </StackPanel>
             </phone:PivotItem>
         </phone:Pivot>
