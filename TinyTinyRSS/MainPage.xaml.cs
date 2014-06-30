@@ -21,6 +21,8 @@ using CaledosLab.Portable.Logging;
 using Microsoft.Phone.Tasks;
 using System.IO.IsolatedStorage;
 using System.IO;
+using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
 
 namespace TinyTinyRSS
 {
@@ -28,7 +30,10 @@ namespace TinyTinyRSS
     {
         ApplicationBarIconButton settingsAppBarButton;
         ApplicationBarIconButton refreshAppBarButton;
-
+        private const string TASKNAMEUSERPRESENT = "TileSchedulerTaskUserPresent";
+        private const string TASKNAMETIMER = "TileSchedulerTaskTimer";
+        private const string TASKENTRYPOINT = "ClockTile.WinRT.TileSchedulerTask";
+        
         List<KeyedList<string, ExtendedFeed>> FeedListDataSource;
 
         private bool validConnection = false;
@@ -154,8 +159,8 @@ namespace TinyTinyRSS
             {
                 if (!validConnection)
                 {
-                    validConnection = await TtRssInterface.getInterface().CheckLogin(); 
-                }                    
+                    validConnection = await TtRssInterface.getInterface().CheckLogin();
+                }      
                 SystemTray.ProgressIndicator.IsIndeterminate = true;
                 try
                 {
@@ -293,6 +298,14 @@ namespace TinyTinyRSS
         {
             base.OnNavigatedTo(e);
             Logger.WriteLine("NavigatedTo MainPage.");
+        }
+
+        private void StartPeridicUpdates()
+        {
+            PeriodicUpdateRecurrence recurrence = PeriodicUpdateRecurrence.HalfHour;
+            System.Uri url = new System.Uri("https://thescientist.eu/ttrss-api/api.php?action=getUnreadCount&device-id=0");
+
+            TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
         }
     }
 }
