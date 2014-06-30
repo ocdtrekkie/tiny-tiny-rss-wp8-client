@@ -122,11 +122,13 @@ namespace TinyTinyRSS.Interface
         {
             try
             {
-                string unreadReq = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getUnread\"}";
-                Response unreadResp = await SendRequestAsync(null, unreadReq);
-                UnreadCount unread = ParseContentOrError<UnreadCount>(unreadResp);
-                return unread.unread;
-                //return GlobalCounter[0]; this one only reads "new" unread articles.
+                // All unread (not fresh)
+                //string unreadReq = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getUnread\"}";
+                //Response unreadResp = await SendRequestAsync(null, unreadReq);
+                //UnreadCount unread = ParseContentOrError<UnreadCount>(unreadResp);
+                //return unread.unread;
+                await getCounters();
+                return FeedCounter[(int) FeedId.Fresh];// this one only reads "new" unread articles.
             }
             catch (TtRssException e)
             {
@@ -141,35 +143,32 @@ namespace TinyTinyRSS.Interface
                 string request = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getCounters\"}";
                 ResponseArray response = await SendRequestArrayAsync(null, request);
                 List<Counter> counters = ParseContentOrError<Counter>(response);
-                GlobalCounter.Clear();
-                CategoryCounter.Clear();
-                FeedCounter.Clear();
                 foreach (Counter c in counters)
                 {
                     int parsedId;
                     if (c.id.Equals("global-unread"))
                     {
-                        GlobalCounter.Add(0, await getUnReadCount()); // The one of getCounters does not count "old" articles
+                        GlobalCounter[0] = c.counter; // The one of getCounters does not count "old" articles
                     }
                     else if (c.id.Equals("subscribed-feeds"))
                     {
-                        GlobalCounter.Add(1, c.counter);
+                        GlobalCounter[1] = c.counter;
                     }
                     else if (int.TryParse(c.id, out parsedId))
                     {
                         if (c.kind != null && c.kind.Equals("cat"))
                         {
-                            CategoryCounter.Add(parsedId, c.counter);
+                            CategoryCounter[parsedId] = c.counter;
                         }
                         else
                         {
                             if (parsedId <= 0 && parsedId > -3)
                             {
-                                FeedCounter.Add(parsedId, int.Parse(c.auxcounter));
+                                FeedCounter[parsedId] = int.Parse(c.auxcounter);
                             }
                             else
                             {
-                                FeedCounter.Add(parsedId, c.counter);
+                                FeedCounter[parsedId] = c.counter;
                             }
                         }
                     }

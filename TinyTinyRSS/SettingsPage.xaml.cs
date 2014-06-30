@@ -216,7 +216,7 @@ namespace TinyTinyRSS
         private void ProjectPageButton_Click(object sender, RoutedEventArgs e)
         {
             WebBrowserTask wbt = new WebBrowserTask();
-            wbt.Uri = new Uri("https://www.thescientist.eu/tt-rss-reader-for-wp-8/");
+            wbt.Uri = new Uri("https://thescientist.eu/tt-rss-reader-for-wp-8/");
             wbt.Show();
         }
     }

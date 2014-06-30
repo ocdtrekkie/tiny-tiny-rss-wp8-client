@@ -96,24 +96,25 @@ namespace TinyTinyRSS
                 {
                     _selectedIndex = positiveMod(_selectedIndex - 1, ArticlesCollection.Count);
                 }
+                int localSelected = _selectedIndex;
                 SetProgressBar(true);
                 updateCount(false);
-                PivotItem next = (PivotItem) PivotControl.Items[positiveMod(PivotControl.SelectedIndex + 1, 3)];
-                PivotItem prev = (PivotItem)PivotControl.Items[positiveMod(PivotControl.SelectedIndex - 1, 3)];
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
                 e.Item.DataContext = item;
 
                 Article article = await item.getContent();
-                
-                setHtml(article.content);
-                var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
-                if (icon != null)
+                if (_selectedIndex == localSelected)
                 {
-                    Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
-                    if (articlesFeed != null)
+                    setHtml(article.content);
+                    var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
+                    if (icon != null)
                     {
-                        icon.Source = articlesFeed.icon;
+                        Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
+                        if (articlesFeed != null)
+                        {
+                            icon.Source = articlesFeed.icon;
+                        }
                     }
                 }
                 UpdateLocalizedApplicationBar(article);
@@ -131,8 +132,6 @@ namespace TinyTinyRSS
                     }
                 }
                 await LoadMoreHeadlines();
-                next.DataContext = ArticlesCollection[positiveMod(_selectedIndex + 1, ArticlesCollection.Count)];
-                prev.DataContext = ArticlesCollection[positiveMod(_selectedIndex - 1, ArticlesCollection.Count)];
             }
             catch (TtRssException ex)
             {
@@ -162,11 +161,19 @@ namespace TinyTinyRSS
             int actual = _selectedIndex + 1;
             if (_IsSpecial() || _showUnreadOnly)
             {
-                if (feedId == (int)FeedId.RecentlyRead)
+                int max;
+                if (feedId == (int)FeedId.Fresh)
                 {
-                    feedId = (int) FeedId.All;
+                    max = await TtRssInterface.getInterface().getUnReadCount();
                 }
-                int max = await TtRssInterface.getInterface().getCountForFeed(force, feedId);
+                else
+                {
+                    if (feedId == (int)FeedId.RecentlyRead)
+                    {
+                        feedId = (int)FeedId.All;
+                    }
+                    max = await TtRssInterface.getInterface().getCountForFeed(force, feedId);
+                }
                 Counter.Text = actual + "/" + max;
                 Scrollbar.Maximum = max;
             }
