@@ -299,13 +299,5 @@ namespace TinyTinyRSS
             base.OnNavigatedTo(e);
             Logger.WriteLine("NavigatedTo MainPage.");
         }
-
-        private void StartPeridicUpdates()
-        {
-            PeriodicUpdateRecurrence recurrence = PeriodicUpdateRecurrence.HalfHour;
-            System.Uri url = new System.Uri("https://thescientist.eu/ttrss-api/api.php?action=getUnreadCount&device-id=0");
-
-            TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
-        }
     }
 }

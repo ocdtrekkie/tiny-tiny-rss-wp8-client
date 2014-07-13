@@ -344,4 +344,30 @@
     <value>Use Scrollbar instead of Counter on Articlepage</value>
     <comment>Option in Settings to change between ScrollBar and Counter</comment>
   </data>
+  <data name="SettingsActivateLiveTile" xml:space="preserve">
+    <value>Activate Live Tile</value>
+    <comment>Label for live tile activation checkbox.</comment>
+  </data>
+  <data name="SettingsLiveTile" xml:space="preserve">
+    <value>Live Tile</value>
+    <comment>Label for live tile pivot in settings</comment>
+  </data>
+  <data name="SettingsTileUpdatePeriod" xml:space="preserve">
+    <value>Update Interval</value>
+    <comment>Label for update interval checkbox</comment>
+  </data>
+  <data name="SettingsUpdateDay" xml:space="preserve">
+    <value>Every Day</value>
+    <comment>Label for radio button</comment>
+  </data>
+  <data name="SettingsUpdateHalfHour" xml:space="preserve">
+    <value>Every Half Hour</value>
+  </data>
+  <data name="SettingsUpdateHour" xml:space="preserve">
+    <value>Every Hour</value>
+  </data>
+  <data name="ErrorAddLiveTile" xml:space="preserve">
+    <value>Error activating live tile. Contact the developer, if this error happens always.</value>
+    <comment>Message to show when live tile activation fails.</comment>
+  </data>
 </root>

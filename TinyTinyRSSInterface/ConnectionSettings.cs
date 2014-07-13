@@ -18,6 +18,8 @@ namespace TinyTinyRSSInterface
         public static string _sortOrderKey = "SortOrder";
         public static string _logExistsKey = "ErrorLogExists";
         public static string _progressBarAsCounterKey = "ProgressAsCntr";
+        public static string _liveTileActivatedKey = "LiveTileActive";
+        public static string _liveTileUpdateIntervalKey = "LiveTileUpdateInterval";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -28,6 +30,8 @@ namespace TinyTinyRSSInterface
         private string _sortOrder;
         private string _logExists;
         private string _progressAsCntr;
+        private string _liveTileActivated;
+        private string _liveTileUpdateInterval;
 
         private ConnectionSettings()
         {
@@ -119,6 +123,23 @@ namespace TinyTinyRSSInterface
             }
         }
 
+        public bool liveTileActive
+        {
+            get
+            {
+                if (_liveTileActivated == null)
+                {
+                    _liveTileActivated = ReadSetting(_liveTileActivatedKey);
+                }
+                return _liveTileActivated.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_liveTileActivatedKey, value.ToString());
+                _liveTileActivated = value.ToString();
+            }
+        }
+
         public bool progressAsCntr
         {
             get
@@ -186,6 +207,25 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_sortOrderKey, value.ToString());
                 _sortOrder = value.ToString();
+            }
+        }
+
+        public int tileUpdateInterval
+        {
+            get
+            {
+                if (_liveTileUpdateInterval == null)
+                {
+                    _liveTileUpdateInterval = ReadSetting(_liveTileUpdateIntervalKey);
+                    if (_liveTileUpdateInterval.Equals(""))
+                        _liveTileUpdateInterval = "0";
+                }
+                return int.Parse(_liveTileUpdateInterval);
+            }
+            set
+            {
+                SaveSetting(_liveTileUpdateIntervalKey, value.ToString());
+                _liveTileUpdateInterval = value.ToString();
             }
         }
 

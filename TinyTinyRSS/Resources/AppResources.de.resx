@@ -342,4 +342,30 @@
   <data name="SettingsScrollarAsCounter" xml:space="preserve">
     <value>Nutze Scrollbar statt Zähler auf Artikelseite</value>
   </data>
+  <data name="SettingsActivateLiveTile" xml:space="preserve">
+    <value>Aktiviere Live Tile</value>
+    <comment>Label for live tile activation checkbox.</comment>
+  </data>
+  <data name="SettingsLiveTile" xml:space="preserve">
+    <value>Live Tile</value>
+    <comment>Label for live tile pivot in settings</comment>
+  </data>
+  <data name="SettingsTileUpdatePeriod" xml:space="preserve">
+    <value>Aktualisierungs Interval</value>
+    <comment>Label for update interval checkbox</comment>
+  </data>
+  <data name="SettingsUpdateDay" xml:space="preserve">
+    <value>Jeden Tag</value>
+    <comment>Label for RadioButton</comment>
+  </data>
+  <data name="SettingsUpdateHalfHour" xml:space="preserve">
+    <value>Alle 30 Minuten</value>
+  </data>
+  <data name="SettingsUpdateHour" xml:space="preserve">
+    <value>Jede Stunde</value>
+  </data>
+  <data name="ErrorAddLiveTile" xml:space="preserve">
+    <value>Fehler beim Aktivieren des Live Tile. Kontaktiere den Entwickler bei anhaltenden Problemen.</value>
+    <comment>Message to show when live tile activation fails.</comment>
+  </data>
 </root>

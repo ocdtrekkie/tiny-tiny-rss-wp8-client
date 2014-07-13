@@ -124,6 +124,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error activating live tile. Contact the developer, if this error happens always..
+        /// </summary>
+        public static string ErrorAddLiveTile {
+            get {
+                return ResourceManager.GetString("ErrorAddLiveTile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection Failed.
         /// </summary>
         public static string FailedConnection {
@@ -367,6 +376,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Activate Live Tile.
+        /// </summary>
+        public static string SettingsActivateLiveTile {
+            get {
+                return ResourceManager.GetString("SettingsActivateLiveTile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsAppBarButtonText {
@@ -390,6 +408,15 @@ namespace TinyTinyRSS.Resources {
         public static string SettingsHead {
             get {
                 return ResourceManager.GetString("SettingsHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live Tile.
+        /// </summary>
+        public static string SettingsLiveTile {
+            get {
+                return ResourceManager.GetString("SettingsLiveTile", resourceCulture);
             }
         }
         
@@ -444,6 +471,42 @@ namespace TinyTinyRSS.Resources {
         public static string SettingsSortOld {
             get {
                 return ResourceManager.GetString("SettingsSortOld", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Interval.
+        /// </summary>
+        public static string SettingsTileUpdatePeriod {
+            get {
+                return ResourceManager.GetString("SettingsTileUpdatePeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every Day.
+        /// </summary>
+        public static string SettingsUpdateDay {
+            get {
+                return ResourceManager.GetString("SettingsUpdateDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every Half Hour.
+        /// </summary>
+        public static string SettingsUpdateHalfHour {
+            get {
+                return ResourceManager.GetString("SettingsUpdateHalfHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Every Hour.
+        /// </summary>
+        public static string SettingsUpdateHour {
+            get {
+                return ResourceManager.GetString("SettingsUpdateHour", resourceCulture);
             }
         }
         
