@@ -164,7 +164,7 @@ namespace TinyTinyRSS
                 int max;
                 if (feedId == (int)FeedId.Fresh)
                 {
-                    max = await TtRssInterface.getInterface().getUnReadCount();
+                    max = await TtRssInterface.getInterface().getUnReadCount(force);
                 }
                 else
                 {

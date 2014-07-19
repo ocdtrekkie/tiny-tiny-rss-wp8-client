@@ -118,16 +118,14 @@ namespace TinyTinyRSS.Interface
             }
         }
 
-        public async Task<int> getUnReadCount()
+        public async Task<int> getUnReadCount(bool force)
         {
             try
             {
-                // All unread (not fresh)
-                //string unreadReq = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getUnread\"}";
-                //Response unreadResp = await SendRequestAsync(null, unreadReq);
-                //UnreadCount unread = ParseContentOrError<UnreadCount>(unreadResp);
-                //return unread.unread;
-                await getCounters();
+                if (force)
+                {
+                    await getCounters();
+                }
                 return FeedCounter[(int) FeedId.Fresh];// this one only reads "new" unread articles.
             }
             catch (TtRssException e)
