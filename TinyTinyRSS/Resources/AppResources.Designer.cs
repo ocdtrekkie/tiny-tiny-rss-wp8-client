@@ -286,6 +286,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save settings? ähnelt.
+        /// </summary>
+        public static string SaveUnsavedSettings {
+            get {
+                return ResourceManager.GetString("SaveUnsavedSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Server ähnelt.
         /// </summary>
         public static string ServerSetting {
@@ -561,6 +570,15 @@ namespace TinyTinyRSS.Resources {
         public static string UnreadOnlySettings {
             get {
                 return ResourceManager.GetString("UnreadOnlySettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die You&apos;ve made changes the haven&apos;t been saved. ähnelt.
+        /// </summary>
+        public static string UnsavedSettings {
+            get {
+                return ResourceManager.GetString("UnsavedSettings", resourceCulture);
             }
         }
         

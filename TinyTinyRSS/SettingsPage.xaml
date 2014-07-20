@@ -66,17 +66,17 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox x:Name="MarkReadCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">
+                    <CheckBox x:Name="MarkReadCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" Click="Changed">
                         <TextBlock Text="{Binding LocalizedResources.MarkReadSettings, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     </CheckBox>
-                    <CheckBox x:Name="ShowUnreadOnlyCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2">
+                        <CheckBox x:Name="ShowUnreadOnlyCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Click="Changed">
                         <TextBlock Text="{Binding LocalizedResources.UnreadOnlySettings, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     </CheckBox>
-                    <CheckBox x:Name="ProgressAsCntrCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2">
+                        <CheckBox x:Name="ProgressAsCntrCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Click="Changed">
                         <TextBlock Text="{Binding LocalizedResources.SettingsScrollarAsCounter, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     </CheckBox>
                     <TextBlock x:Name="SortLabel" Text="{Binding LocalizedResources.SettingsSortLabel, Source={StaticResource LocalizedStrings}}" Grid.Column="0" Grid.Row="3" FontSize="24" />
-                    <toolkit:ListPicker x:Name="SortBox" Grid.Column="1" Grid.Row="3">
+                    <toolkit:ListPicker x:Name="SortBox" Grid.Column="1" Grid.Row="3" SelectionChanged="SelChanged" >
                         <toolkit:ListPickerItem Name="SortDefault" Content="{Binding LocalizedResources.SettingsSortDefault, Source={StaticResource LocalizedStrings}}" />
                         <toolkit:ListPickerItem Name="SortNewFirst" Content="{Binding LocalizedResources.SettingsSortNew, Source={StaticResource LocalizedStrings}}" />
                         <toolkit:ListPickerItem Name="SortOldFirst" Content="{Binding LocalizedResources.SettingsSortOld, Source={StaticResource LocalizedStrings}}" />

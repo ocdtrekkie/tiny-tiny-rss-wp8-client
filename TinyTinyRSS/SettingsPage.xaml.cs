@@ -19,6 +19,7 @@ using CaledosLab.Portable.Logging;
 using Microsoft.Phone.Tasks;
 using System.IO;
 using System.Reflection;
+using System.ComponentModel;
 
 namespace TinyTinyRSS
 {
@@ -26,6 +27,7 @@ namespace TinyTinyRSS
     {
         ApplicationBarIconButton applyAppBarButton;
         ApplicationBarIconButton cancelAppBarButton;
+        bool unsavedSettings = false;
 
         public SettingsPage()
         {
@@ -56,38 +58,51 @@ namespace TinyTinyRSS
         private void SetFields()
         {
             UsernameField.Text = ConnectionSettings.getInstance().username;
+            SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             ServerField.Text = ConnectionSettings.getInstance().server;
             PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
-            SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
+            unsavedSettings = false;
         }
 
-        private async void AppBarButton_Click(object sender, EventArgs e)
+        private void AppBarButton_Click(object sender, EventArgs e)
         {
             if (sender.Equals(applyAppBarButton))
             {
-                if (await TestSettings())
-                {
-                    ConnectionSettings.getInstance().username = UsernameField.Text;
-                    ConnectionSettings.getInstance().server = ServerField.Text;
-                    ConnectionSettings.getInstance().password = PasswdField.Password;
-                    ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
-                    ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-                    ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
-                    ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
-                    NavigationService.GoBack(); // Reload Page!?
-                }
-                else
-                {
-                    // Popup falsche Settings
-                }
+                SaveAllSettings();
             }
             else if (sender.Equals(cancelAppBarButton))
             {
-                NavigationService.GoBack();
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+                else
+                {
+                    NavigationService.Navigate(new Uri("/MainPage.xml"));
+                }
             }
+        }
+
+        private void SaveAllSettings()
+        {
+            ConnectionSettings.getInstance().username = UsernameField.Text;
+                ConnectionSettings.getInstance().server = ServerField.Text;
+                ConnectionSettings.getInstance().password = PasswdField.Password;
+                ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+                ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
+                ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
+                ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
+                if (NavigationService.CanGoBack)
+                {
+                    NavigationService.GoBack();
+                }
+                else
+                {
+                    NavigationService.Navigate(new Uri("/MainPage.xml"));
+                }
         }
 
         private async Task<bool> TestSettings()
@@ -135,6 +150,7 @@ namespace TinyTinyRSS
             {
                 TestButton.Content = AppResources.TestConnectionSettingsButton;
             }
+            unsavedSettings = true;
         }
 
         private async void TestButtonClicked(object sender, RoutedEventArgs e)
@@ -154,13 +170,12 @@ namespace TinyTinyRSS
             {
                 TestButton.Content = AppResources.TestConnectionSettingsButton;
             }
+            unsavedSettings = true;
         }
 
         private void AboutSendButton_Click(object sender, RoutedEventArgs e)
         {
-            //http://www.geekchamp.com/marketplace/components/livemailmessage
             Logger.WriteLine("Begin Send via email");
-
             string Subject = "TT-RSS WP8 App Feedback";
 
             try
@@ -208,6 +223,18 @@ namespace TinyTinyRSS
             Logger.WriteLine("End Send via email");
         }
 
+        protected override void OnBackKeyPress(CancelEventArgs e)
+        {
+            if (unsavedSettings)
+            {
+                if (MessageBox.Show(AppResources.UnsavedSettings, AppResources.SaveUnsavedSettings,
+                                    MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    SaveAllSettings();
+                }
+            }            
+        }
+
         /// <summary>
         /// Button listener that opens the webpage of this project.
         /// </summary>
@@ -218,6 +245,19 @@ namespace TinyTinyRSS
             WebBrowserTask wbt = new WebBrowserTask();
             wbt.Uri = new Uri("https://thescientist.eu/tt-rss-reader-for-wp-8/");
             wbt.Show();
+        }
+
+        private void Changed(object sender, RoutedEventArgs e)
+        {
+            unsavedSettings = true;
+        }
+
+        private void SelChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count != 0 || e.RemovedItems.Count != 0)
+            {
+                unsavedSettings = true;
+            }
         }
     }
 }

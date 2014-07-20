@@ -120,18 +120,7 @@ namespace TinyTinyRSS.Interface
 
         public async Task<int> getUnReadCount(bool force)
         {
-            try
-            {
-                if (force)
-                {
-                    await getCounters();
-                }
-                return FeedCounter[(int) FeedId.Fresh];// this one only reads "new" unread articles.
-            }
-            catch (TtRssException e)
-            {
-                throw e;
-            }
+            return await getCountForFeed(force, (int)FeedId.Fresh);
         }
 
         public async Task<int> getCounters()

@@ -346,4 +346,12 @@
     <value>Projekt Website</value>
     <comment>Label für Button der Projekt website aufruft.</comment>
   </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>Speichern?</value>
+    <comment>Headline for messagebox unsaved settings</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>Du hast ungespeicherte Änderungen.</value>
+    <comment>Messageboxtext for unsaved settings</comment>
+  </data>
 </root>

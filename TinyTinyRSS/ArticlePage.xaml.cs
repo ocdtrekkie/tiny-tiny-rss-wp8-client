@@ -58,9 +58,7 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            Logger.WriteLine("load headlines");
             await LoadHeadlines();
-            Logger.WriteLine("load headlines ready");
             PivotControl_LoadingPivotItem(null, new PivotItemEventArgs(Item0));
         }
 
@@ -423,7 +421,14 @@ namespace TinyTinyRSS
                 if (headlines.Count == 0)
                 {
                     MessageBox.Show(AppResources.NoArticlesMessage);
-                    NavigationService.GoBack();
+                    if (NavigationService.CanGoBack)
+                    {
+                        NavigationService.GoBack();
+                    }
+                    else
+                    {
+                        NavigationService.Navigate(new Uri("/MainPage.xml"));
+                    }
                 }
                 else
                 {

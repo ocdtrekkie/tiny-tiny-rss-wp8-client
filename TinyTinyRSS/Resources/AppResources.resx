@@ -348,4 +348,12 @@
     <value>Project Website</value>
     <comment>Label for button that links to the project website</comment>
   </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>Save settings?</value>
+    <comment>Headline for messagebox unsaved settings</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>You've made changes the haven't been saved.</value>
+    <comment>Messageboxtext for unsaved settings</comment>
+  </data>
 </root>
