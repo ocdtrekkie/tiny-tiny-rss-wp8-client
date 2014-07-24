@@ -31,7 +31,7 @@ namespace TinyTinyRSS
     {
         ApplicationBarIconButton applyAppBarButton;
         ApplicationBarIconButton cancelAppBarButton;
-        private const String serverUrl = "https://thescientist.eu/ttrss-api/api.php";
+        public const String SERVERURL = "https://thescientist.eu/ttrss-api/api.php";
         public SettingsPage()
         {
             InitializeComponent();
