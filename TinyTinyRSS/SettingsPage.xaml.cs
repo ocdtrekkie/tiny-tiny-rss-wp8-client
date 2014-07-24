@@ -23,6 +23,7 @@ using System.Net.Http;
 using Microsoft.Phone.Info;
 using Windows.Phone.System.Analytics;
 using Windows.Data.Xml.Dom;
+using NotificationsExtensions.BadgeContent;
 
 namespace TinyTinyRSS
 {
@@ -281,9 +282,15 @@ namespace TinyTinyRSS
                             {
                                 recurrence = PeriodicUpdateRecurrence.Hour;
                             }
-                            //System.Uri url = new System.Uri(serverUrl + "?action=getUnreadCount&deviceId=" + deviceId);
-                            System.Uri url = new System.Uri("https://thescientist.eu/ttrss-api/tile.xml");
-                            TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
+                            System.Uri url = new System.Uri(serverUrl + "?action=getUnreadCount&deviceId=" + Uri.EscapeDataString(deviceId));
+                            XmlDocument tileXml = TileUpdateManager.GetTemplateContent(TileTemplateType.TileSquare150x150IconWithBadge);
+
+                            TileNotification tile = new TileNotification(tileXml);
+                            TileUpdateManager.CreateTileUpdaterForApplication().Update(tile);
+                            BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent(81);
+                            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
+                            //System.Uri url = new System.Uri("https://thescientist.eu/ttrss-api/tile.xml");
+                            BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
                         }
                     }
                     catch (HttpRequestException ex)
@@ -320,7 +327,7 @@ namespace TinyTinyRSS
                         Logger.WriteLine("error deleting livetile user");
                         Logger.WriteLine(ex.Message);
                     }
-                    TileUpdateManager.CreateTileUpdaterForApplication().StopPeriodicUpdate();
+                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().StopPeriodicUpdate();
                     ConnectionSettings.getInstance().liveTileActive = false;
                 }
             }
@@ -346,10 +353,10 @@ namespace TinyTinyRSS
                 recurrence = PeriodicUpdateRecurrence.Hour;
             }
             // Update UpdateReccurence
-            TileUpdateManager.CreateTileUpdaterForApplication().StopPeriodicUpdate();
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().StopPeriodicUpdate();
             //System.Uri url = new System.Uri(serverUrl + "?action=getUnreadCount&deviceId=" + deviceId);
             System.Uri url = new System.Uri("https://thescientist.eu/ttrss-api/tile.xml");
-            TileUpdateManager.CreateTileUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
         }
     }
 }

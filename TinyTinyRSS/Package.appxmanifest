@@ -16,10 +16,24 @@
   </Resources>
   <Applications>
     <Application Id="xad6373d0y14b8y4908y8a40y2208f047aeafx" Executable="AGHost.exe" EntryPoint="MainPage.xaml">
-      <m3:VisualElements DisplayName="Tiny Tiny RSS" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="TinyTinyRSS" ForegroundText="light" BackgroundColor="transparent" ToastCapable="false">
-        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
+      <m3:VisualElements
+    DisplayName="Tiny Tiny RSS"
+    Description="Tiny Tiny RSS Client"
+    BackgroundColor="transparent"
+    ForegroundText="light"
+    ToastCapable="false"
+    Square150x150Logo="Assets\SquareTile150x150.png"
+    Square44x44Logo="Assets\Logo.png">
+
+        <m3:DefaultTile
+            Square71x71Logo="Assets\SquareTile71x71.png"
+            ShortName="Tiny Tiny RSS"
+            DefaultSize="square150x150Logo">
+
+          <m3:ShowNameOnTiles>
+            <m3:ShowOn Tile="square150x150Logo"/>
+          </m3:ShowNameOnTiles>
         </m3:DefaultTile>
-        <!--<m3:SplashScreen Image="Assets\Splashscreen.png" />-->
       </m3:VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="AgHost.BackgroundTask">

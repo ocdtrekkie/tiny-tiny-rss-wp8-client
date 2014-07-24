@@ -196,6 +196,10 @@
       <Project>{9E0BE204-58E7-4517-999E-679792FDBFCF}</Project>
       <Name>CaledosLab.Portable.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NotificationsExtensions\NotificationsExtensions.csproj">
+      <Project>{6e87464b-b064-40ca-8161-7c18c337adff}</Project>
+      <Name>NotificationsExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TinyTinyRSSInterface\TinyTinyRSSInterface.csproj">
       <Project>{1E909BE1-70E0-4AE9-A50D-445F68714114}</Project>
       <Name>TinyTinyRSSInterface</Name>
