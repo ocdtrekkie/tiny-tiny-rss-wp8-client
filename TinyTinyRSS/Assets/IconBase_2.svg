@@ -14,7 +14,7 @@
    viewBox="0 0 500.00001 500"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="IconBase_2.svg"
-   inkscape:export-filename="D:\Code\Git\tiny-tiny-rss-wp8-client\TinyTinyRSS\Assets\storeIcon.png"
+   inkscape:export-filename="D:\Code\Git\tiny-tiny-rss-wp8-client\TinyTinyRSS\Assets\storeIcon2.png"
    inkscape:export-xdpi="108"
    inkscape:export-ydpi="108">
   <metadata
@@ -36,16 +36,16 @@
      objecttolerance="10"
      gridtolerance="10"
      guidetolerance="10"
-     inkscape:pageopacity="0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:window-width="1218"
+     inkscape:window-width="1217"
      inkscape:window-height="697"
      id="namedview3827"
      showgrid="false"
      inkscape:zoom="1.4254587"
      inkscape:cx="80.051196"
      inkscape:cy="119.04382"
-     inkscape:window-x="54"
+     inkscape:window-x="55"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="RSSicon"
@@ -55,7 +55,8 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     showborder="true" />
+     showborder="true"
+     borderlayer="true" />
   <defs
      id="defs3798">
     <linearGradient

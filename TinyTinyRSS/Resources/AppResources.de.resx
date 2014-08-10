@@ -368,4 +368,16 @@
     <value>Fehler beim Aktivieren des Live Tile. Kontaktiere den Entwickler bei anhaltenden Problemen.</value>
     <comment>Message to show when live tile activation fails.</comment>
   </data>
+  <data name="SettingsAboutButtonProjectWeb" xml:space="preserve">
+    <value>Projekt Website</value>
+    <comment>Label für Button der Projekt website aufruft.</comment>
+  </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>Speichern?</value>
+    <comment>Headline for messagebox unsaved settings</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>Du hast ungespeicherte Änderungen.</value>
+    <comment>Messageboxtext for unsaved settings</comment>
+  </data>
 </root>

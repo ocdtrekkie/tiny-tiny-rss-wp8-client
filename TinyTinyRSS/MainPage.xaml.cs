@@ -238,7 +238,7 @@ namespace TinyTinyRSS
             // Unread
             try
             {
-                int unread = await TtRssInterface.getInterface().getUnReadCount();
+                int unread = await TtRssInterface.getInterface().getUnReadCount(true);
                 if (unread != 0)
                 {
                     Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
