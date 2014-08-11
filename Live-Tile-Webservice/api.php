@@ -1,23 +1,19 @@
 <?php
-
 // This is the API,  possibilities: add a user, update password, remove user or get unreadCount.
-class TtRssAPI
-{
+class TtRssAPI {
     private $db;
-
+ 
     // Constructor - open DB connection
-    function __construct()
-    {
-        $this->db = new mysqli('localhost', 'mysqluser', 'mysqlpassword', 'ttrss-api');
+    function __construct() {
+        $this->db = new mysqli('localhost', 'XXX', 'XXX', 'ttrss-api');
     }
-
+ 
     // Destructor - close DB connection
-    function __destruct()
-    {
+    function __destruct() {
         $this->db->close();
     }
 
-    function getUnreadCount($deviceId)
+        function getUnreadCount($deviceId)
     {
         $result = $this->db->query("SELECT * FROM users WHERE deviceId='$deviceId'");
         //return "test1";
@@ -34,27 +30,29 @@ class TtRssAPI
         $result->close();
         /* login to tt-rss */
         $loginData = json_decode($this->ttrsscurl($server, '{"op":"login","user":"'.$userName.'","password":"'.$password.'"}'), TRUE);
-        if($loginData == null || $loginData[status] == 1) {
+        if($loginData == null || $loginData['status'] == 1) {
             return 0;
         }
-        $sessionId = $loginData[content][session_id];
+        $sessionId = $loginData['content']['session_id'];
         /* get counters */
         $counters = json_decode($this->ttrsscurl($server, '{"op":"getCounters","sid":"'.$sessionId.'","output_mode":"f"}'), TRUE);
-        if($counters[status] == 1) {
+        if($counters['status'] == 1) {
             return 0;
             $this->ttrsscurl($server, '{"op":"logout","sid":"'.$sessionId.'"}');
         }
         $unreadCount = 0;
-        $counterContent = $counters[content];
+        $counterContent = $counters['content'];
         foreach ($counterContent as $counter) {
-            if($counter[id]==-3) {
-                $unreadCount = $counter[counter];
+            if($counter['id']==-3) {
+                $unreadCount = $counter['counter'];
                 break;
             }
         }
         /* logout */
         $this->ttrsscurl($server, '{"op":"logout","sid":"'.$sessionId.'"}');
-        return $unreadCount;
+        $out = '<?xml version = "1.0" encoding = "utf-8" ?><badge version="1" value="'.$unreadCount.'"/>';
+        error_log("getUnreadCount out:" .$out);
+        return $out;
     }
 
     function ttrsscurl($url, $params)
@@ -112,8 +110,10 @@ $value = 0;
 
 $api = new TtRssAPI;
 if (isset($_GET["action"]) && in_array($_GET["action"], $possible_get) && isset($_GET["deviceId"])) {
+    error_log("incoming request:" .$_GET["action"].$_GET["deviceId"]);       
     switch ($_GET["action"]) {
         case "getUnreadCount":
+            header('Content-type: application/xml; charset=utf-8');
             $value = $api->getUnreadCount($_GET["deviceId"]);
             break;
         case "deleteUser":

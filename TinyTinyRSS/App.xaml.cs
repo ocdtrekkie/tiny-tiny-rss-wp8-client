@@ -13,6 +13,8 @@ using System.IO.IsolatedStorage;
 using System.IO;
 using CaledosLab.Portable.Logging;
 using Microsoft.Phone.Tasks;
+using TinyTinyRSS.Classes;
+using System.Threading.Tasks;
 
 namespace TinyTinyRSS
 {
@@ -103,6 +105,7 @@ namespace TinyTinyRSS
             }
             // Initial login
             await loginTask;
+            await Helper.UpdateLiveTile();
         }
 
         /// <summary>
@@ -164,19 +167,23 @@ namespace TinyTinyRSS
 
         // Code, der ausgeführt werden soll, wenn die Anwendung deaktiviert wird (in den Hintergrund gebracht wird)
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
-        private void Application_Deactivated(object sender, DeactivatedEventArgs e)
+        private async void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            Task update = Helper.UpdateLiveTile();
             Logger.WriteLine("App suspended");
             FinalizeLogging(true);
             Logger.ClearLog();
+            await update;
         }
 
         // Code, der beim Schließen der Anwendung ausgeführt wird (z. B. wenn der Benutzer auf "Zurück" klickt)
         // Dieser Code wird beim Deaktivieren der Anwendung nicht ausgeführt
-        private void Application_Closing(object sender, ClosingEventArgs e)
+        private async void Application_Closing(object sender, ClosingEventArgs e)
         {
+            Task update = Helper.UpdateLiveTile();
             FinalizeLogging(false);
             Logger.ClearLog();
+            await update;
         }
 
         // Code, der bei einem Navigationsfehler ausgeführt wird

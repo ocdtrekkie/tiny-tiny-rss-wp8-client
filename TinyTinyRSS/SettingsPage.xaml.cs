@@ -25,6 +25,7 @@ using Windows.Phone.System.Analytics;
 using Windows.Data.Xml.Dom;
 using NotificationsExtensions.BadgeContent;
 using System.ComponentModel;
+using TinyTinyRSS.Classes;
 
 namespace TinyTinyRSS
 {
@@ -90,6 +91,7 @@ namespace TinyTinyRSS
 
         private void AppBarButton_Click(object sender, EventArgs e)
         {
+            unsavedSettings = false;
             if (sender.Equals(applyAppBarButton))
             {
                 SaveAllSettings();
@@ -98,42 +100,18 @@ namespace TinyTinyRSS
             {
                 if (NavigationService.CanGoBack)
                 {
-                    ConnectionSettings.getInstance().username = UsernameField.Text;
-                    ConnectionSettings.getInstance().server = ServerField.Text;
-                    ConnectionSettings.getInstance().password = PasswdField.Password;
-                    ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
-                    ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-                    ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
-                    ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
-                    if (NavigationService.CanGoBack) { 
-                    NavigationService.GoBack(); // Reload Page!?
-                    }
-                    else
-                    {
-                        NavigationService.Navigate(new Uri("/MainPage.xaml"));
-                    }
-                   NavigationService.GoBack();
+                    NavigationService.GoBack(); // Reload Page!?                    
                 }
                 else
                 {
                     NavigationService.Navigate(new Uri("/MainPage.xml"));
                 }
             }
-            else if (sender.Equals(cancelAppBarButton))
-            {
-                if (NavigationService.CanGoBack) { 
-                    NavigationService.GoBack(); // Reload Page!?
-                    }
-                    else
-                    {
-                        NavigationService.Navigate(new Uri("/MainPage.xaml"));
-                    }
-            }
         }
 
         private void SaveAllSettings()
         {
-            ConnectionSettings.getInstance().username = UsernameField.Text;
+                ConnectionSettings.getInstance().username = UsernameField.Text;
                 ConnectionSettings.getInstance().server = ServerField.Text;
                 ConnectionSettings.getInstance().password = PasswdField.Password;
                 ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
@@ -169,7 +147,9 @@ namespace TinyTinyRSS
             {
                 server = string.Concat(server, "api/");
             }
+            bool unsavedBefore = unsavedSettings;
             ServerField.Text = server;
+            unsavedSettings = unsavedBefore;
             string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
             if (error.Length == 0)
             {
@@ -208,14 +188,16 @@ namespace TinyTinyRSS
             base.OnNavigatedTo(e);
             Logger.WriteLine("NavigatedTo Settings.");
         }
-
-        private void PasswdField_PasswordChanged(object sender, RoutedEventArgs e)
+        private void PasswdField_PasswordChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!TestButton.Content.Equals(AppResources.TestConnectionSettingsButton))
+            if (!PasswdField.Password.Equals(ConnectionSettings.getInstance().password))
             {
-                TestButton.Content = AppResources.TestConnectionSettingsButton;
-            }
-            unsavedSettings = true;
+                if (!TestButton.Content.Equals(AppResources.TestConnectionSettingsButton))
+                {
+                    TestButton.Content = AppResources.TestConnectionSettingsButton;
+                }
+                unsavedSettings = true;
+            } 
         }
 
         private void AboutSendButton_Click(object sender, RoutedEventArgs e)
@@ -272,6 +254,7 @@ namespace TinyTinyRSS
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
             string deviceId = HostInformation.PublisherHostId;
+            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
             if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
             {
                 if (await TestSettings())
@@ -312,18 +295,8 @@ namespace TinyTinyRSS
                             {
                                 recurrence = PeriodicUpdateRecurrence.Hour;
                             }
-                            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + Uri.EscapeDataString(deviceId));
-                            int unread;
-                            try
-                            {
-                                unread = await TtRssInterface.getInterface().getUnReadCount(true);
-                            }
-                            catch (Exception exc)
-                            {
-                                unread = 0;
-                            }
-                            BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent(Convert.ToUInt32(unread));
-                            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
+                            await Helper.UpdateLiveTile();
+                            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + deviceIdEscaped);
                             BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
                         }
                     }
@@ -347,7 +320,7 @@ namespace TinyTinyRSS
                     try
                     {
                         var httpClient = new HttpClient(new System.Net.Http.HttpClientHandler());
-                        HttpResponseMessage response = await httpClient.GetAsync(SERVERURL + "?action=deleteUser&deviceId=" + Uri.EscapeDataString(deviceId));
+                        HttpResponseMessage response = await httpClient.GetAsync(SERVERURL + "?action=deleteUser&deviceId=" + deviceIdEscaped);
                         response.EnsureSuccessStatusCode();
                         var responseString = await response.Content.ReadAsStringAsync();
                         if (!responseString.Equals("1"))
@@ -370,7 +343,8 @@ namespace TinyTinyRSS
 
         private async void UpdateInterval_Click(object sender, RoutedEventArgs e)
         {
-            string deviceId = DeviceExtendedProperties.GetValue("DeviceUniqueId").ToString();
+            string deviceId = HostInformation.PublisherHostId;
+            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
             PeriodicUpdateRecurrence recurrence;
             if (sender == Dayly)
             {
@@ -387,18 +361,8 @@ namespace TinyTinyRSS
                 ConnectionSettings.getInstance().tileUpdateInterval = 1;
                 recurrence = PeriodicUpdateRecurrence.Hour;
             }
-            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + Uri.EscapeDataString(deviceId));
-            int unread;
-            try
-            {
-                unread = await TtRssInterface.getInterface().getUnReadCount(true);
-            }
-            catch (Exception exc)
-            {
-                unread = 0;
-            }
-            BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent(Convert.ToUInt32(unread));
-            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
+            await Helper.UpdateLiveTile();                            
+            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + deviceIdEscaped);            
             BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
 
         }
@@ -407,6 +371,7 @@ namespace TinyTinyRSS
         {
             if (unsavedSettings)
             {
+                unsavedSettings = false;
                 if (MessageBox.Show(AppResources.UnsavedSettings, AppResources.SaveUnsavedSettings,
                                     MessageBoxButton.OKCancel) == MessageBoxResult.OK)
                 {
