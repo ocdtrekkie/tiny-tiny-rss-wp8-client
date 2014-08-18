@@ -427,7 +427,7 @@ namespace TinyTinyRSS
                     }
                     else
                     {
-                        NavigationService.Navigate(new Uri("/MainPage.xml"));
+                        NavigationService.Navigate(new Uri("/MainPage.xaml"));
                     }
                 }
                 else
