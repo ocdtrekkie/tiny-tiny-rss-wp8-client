@@ -372,6 +372,7 @@ namespace TinyTinyRSS
             if (sender == openExtAppBarButton)
             {
                 WebBrowserTask wbt = new WebBrowserTask();
+                // TODO Fix nullReferenceException/ArgumentOutOfRangeExc.
                 wbt.Uri = new Uri(ArticlesCollection[_selectedIndex].Article.link);
                 wbt.Show();
             }
