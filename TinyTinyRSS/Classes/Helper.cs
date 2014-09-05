@@ -51,20 +51,5 @@ namespace TinyTinyRSS.Classes
             }
             return null;
         }
-
-        public static async Task UpdateLiveTile()
-        {
-            try
-            {
-                int unread = await TtRssInterface.getInterface().getUnReadCount(true);
-                BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent(Convert.ToUInt32(unread));
-                BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
-            }
-            catch (Exception exc)
-            {
-                Logger.WriteLine("Could not get actual unreadCount while activating live tile.");
-                Logger.WriteLine(exc.Message);
-            }
-        }
     }
 }

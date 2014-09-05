@@ -26,6 +26,7 @@ using Windows.Data.Xml.Dom;
 using NotificationsExtensions.BadgeContent;
 using System.ComponentModel;
 using TinyTinyRSS.Classes;
+using Windows.Networking.PushNotifications;
 
 namespace TinyTinyRSS
 {
@@ -33,7 +34,6 @@ namespace TinyTinyRSS
     {
         ApplicationBarIconButton applyAppBarButton;
         ApplicationBarIconButton cancelAppBarButton;
-        public const String SERVERURL = "https://thescientist.eu/ttrss-api/api.php";
 
         bool unsavedSettings = false;
 
@@ -74,18 +74,6 @@ namespace TinyTinyRSS
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
-            switch (ConnectionSettings.getInstance().tileUpdateInterval)
-            {
-                case 1:
-                    Hour.IsChecked = true;
-                    break;
-                case 2:
-                    Dayly.IsChecked = true;
-                    break;
-                default:
-                    HalfHour.IsChecked = true;
-                    break;
-            }
             unsavedSettings = false;
         }
 
@@ -111,21 +99,21 @@ namespace TinyTinyRSS
 
         private void SaveAllSettings()
         {
-                ConnectionSettings.getInstance().username = UsernameField.Text;
-                ConnectionSettings.getInstance().server = ServerField.Text;
-                ConnectionSettings.getInstance().password = PasswdField.Password;
-                ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
-                ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-                ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
-                ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
-                if (NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack();
-                }
-                else
-                {
-                    NavigationService.Navigate(new Uri("/MainPage.xml"));
-                }
+            ConnectionSettings.getInstance().username = UsernameField.Text;
+            ConnectionSettings.getInstance().server = ServerField.Text;
+            ConnectionSettings.getInstance().password = PasswdField.Password;
+            ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+            ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
+            ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
+            ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+            else
+            {
+                NavigationService.Navigate(new Uri("/MainPage.xml"));
+            }
         }
 
         private async Task<bool> TestSettings()
@@ -197,7 +185,7 @@ namespace TinyTinyRSS
                     TestButton.Content = AppResources.TestConnectionSettingsButton;
                 }
                 unsavedSettings = true;
-            } 
+            }
         }
 
         private void AboutSendButton_Click(object sender, RoutedEventArgs e)
@@ -259,51 +247,13 @@ namespace TinyTinyRSS
             {
                 if (await TestSettings())
                 {
-                    var values = new List<KeyValuePair<string, string>>
+                    if (await PushNotificationHelper.AddNotificationChannel(UsernameField.Text, PasswdField.Password, ServerField.Text))
                     {
-                        new KeyValuePair<string, string>("action", "updateUser"),
-                        new KeyValuePair<string, string>("deviceId", deviceId),
-                        new KeyValuePair<string, string>("loginName", UsernameField.Text),
-                        new KeyValuePair<string, string>("loginPassword", PasswdField.Password),
-                        new KeyValuePair<string, string>("server", ServerField.Text)
-                    };
-                    try
-                    {
-                        var httpClient = new HttpClient(new System.Net.Http.HttpClientHandler());
-                        HttpResponseMessage response = await httpClient.PostAsync(SERVERURL, new FormUrlEncodedContent(values));
-                        response.EnsureSuccessStatusCode();
-                        var responseString = await response.Content.ReadAsStringAsync();
-                        if (!responseString.Equals("1"))
-                        {
-                            MessageBox.Show(AppResources.ErrorAddLiveTile);
-                            Logger.WriteLine(responseString);
-                            LiveTileCheckbox.IsChecked = false;
-                        }
-                        else
-                        {
-                            ConnectionSettings.getInstance().liveTileActive = true;
-                            PeriodicUpdateRecurrence recurrence;
-                            if (Dayly.IsChecked.HasValue && Dayly.IsChecked.Value)
-                            {
-                                recurrence = PeriodicUpdateRecurrence.Daily;
-                            }
-                            else if (HalfHour.IsChecked.HasValue && HalfHour.IsChecked.Value)
-                            {
-                                recurrence = PeriodicUpdateRecurrence.HalfHour;
-                            }
-                            else
-                            {
-                                recurrence = PeriodicUpdateRecurrence.Hour;
-                            }
-                            await Helper.UpdateLiveTile();
-                            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + deviceIdEscaped);
-                            BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
-                        }
+                        ConnectionSettings.getInstance().liveTileActive = true;
+                        await PushNotificationHelper.UpdateLiveTile();                        
                     }
-                    catch (HttpRequestException ex)
+                    else
                     {
-                        MessageBox.Show(AppResources.ErrorAddLiveTile);
-                        Logger.WriteLine(ex.Message);
                         LiveTileCheckbox.IsChecked = false;
                     }
                 }
@@ -320,7 +270,7 @@ namespace TinyTinyRSS
                     try
                     {
                         var httpClient = new HttpClient(new System.Net.Http.HttpClientHandler());
-                        HttpResponseMessage response = await httpClient.GetAsync(SERVERURL + "?action=deleteUser&deviceId=" + deviceIdEscaped);
+                        HttpResponseMessage response = await httpClient.GetAsync(PushNotificationHelper.SERVERURL + "?action=deleteUser&deviceId=" + deviceIdEscaped);
                         response.EnsureSuccessStatusCode();
                         var responseString = await response.Content.ReadAsStringAsync();
                         if (!responseString.Equals("1"))
@@ -334,37 +284,11 @@ namespace TinyTinyRSS
                         Logger.WriteLine("error deleting livetile user");
                         Logger.WriteLine(ex.Message);
                     }
-                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
-                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().StopPeriodicUpdate();
+                    await PushNotificationHelper.ClosePushNotifications();
+                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
                     ConnectionSettings.getInstance().liveTileActive = false;
                 }
             }
-        }
-
-        private async void UpdateInterval_Click(object sender, RoutedEventArgs e)
-        {
-            string deviceId = HostInformation.PublisherHostId;
-            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
-            PeriodicUpdateRecurrence recurrence;
-            if (sender == Dayly)
-            {
-                ConnectionSettings.getInstance().tileUpdateInterval = 2;
-                recurrence = PeriodicUpdateRecurrence.Daily;
-            }
-            else if (sender == HalfHour)
-            {
-                ConnectionSettings.getInstance().tileUpdateInterval = 0;
-                recurrence = PeriodicUpdateRecurrence.HalfHour;
-            }
-            else
-            {
-                ConnectionSettings.getInstance().tileUpdateInterval = 1;
-                recurrence = PeriodicUpdateRecurrence.Hour;
-            }
-            await Helper.UpdateLiveTile();                            
-            System.Uri url = new System.Uri(SERVERURL + "?action=getUnreadCount&deviceId=" + deviceIdEscaped);            
-            BadgeUpdateManager.CreateBadgeUpdaterForApplication().StartPeriodicUpdate(url, recurrence);
-
         }
 
         protected override void OnBackKeyPress(CancelEventArgs e)
@@ -377,7 +301,7 @@ namespace TinyTinyRSS
                 {
                     SaveAllSettings();
                 }
-            }            
+            }
         }
 
         /// <summary>

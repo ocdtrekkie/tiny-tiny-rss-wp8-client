@@ -105,7 +105,6 @@ namespace TinyTinyRSS
             }
             // Initial login
             await loginTask;
-            await Helper.UpdateLiveTile();
         }
 
         /// <summary>

@@ -20,6 +20,7 @@ namespace TinyTinyRSSInterface
         public static string _progressBarAsCounterKey = "ProgressAsCntr";
         public static string _liveTileActivatedKey = "LiveTileActive";
         public static string _liveTileUpdateIntervalKey = "LiveTileUpdateInterval";
+        public static string _channelUriKey = "LiveTileUpdateChannel";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -32,6 +33,7 @@ namespace TinyTinyRSSInterface
         private string _progressAsCntr;
         private string _liveTileActivated;
         private string _liveTileUpdateInterval;
+        private string _liveTileChannelUri;
 
         private ConnectionSettings()
         {
@@ -226,6 +228,23 @@ namespace TinyTinyRSSInterface
             {
                 SaveSetting(_liveTileUpdateIntervalKey, value.ToString());
                 _liveTileUpdateInterval = value.ToString();
+            }
+        }
+
+        public string channelUri
+        {
+            get
+            {
+                if (_liveTileChannelUri == null)
+                {
+                    _liveTileChannelUri = ReadSetting(_channelUriKey);
+                }
+                return _liveTileChannelUri;
+            }
+            set
+            {
+                SaveSetting(_channelUriKey, value);
+                _liveTileChannelUri = value;
             }
         }
 

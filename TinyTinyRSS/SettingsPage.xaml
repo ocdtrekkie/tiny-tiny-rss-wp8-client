@@ -92,16 +92,6 @@
                      <CheckBox x:Name="LiveTileCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="LiveTileCheckbox_Click">
                       <TextBlock Text="{Binding LocalizedResources.SettingsActivateLiveTile, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     </CheckBox>
-                    <TextBlock x:Name="UpdatePeriod" Text="{Binding LocalizedResources.SettingsTileUpdatePeriod, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" FontSize="24"/>
-                    <RadioButton GroupName="UpdateInterval" Name="HalfHour" IsChecked="true" IsEnabled="{Binding ElementName=LiveTileCheckbox, Path=IsChecked}" Click="UpdateInterval_Click">
-                        <TextBlock Text="{Binding LocalizedResources.SettingsUpdateHalfHour, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
-                    </RadioButton>
-                    <RadioButton GroupName="UpdateInterval" Name="Hour" IsEnabled="{Binding ElementName=LiveTileCheckbox, Path=IsChecked}" Click="UpdateInterval_Click">
-                        <TextBlock Text="{Binding LocalizedResources.SettingsUpdateHour, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
-                    </RadioButton>
-                    <RadioButton GroupName="UpdateInterval" Name="Dayly" IsEnabled="{Binding ElementName=LiveTileCheckbox, Path=IsChecked}" Click="UpdateInterval_Click">
-                        <TextBlock Text="{Binding LocalizedResources.SettingsUpdateDay, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" Width="349"/>
-                    </RadioButton>
                 </StackPanel>
             </phone:PivotItem>
             <phone:PivotItem x:Name="AboutPivot">

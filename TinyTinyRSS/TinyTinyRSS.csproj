@@ -108,6 +108,7 @@
     <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\KeyedList.cs" />
     <Compile Include="Classes\Converter.cs" />
+    <Compile Include="Classes\PushNotificationHelper.cs" />
     <Compile Include="Classes\WebBrowserHelper.cs" />
     <Compile Include="Classes\ResolutionHelper.cs" />
     <Compile Include="Classes\WrappedArticle.cs" />

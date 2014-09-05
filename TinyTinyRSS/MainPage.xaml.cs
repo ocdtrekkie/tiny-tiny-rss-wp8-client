@@ -61,6 +61,7 @@ namespace TinyTinyRSS
                     await TtRssInterface.getInterface().getCounters();
                     await UpdateSpecialFeeds();
                     await UpdateAllFeedsList(true);
+                    await PushNotificationHelper.UpdateNotificationChannel();
                 }
                 else
                 {
@@ -242,6 +243,7 @@ namespace TinyTinyRSS
                 if (unread != 0)
                 {
                     Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
+                    await PushNotificationHelper.UpdateLiveTile();
                 }
                 else
                 {
