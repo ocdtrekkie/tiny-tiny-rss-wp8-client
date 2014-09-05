@@ -172,6 +172,10 @@ namespace TinyTinyRSS
                     }
                     max = await TtRssInterface.getInterface().getCountForFeed(force, feedId);
                 }
+                if (ArticlesCollection.Count > max)
+                {
+                    max = ArticlesCollection.Count;
+                }
                 Counter.Text = actual + "/" + max;
                 Scrollbar.Maximum = max;
             }
@@ -372,6 +376,7 @@ namespace TinyTinyRSS
             if (sender == openExtAppBarButton)
             {
                 WebBrowserTask wbt = new WebBrowserTask();
+                // TODO Fix nullReferenceException/ArgumentOutOfRangeExc.
                 wbt.Uri = new Uri(ArticlesCollection[_selectedIndex].Article.link);
                 wbt.Show();
             }
@@ -427,7 +432,7 @@ namespace TinyTinyRSS
                     }
                     else
                     {
-                        NavigationService.Navigate(new Uri("/MainPage.xml"));
+                        NavigationService.Navigate(new Uri("/MainPage.xaml"));
                     }
                 }
                 else
@@ -490,11 +495,7 @@ namespace TinyTinyRSS
                 catch (TtRssException ex)
                 {
                     checkException(ex);
-                }
-                //catch (OutOfMemoryException oome)
-                //{
-                //    Logger.WriteLine(oome);
-                //}                    
+                }              
                 finally
                 {
                     _moreArticlesLoading = false;

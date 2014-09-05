@@ -328,7 +328,7 @@ namespace TinyTinyRSS.Interface
                     string getFeeds = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getFeeds\",\"cat_id\":-3,\"unread_only\":false}";
                     ResponseArray response = await SendRequestArrayAsync(null, getFeeds);
                     List<Feed> feeds = ParseContentOrError<Feed>(response);
-                    feeds.ForEach(x => FeedDictionary.Add(x.id, x));
+                    feeds.ForEach(x => FeedDictionary[x.id] = x);
                 }
                 catch (TtRssException e)
                 {
