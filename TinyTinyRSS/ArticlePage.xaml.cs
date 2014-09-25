@@ -75,6 +75,7 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
+            ApplicationBar.IsVisible = false;
             if (ArticlesCollection.Count <= _selectedIndex)
             {
                 return;
@@ -197,6 +198,7 @@ namespace TinyTinyRSS
 
         private void UpdateLocalizedApplicationBar(Article article)
         {
+            ApplicationBar.IsVisible = true;
             if (article.unread)
             {
                 toogleReadAppBarButton.IconUri = new Uri("/Assets/AppBar/mail-read.png", UriKind.Relative);
