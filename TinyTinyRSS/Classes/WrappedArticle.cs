@@ -20,8 +20,9 @@ namespace TinyTinyRSS.Classes
 
         public async Task<Article> getContent()
         {
-            if(Article==null) {
-            Article = await TtRssInterface.getInterface().getArticle(Headline.id, false);
+            if(Article==null) 
+            {
+                Article = await TtRssInterface.getInterface().getArticle(Headline.id, false);
             }
             return Article;
         }
