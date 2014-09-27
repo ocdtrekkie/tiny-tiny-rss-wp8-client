@@ -75,7 +75,6 @@ namespace TinyTinyRSS
 
         private async void PivotControl_LoadingPivotItem(object sender, PivotItemEventArgs e)
         {
-            ApplicationBar.IsVisible = false;
             if (ArticlesCollection.Count <= _selectedIndex)
             {
                 return;
@@ -198,7 +197,6 @@ namespace TinyTinyRSS
 
         private void UpdateLocalizedApplicationBar(Article article)
         {
-            ApplicationBar.IsVisible = true;
             if (article.unread)
             {
                 toogleReadAppBarButton.IconUri = new Uri("/Assets/AppBar/mail-read.png", UriKind.Relative);
@@ -367,7 +365,10 @@ namespace TinyTinyRSS
                 if (success)
                 {
                     ArticlesCollection[selectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id, true);
-                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    if (selectedIndex == _selectedIndex)
+                    {
+                        UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    }
                 }
             }
             catch (TtRssException ex)
