@@ -250,7 +250,6 @@ namespace TinyTinyRSS
                     if (await PushNotificationHelper.AddNotificationChannel(UsernameField.Text, PasswdField.Password, ServerField.Text))
                     {
                         ConnectionSettings.getInstance().liveTileActive = true;
-                        await PushNotificationHelper.UpdateLiveTile();                        
                     }
                     else
                     {
@@ -267,10 +266,16 @@ namespace TinyTinyRSS
             {
                 if (ConnectionSettings.getInstance().liveTileActive == true)
                 {
+                    var values = new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("action", "deleteUser"),
+                        new KeyValuePair<string, string>("deviceId", deviceIdEscaped),
+                        new KeyValuePair<string, string>("hash", PushNotificationHelper.HASH)
+                    };
                     try
                     {
                         var httpClient = new HttpClient(new System.Net.Http.HttpClientHandler());
-                        HttpResponseMessage response = await httpClient.GetAsync(PushNotificationHelper.SERVERURL + "?action=deleteUser&deviceId=" + deviceIdEscaped);
+                        HttpResponseMessage response = await httpClient.PostAsync(PushNotificationHelper.SERVERURL, new FormUrlEncodedContent(values));
                         response.EnsureSuccessStatusCode();
                         var responseString = await response.Content.ReadAsStringAsync();
                         if (!responseString.Equals("1"))

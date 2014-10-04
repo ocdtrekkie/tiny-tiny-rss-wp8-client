@@ -168,21 +168,17 @@ namespace TinyTinyRSS
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
         private async void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
-            Task update = Helper.UpdateLiveTile();
             Logger.WriteLine("App suspended");
             FinalizeLogging(true);
             Logger.ClearLog();
-            await update;
         }
 
         // Code, der beim Schließen der Anwendung ausgeführt wird (z. B. wenn der Benutzer auf "Zurück" klickt)
         // Dieser Code wird beim Deaktivieren der Anwendung nicht ausgeführt
         private async void Application_Closing(object sender, ClosingEventArgs e)
         {
-            Task update = Helper.UpdateLiveTile();
             FinalizeLogging(false);
             Logger.ClearLog();
-            await update;
         }
 
         // Code, der bei einem Navigationsfehler ausgeführt wird

@@ -18,8 +18,8 @@ namespace TinyTinyRSS.Classes
 {
     public class PushNotificationHelper
     {
-        public const String SERVERURL = "https://thescientist.eu/ttrss-api/api.php";
-
+        public const String SERVERURL = "http://localhost/ttrss/api.php";
+        public const String HASH = "2u409g0hbinyv";
         public static async Task<bool> UpdateNotificationChannel()
         {
             if (!ConnectionSettings.getInstance().liveTileActive)
@@ -42,7 +42,8 @@ namespace TinyTinyRSS.Classes
                     {
                         new KeyValuePair<string, string>("action", "updateChannel"),
                         new KeyValuePair<string, string>("deviceId", deviceId),
-                        new KeyValuePair<string, string>("channel", channelEscaped)
+                        new KeyValuePair<string, string>("channel", channelEscaped),
+                        new KeyValuePair<string, string>("hash", HASH)
                     };
 
                 var httpClient = new HttpClient(new System.Net.Http.HttpClientHandler());
@@ -80,7 +81,8 @@ namespace TinyTinyRSS.Classes
                         new KeyValuePair<string, string>("loginName", user),
                         new KeyValuePair<string, string>("loginPassword", password),
                         new KeyValuePair<string, string>("server", server),
-                        new KeyValuePair<string, string>("channel", channelEscaped)
+                        new KeyValuePair<string, string>("channel", channelEscaped),
+                        new KeyValuePair<string, string>("hash", HASH)
                     };
                 try
                 {
@@ -108,21 +110,6 @@ namespace TinyTinyRSS.Classes
                 return false;
             }
             return true;
-        }
-
-        public static async Task UpdateLiveTile()
-        {
-            try
-            {
-                int unread = await TtRssInterface.getInterface().getUnReadCount(true);
-                BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent(Convert.ToUInt32(unread));
-                BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
-            }
-            catch (Exception exc)
-            {
-                Logger.WriteLine("Could not get actual unreadCount while activating live tile.");
-                Logger.WriteLine(exc.Message);
-            }
         }
 
         public static async Task ClosePushNotifications()
