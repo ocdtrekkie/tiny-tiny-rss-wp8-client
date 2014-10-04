@@ -55,6 +55,10 @@ namespace TinyTinyRSS.Classes
                     Logger.WriteLine("Could not update notific. channel" + responseString);
                     return false;
                 }
+                else
+                {
+                    ConnectionSettings.getInstance().channelUri = channel.Uri;
+                }
             }
             catch (Exception ex)
             {
@@ -96,6 +100,10 @@ namespace TinyTinyRSS.Classes
                         Logger.WriteLine(responseString);
                         return false;
                     }
+                    else
+                    {
+                        ConnectionSettings.getInstance().channelUri = channel.Uri;
+                    }
                 }
                 catch (HttpRequestException ex)
                 {
@@ -114,9 +122,10 @@ namespace TinyTinyRSS.Classes
 
         public static async Task ClosePushNotifications()
         {
-            try { 
-            PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-            channel.Close();
+            try {
+                PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+                channel.Close();
+                ConnectionSettings.getInstance().channelUri = "";
             }
             catch (Exception exc)
             {
