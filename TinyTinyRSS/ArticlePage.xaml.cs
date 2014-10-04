@@ -359,6 +359,7 @@ namespace TinyTinyRSS
             }
             try
             {
+                SetProgressBar(true);
                 List<int> idList = new List<int>();
                 idList.Add(current.id);
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
@@ -370,6 +371,7 @@ namespace TinyTinyRSS
                         UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
                     }
                 }
+                SetProgressBar(false);
             }
             catch (TtRssException ex)
             {
