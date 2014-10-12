@@ -296,7 +296,10 @@ namespace TinyTinyRSS
                 {
                     (from a in ArticlesCollection where a.Headline.unread select a).ToList().ForEach(a => a.Headline.unread = false);
                     (from a in ArticlesCollection where a.Article != null && a.Article.unread select a).ToList().ForEach(a => a.Article.unread = false);
-                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    if (_selectedIndex == selectedIndex)
+                    {
+                        UpdateLocalizedApplicationBar(current);
+                    }
                 }
                 SetProgressBar(false);
                 return;
@@ -356,14 +359,19 @@ namespace TinyTinyRSS
             }
             try
             {
+                SetProgressBar(true);
                 List<int> idList = new List<int>();
                 idList.Add(current.id);
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
                 if (success)
                 {
                     ArticlesCollection[selectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id, true);
-                    UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    if (selectedIndex == _selectedIndex)
+                    {
+                        UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    }
                 }
+                SetProgressBar(false);
             }
             catch (TtRssException ex)
             {
@@ -371,14 +379,24 @@ namespace TinyTinyRSS
             }
         }
 
-        private void openExt_Click(object sender, EventArgs e)
+        private async void openExt_Click(object sender, EventArgs e)
         {
             if (sender == openExtAppBarButton)
             {
-                WebBrowserTask wbt = new WebBrowserTask();
-                // TODO Fix nullReferenceException/ArgumentOutOfRangeExc.
-                wbt.Uri = new Uri(ArticlesCollection[_selectedIndex].Article.link);
-                wbt.Show();
+                WrappedArticle article = ArticlesCollection[_selectedIndex];
+                if (article.Article != null)
+                {
+                    WebBrowserTask wbt = new WebBrowserTask();
+                    wbt.Uri = new Uri(article.Article.link);
+                    wbt.Show();
+                }
+                else
+                {
+                    WebBrowserTask wbt = new WebBrowserTask();
+                    Article art = await article.getContent();
+                    wbt.Uri = new Uri(art.link);
+                    wbt.Show();
+                }
             }
         }
 
