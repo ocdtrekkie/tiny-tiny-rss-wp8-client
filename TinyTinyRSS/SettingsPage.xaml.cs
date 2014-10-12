@@ -242,7 +242,6 @@ namespace TinyTinyRSS
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
             string deviceId = HostInformation.PublisherHostId;
-            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
             if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
             {
                 if (await TestSettings())
@@ -269,7 +268,7 @@ namespace TinyTinyRSS
                     var values = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("action", "deleteUser"),
-                        new KeyValuePair<string, string>("deviceId", deviceIdEscaped),
+                        new KeyValuePair<string, string>("deviceId", deviceId),
                         new KeyValuePair<string, string>("hash", PushNotificationHelper.HASH)
                     };
                     try
@@ -296,6 +295,10 @@ namespace TinyTinyRSS
             }
         }
 
+        /// <summary>
+        /// Override OnBackKeyPress to warn about unsaved settings.
+        /// </summary>
+        /// <param name="e">Button Press arguments</param>
         protected override void OnBackKeyPress(CancelEventArgs e)
         {
             if (unsavedSettings)
@@ -307,6 +310,7 @@ namespace TinyTinyRSS
                     SaveAllSettings();
                 }
             }
+            base.OnBackKeyPress(e);
         }
 
         /// <summary>

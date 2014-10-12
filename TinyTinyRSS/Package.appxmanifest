@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="53af8abe-4123-4b08-82fc-82ac266a6a58" Publisher="CN=Stefan" Version="1.1.0.0" />
+  <Identity Name="41231TheScientist.TinyTinyRSSReader" Publisher="CN=43EC541E-A7AC-483F-936F-571289112EAB" Version="1.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="ad6373d0-14b8-4908-8a40-2208f047aeaf" PhonePublisherId="4b22ace6-b3ff-4b70-92b2-c4bcb07a0645" />
   <Properties>
     <DisplayName>TinyTinyRSS</DisplayName>
-    <PublisherDisplayName>Stefan</PublisherDisplayName>
+    <PublisherDisplayName>TheScientist</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
@@ -16,22 +16,10 @@
   </Resources>
   <Applications>
     <Application Id="xad6373d0y14b8y4908y8a40y2208f047aeafx" Executable="AGHost.exe" EntryPoint="MainPage.xaml">
-      <m3:VisualElements
-    DisplayName="Tiny Tiny RSS"
-    Description="Tiny Tiny RSS Client"
-    BackgroundColor="transparent"
-    ForegroundText="light"
-    ToastCapable="false"
-    Square150x150Logo="Assets\SquareTile150x150.png"
-    Square44x44Logo="Assets\Logo.png">
-
-        <m3:DefaultTile
-            Square71x71Logo="Assets\SquareTile71x71.png"
-            ShortName="Tiny Tiny RSS"
-            DefaultSize="square150x150Logo">
-
+      <m3:VisualElements DisplayName="Tiny Tiny RSS" Description="Tiny Tiny RSS Client" BackgroundColor="transparent" ForegroundText="light" ToastCapable="false" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png">
+        <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png" ShortName="Tiny Tiny RSS" DefaultSize="square150x150Logo">
           <m3:ShowNameOnTiles>
-            <m3:ShowOn Tile="square150x150Logo"/>
+            <m3:ShowOn Tile="square150x150Logo" />
           </m3:ShowNameOnTiles>
         </m3:DefaultTile>
       </m3:VisualElements>

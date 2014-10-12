@@ -18,7 +18,8 @@ namespace TinyTinyRSS.Classes
 {
     public class PushNotificationHelper
     {
-        public const String SERVERURL = "http://localhost/ttrss/api.php";
+        //public const String SERVERURL = "http://localhost/ttrss/api.php";
+        public const String SERVERURL = "https://thescientist.eu/ttrss-api/api.php";
         public const String HASH = "2u409g0hbinyv";
         public static async Task<bool> UpdateNotificationChannel()
         {
@@ -27,7 +28,6 @@ namespace TinyTinyRSS.Classes
                 return true;
             }
             string deviceId = HostInformation.PublisherHostId;
-            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
 
             PushNotificationChannel channel = null;
             try
@@ -37,12 +37,11 @@ namespace TinyTinyRSS.Classes
                 {
                     return true;
                 }
-                string channelEscaped = Uri.EscapeDataString(channel.Uri);
                 var values = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("action", "updateChannel"),
                         new KeyValuePair<string, string>("deviceId", deviceId),
-                        new KeyValuePair<string, string>("channel", channelEscaped),
+                        new KeyValuePair<string, string>("channel", channel.Uri),
                         new KeyValuePair<string, string>("hash", HASH)
                     };
 
@@ -71,13 +70,11 @@ namespace TinyTinyRSS.Classes
         public static async Task<bool> AddNotificationChannel(string user, string password, string server)
         {
             string deviceId = HostInformation.PublisherHostId;
-            string deviceIdEscaped = Uri.EscapeDataString(deviceId);
 
             PushNotificationChannel channel = null;
             try
             {
                 channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-                string channelEscaped = Uri.EscapeDataString(channel.Uri);
                 var values = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("action", "updateUser"),
@@ -85,7 +82,7 @@ namespace TinyTinyRSS.Classes
                         new KeyValuePair<string, string>("loginName", user),
                         new KeyValuePair<string, string>("loginPassword", password),
                         new KeyValuePair<string, string>("server", server),
-                        new KeyValuePair<string, string>("channel", channelEscaped),
+                        new KeyValuePair<string, string>("channel", channel.Uri),
                         new KeyValuePair<string, string>("hash", HASH)
                     };
                 try
