@@ -12,11 +12,11 @@
    height="200"
    id="RSSicon"
    viewBox="0 0 400.00001 400"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.5 r10040"
    sodipodi:docname="IconBase.svg"
-   inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\Tiles\IconicTileMediumLarge.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="C:\dev\tiny-tiny-rss-wp8-client\TinyTinyRSS\Assets\lockscreen.png"
+   inkscape:export-xdpi="10.799997"
+   inkscape:export-ydpi="10.799997">
   <metadata
      id="metadata3829">
     <rdf:RDF>
@@ -25,7 +25,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -38,14 +38,14 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1218"
-     inkscape:window-height="697"
+     inkscape:window-width="1920"
+     inkscape:window-height="1138"
      id="namedview3827"
      showgrid="false"
      inkscape:zoom="0.4700653"
      inkscape:cx="144.9379"
-     inkscape:cy="323.43003"
-     inkscape:window-x="54"
+     inkscape:cy="153.24091"
+     inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="RSSicon"
@@ -113,7 +113,7 @@
      sodipodi:nodetypes="cccccccccscccccccc" />
   <path
      style="fill:#ffffff;fill-opacity:1"
-     d="m 0,5.928779 0,78.814264 c 40.275316,0.0539 74.968431,2.35082 112.30693,17.434167 l 26.76654,0 11.89994,-51.955287 17.99992,-8.56663 C 114.98067,14.805834 60.311169,6.117459 0,5.928779 z m 229.70082,64.343044 -8.44996,31.905387 48.20533,0 C 256.91061,90.701963 243.62339,80.034223 229.70082,70.271823 z m 67.30523,59.271917 -5.47775,34.09428 -82.79961,0 -0.31666,0.93888 c 35.08797,29.41889 63.64264,61.01724 83.03293,102.47841 19.3903,41.46118 29.59373,87.17927 29.66653,132.94273 l 78.88852,0.002 c -0.0775,-48.45572 -9.19965,-102.43877 -26.76099,-147.60688 -17.56133,-45.1681 -43.55057,-87.04634 -76.23297,-122.84942 z"
+     d="m 0,3e-5 0,80.000014 c 40.275316,0.05471 74.968431,2.386188 112.30693,17.696462 l 26.76654,0 11.89994,-52.736948 17.99992,-8.695513 C 114.98067,9.0106391 60.311169,0.19154867 0,3e-5 z m 229.70082,65.311076 -8.44996,32.3854 48.20533,0 C 256.91061,86.048615 243.62339,75.22038 229.70082,65.311106 z m 67.30523,60.163654 -5.47775,34.60723 -82.79961,0 -0.31666,0.953 c 35.08797,29.86149 63.64264,61.93524 83.03293,104.02018 19.3903,42.08496 29.59373,88.49087 29.66653,134.94284 l 78.88852,0.002 c -0.0775,-49.18473 -9.19965,-103.97995 -26.76099,-149.82761 -17.56133,-45.84764 -43.55057,-88.35594 -76.23297,-124.69767 z"
      id="path3825"
      inkscape:connector-curvature="0"
      inkscape:export-filename="D:\Code\VisualStudio\Projekte\TinyTinyRSS\TinyTinyRSS\Assets\Tile.png"
