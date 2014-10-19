@@ -1,5 +1,6 @@
 ﻿using CaledosLab.Portable.Logging;
 using NotificationsExtensions.BadgeContent;
+using NotificationsExtensions.TileContent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -123,12 +124,34 @@ namespace TinyTinyRSS.Classes
                 PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
                 channel.Close();
                 ConnectionSettings.getInstance().channelUri = "";
+                TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
             }
             catch (Exception exc)
             {
                 Logger.WriteLine("Could not close pushnotificationchannel.");
                 Logger.WriteLine(exc.Message);
             }
+        }
+
+        public static async Task UpdateLiveTile(int fresh)
+        {
+            if (!ConnectionSettings.getInstance().liveTileActive)
+            {
+                return;
+            }
+            if (fresh == -1)
+            {
+                fresh = await TtRssInterface.getInterface().getUnReadCount(true);
+            }
+            ITileSquare150x150IconWithBadge tileContent = TileContentFactory.CreateTileSquare150x150IconWithBadge();
+
+            tileContent.ImageIcon.Src = "ms-appx:///Assets/LiveTile.png";
+            TileUpdateManager.CreateTileUpdaterForApplication().Update(tileContent.CreateNotification());
+
+            BadgeNumericNotificationContent badgeContent = new BadgeNumericNotificationContent((uint)fresh);
+            BadgeUpdateManager.CreateBadgeUpdaterForApplication().Update(badgeContent.CreateNotification());
+
         }
     }
 }

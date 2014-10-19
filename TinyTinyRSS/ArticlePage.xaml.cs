@@ -127,6 +127,7 @@ namespace TinyTinyRSS
                         article.unread = false;
                         item.Headline.unread = false;
                         UpdateLocalizedApplicationBar(article);
+                        Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
                 await LoadMoreHeadlines();
@@ -301,6 +302,7 @@ namespace TinyTinyRSS
                         UpdateLocalizedApplicationBar(current);
                     }
                 }
+                Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
                 SetProgressBar(false);
                 return;
             }

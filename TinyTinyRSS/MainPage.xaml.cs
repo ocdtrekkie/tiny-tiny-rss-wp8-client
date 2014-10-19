@@ -243,6 +243,7 @@ namespace TinyTinyRSS
                 if (unread != 0)
                 {
                     Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
+                    Task tsk = PushNotificationHelper.UpdateLiveTile(unread);
                 }
                 else
                 {

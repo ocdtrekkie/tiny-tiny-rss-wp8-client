@@ -55,15 +55,17 @@ class WPN{
         $this->access_token = $output->access_token;
     }
 
-    public function build_tile_xml($title, $img){
+    public function build_tile_xml(){
         return '<?xml version="1.0" encoding="utf-16"?>'.
         '<tile>'.
-          '<visual lang="en-US">'.
-            '<binding template="TileWideImageAndText01">'.
-              '<image id="1" src="'.$img.'"/>'.
-              '<text id="1">'.$title.'</text>'.
-            '</binding>'.
-          '</visual>'.
+            '<visual version="3">'.
+                //'<binding template="TileSquare71x71IconWithBadge">'.
+                 //   '<image id="1" src="ms-appx:///Assets/SquareTile71x71.png" />'.
+                //'</binding>'.
+                '<binding template="TileSquare150x150IconWithBadge">'.
+                    '<image id="1" src="ms-appx:///Assets/Tiles/IconicTileMediumLarge.png" />'.
+                '</binding>'.
+            '</visual>'.
         '</tile>';
     }
 
@@ -103,6 +105,7 @@ class WPN{
             return new WPNResponse('Expired or invalid URI', $code, true);
         }
         else{
+            error_log($code. ' - ' . $uri);
             return new WPNResponse('Unknown error while sending message', $code, true);
         }
     }
@@ -141,7 +144,6 @@ class WPN{
             return $this->post_tile($uri, $xml_data, $type);
         }
         else if($code == 410 || $code == 404){
-            // TODO set inactive
             return new WPNResponse('Expired or invalid URI', $code, true);
         }
         else{
@@ -234,12 +236,31 @@ class TtRssAPI {
         }
         /* fetch object array */
         while ($row = $result->fetch_object()) {
-            $deviceId = $row->deviceId;
+            $deviceId = $row->deviceId;         
             $cnt = $this->getUnreadCount($deviceId);
             // Call WNS
             $wns = new WPN();
-            $xml_data = $wns->build_badge_xml($cnt);
-            $response = $wns->post_badge($row->channel, $xml_data);
+            $xml_tile_data = $wns->build_tile_xml();
+            error_log('Send tile to '.$deviceId);
+            $responseTile = $wns->post_tile($row->channel, $xml_tile_data);
+            if($responseTile->error) { 
+                error_log($responseTile->message);
+                if($responseTile->httpCode == 410 || $responseTile->httpCode == 404) {
+                    $this->db->query("UPDATE users SET channelInactive=(1)"
+                    . "WHERE deviceId='$deviceId'");
+                }
+            } else {
+                $xml_data = $wns->build_badge_xml($cnt);
+                error_log('Send badge to '.$deviceId);
+                $response = $wns->post_badge($row->channel, $xml_data);
+                  if($response->error) { 
+                   error_log($response->message);
+                   if($response->httpCode == 410 || $response->httpCode == 404) {
+                       $this->db->query("UPDATE users SET channelInactive=(1)"
+                       . "WHERE deviceId='$deviceId'");
+                   }
+                } 
+            }
         }
         /* free result set */
         $result->close();
@@ -248,7 +269,7 @@ class TtRssAPI {
 $options = getopt("p:");
 if ($options["p"] != 'myHash') {
     echo "You are not allowed to run this script.";
-   return -1;
+    return -1;
 } else {
 $api = new TtRssAPI;
 $api->iterate();

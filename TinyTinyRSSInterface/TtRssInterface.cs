@@ -287,18 +287,14 @@ namespace TinyTinyRSS.Interface
 
         public async Task<bool> markAllArticlesRead(int feedId)
         {
-            try
-            {
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"skip\":" + 0 + ", \"view_mode\":\"unread\", \"feed_id\":" + (int)feedId + "}";
-                ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
-                List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
-                List<int> ids = headlines.Select(n => n.id).ToList<int>();
-                return await updateArticles(ids, UpdateField.Unread, UpdateMode.False);
-            }
-            catch (TtRssException e)
-            {
-                throw e;
-            }
+             string catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + "}";
+             Response status = await SendRequestAsync(null, catchUp);
+             if (status.content.ToString().Contains("OK"))
+             {
+                 return true;
+             }
+             return false;
+               
         }
 
         public Feed getFeedById(int? id)

@@ -173,14 +173,14 @@
     </Content>
     <Content Include="Assets\BadgeLogo.png" />
     <Content Include="Assets\FeedIcon.png" />
+    <Content Include="Assets\LiveTile.png" />
+    <Content Include="Assets\lockscreen.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\SquareTile150x150.png" />
     <Content Include="Assets\SquareTile71x71.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Tile.png" />
-    <Content Include="Assets\Tiles\IconicTileMediumLarge.png" />
-    <Content Include="Assets\Tiles\IconicTileSmall.png" />
     <Content Include="Assets\WideLogo.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
