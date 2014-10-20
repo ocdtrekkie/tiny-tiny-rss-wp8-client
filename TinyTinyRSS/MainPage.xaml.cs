@@ -236,14 +236,14 @@ namespace TinyTinyRSS
         private async Task<bool> UpdateSpecialFeeds()
         {
             // Counters
-            // Unread
             try
             {
-                int unread = await TtRssInterface.getInterface().getUnReadCount(true);
+                // Unread
+				int unread = await TtRssInterface.getInterface().getUnReadCount(true);
+                Task tsk = PushNotificationHelper.UpdateLiveTile(unread);
                 if (unread != 0)
                 {
                     Fresh.Text = AppResources.FreshFeeds + Environment.NewLine + "(" + unread + ")";
-                    Task tsk = PushNotificationHelper.UpdateLiveTile(unread);
                 }
                 else
                 {
