@@ -288,8 +288,9 @@ namespace TinyTinyRSS
                         Logger.WriteLine("error deleting livetile user");
                         Logger.WriteLine(ex.Message);
                     }
-                    await PushNotificationHelper.ClosePushNotifications();
+                    Task t = PushNotificationHelper.ClosePushNotifications();
                     TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
                     ConnectionSettings.getInstance().liveTileActive = false;
                 }
             }
