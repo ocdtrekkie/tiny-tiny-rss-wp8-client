@@ -380,4 +380,12 @@
     <value>Du hast ungespeicherte Änderungen.</value>
     <comment>Messageboxtext for unsaved settings</comment>
   </data>
+  <data name="SettingsLiveTileInfo" xml:space="preserve">
+    <value>Bei aktiviertem Live Tile wird auf der Startseite die Zahl neuer ungelesener Artikel angezeigt. In den Einstellungen für den Sperrbildschirm kann die App auch dafür aktviert werden.</value>
+    <comment>Info about live tile</comment>
+  </data>
+  <data name="SettingsLiveTileLockScreenLink" xml:space="preserve">
+    <value>Sperrbildschirm Einstellungen</value>
+    <comment>Link to lockscreen settings</comment>
+  </data>
 </root>

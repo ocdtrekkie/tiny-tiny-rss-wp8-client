@@ -124,10 +124,11 @@ namespace TinyTinyRSS
                     bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
                     if (success)
                     {
+                        Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
                         article.unread = false;
                         item.Headline.unread = false;
                         UpdateLocalizedApplicationBar(article);
-                        Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                        await tsk;
                     }
                 }
                 await LoadMoreHeadlines();
@@ -167,18 +168,22 @@ namespace TinyTinyRSS
                 }
                 else
                 {
-                    if (feedId == (int)FeedId.RecentlyRead)
+                    int ifOfFeed = feedId;
+                    if (ifOfFeed == (int)FeedId.RecentlyRead)
                     {
-                        feedId = (int)FeedId.All;
+                        ifOfFeed = (int)FeedId.All;
                     }
-                    max = await TtRssInterface.getInterface().getCountForFeed(force, feedId);
+                    max = await TtRssInterface.getInterface().getCountForFeed(force, ifOfFeed);
                 }
                 if (ArticlesCollection.Count > max)
                 {
                     max = ArticlesCollection.Count;
                 }
-                Counter.Text = actual + "/" + max;
-                Scrollbar.Maximum = max;
+                if (Scrollbar.Maximum < max || force)
+                {
+                    Scrollbar.Maximum = max;
+                }
+                Counter.Text = actual + "/" + Scrollbar.Maximum;
             }
             else
             {
@@ -304,6 +309,7 @@ namespace TinyTinyRSS
                 }
                 Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
                 SetProgressBar(false);
+                await tsk;
                 return;
             }
             else if (sender == showUnreadOnlyAppBarMenu)
@@ -371,6 +377,10 @@ namespace TinyTinyRSS
                     if (selectedIndex == _selectedIndex)
                     {
                         UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
+                    }
+                    if (sender == toogleReadAppBarButton)
+                    {
+                        await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
                 SetProgressBar(false);
