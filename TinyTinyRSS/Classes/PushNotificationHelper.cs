@@ -22,6 +22,7 @@ namespace TinyTinyRSS.Classes
         //public const String SERVERURL = "http://localhost/ttrss/api.php";
         public const String SERVERURL = "https://thescientist.eu/ttrss-api/api.php";
         public const String HASH = "2u409g0hbinyv";
+		
         public static async Task<bool> UpdateNotificationChannel()
         {
             if (!ConnectionSettings.getInstance().liveTileActive)

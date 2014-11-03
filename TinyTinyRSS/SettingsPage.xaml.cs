@@ -31,38 +31,16 @@ using Windows.Networking.PushNotifications;
 namespace TinyTinyRSS
 {
     public partial class SettingsPage : PhoneApplicationPage
-    {
-        ApplicationBarIconButton applyAppBarButton;
-        ApplicationBarIconButton cancelAppBarButton;
-
-        bool unsavedSettings = false;
-
+    {       
         public SettingsPage()
         {
             InitializeComponent();
-            BuildLocalizedApplicationBar();
             SetFields();
             this.AppVersion.Text = AppResources.SettingsAboutVersion + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             this.AppAuthor.Text = AppResources.SettingsAboutAuthor + "Stefan Prasse";
         }
 
-        private void BuildLocalizedApplicationBar()
-        {
-            // ApplicationBar der Seite einer neuen Instanz von ApplicationBar zuweisen
-            ApplicationBar = new ApplicationBar();
-
-            // Eine neue Schaltfläche erstellen und als Text die lokalisierte Zeichenfolge aus AppResources zuweisen.
-            applyAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/check.png", UriKind.Relative));
-            applyAppBarButton.Text = AppResources.SaveAppBarButtonText;
-            applyAppBarButton.Click += AppBarButton_Click;
-            ApplicationBar.Buttons.Add(applyAppBarButton);
-
-            cancelAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/cancel.png", UriKind.Relative));
-            cancelAppBarButton.Text = AppResources.CancelAppBarButtonText;
-            cancelAppBarButton.Click += AppBarButton_Click;
-            ApplicationBar.Buttons.Add(cancelAppBarButton);
-        }
-
+		// init settings from saved values.
         private void SetFields()
         {
             UsernameField.Text = ConnectionSettings.getInstance().username;
@@ -74,48 +52,9 @@ namespace TinyTinyRSS
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
-            unsavedSettings = false;
         }
-
-        private void AppBarButton_Click(object sender, EventArgs e)
-        {
-            unsavedSettings = false;
-            if (sender.Equals(applyAppBarButton))
-            {
-                SaveAllSettings();
-            }
-            else if (sender.Equals(cancelAppBarButton))
-            {
-                if (NavigationService.CanGoBack)
-                {
-                    NavigationService.GoBack(); // Reload Page!?                    
-                }
-                else
-                {
-                    NavigationService.Navigate(new Uri("/MainPage.xml"));
-                }
-            }
-        }
-
-        private void SaveAllSettings()
-        {
-            ConnectionSettings.getInstance().username = UsernameField.Text;
-            ConnectionSettings.getInstance().server = ServerField.Text;
-            ConnectionSettings.getInstance().password = PasswdField.Password;
-            ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
-            ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-            ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
-            ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
-            if (NavigationService.CanGoBack)
-            {
-                NavigationService.GoBack();
-            }
-            else
-            {
-                NavigationService.Navigate(new Uri("/MainPage.xml"));
-            }
-        }
-
+		
+		// Test and save connection settings.        
         private async Task<bool> TestSettings()
         {
             MyProgressbar.Visibility = Visibility.Visible;
@@ -141,10 +80,16 @@ namespace TinyTinyRSS
             string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
             if (error.Length == 0)
             {
+				ConnectionSettings.getInstance().username = UsernameField.Text;
+				ConnectionSettings.getInstance().server = ServerField.Text;
+				ConnectionSettings.getInstance().password = PasswdField.Password;
+				Task tsk = PushNotificationHelper.AddNotificationChannel(ConnectionSettings.getInstance().username, ConnectionSettings.getInstance().password, ConnectionSettings.getInstance().server);
                 TestButton.Content = AppResources.SuccessfulConnection;
                 ErrorMessage.Text = "";
+				await tsk;
+				// TODO MessageBox bei Fehler.
                 MyProgressbar.Visibility = Visibility.Collapsed;
-                MyProgressbar.IsIndeterminate = false;
+                MyProgressbar.IsIndeterminate = false;				
                 return true;
             }
             else
@@ -157,15 +102,16 @@ namespace TinyTinyRSS
             }
         }
 
+		// Listener for changes on connection settings input fields.
         private void ConnectionSettingsChanged(object sender, TextChangedEventArgs e)
         {
             if (!TestButton.Content.Equals(AppResources.TestConnectionSettingsButton))
             {
                 TestButton.Content = AppResources.TestConnectionSettingsButton;
             }
-            unsavedSettings = true;
         }
 
+		// Test and save connection settings.
         private async void TestButtonClicked(object sender, RoutedEventArgs e)
         {
             await TestSettings();
@@ -176,6 +122,8 @@ namespace TinyTinyRSS
             base.OnNavigatedTo(e);
             Logger.WriteLine("NavigatedTo Settings.");
         }
+		
+		// Password changed listener
         private void PasswdField_PasswordChanged(object sender, SizeChangedEventArgs e)
         {
             if (!PasswdField.Password.Equals(ConnectionSettings.getInstance().password))
@@ -184,15 +132,14 @@ namespace TinyTinyRSS
                 {
                     TestButton.Content = AppResources.TestConnectionSettingsButton;
                 }
-                unsavedSettings = true;
             }
         }
 
+		// Send mail
         private void AboutSendButton_Click(object sender, RoutedEventArgs e)
         {
             Logger.WriteLine("Begin Send via email");
             string Subject = "TT-RSS WP8 App Feedback";
-
             try
             {
                 EmailComposeTask mail = new EmailComposeTask();
@@ -239,6 +186,7 @@ namespace TinyTinyRSS
             Logger.WriteLine("End Send via email");
         }
 
+		// Live tile activated/deactivated
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
             string deviceId = HostInformation.PublisherHostId;
@@ -296,24 +244,6 @@ namespace TinyTinyRSS
         }
 
         /// <summary>
-        /// Override OnBackKeyPress to warn about unsaved settings.
-        /// </summary>
-        /// <param name="e">Button Press arguments</param>
-        protected override void OnBackKeyPress(CancelEventArgs e)
-        {
-            if (unsavedSettings)
-            {
-                unsavedSettings = false;
-                if (MessageBox.Show(AppResources.UnsavedSettings, AppResources.SaveUnsavedSettings,
-                                    MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-                {
-                    SaveAllSettings();
-                }
-            }
-            base.OnBackKeyPress(e);
-        }
-
-        /// <summary>
         /// Button listener that opens the webpage of this project.
         /// </summary>
         /// <param name="sender">default method argument</param>
@@ -325,17 +255,22 @@ namespace TinyTinyRSS
             wbt.Show();
         }
 
+		// settings changed
         private void Changed(object sender, RoutedEventArgs e)
         {
-            unsavedSettings = true;
+			if(sender==MarkReadCheckbox) {
+				ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
+			} else if(sender==ShowUnreadOnlyCheckbox) {
+				ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
+			} else if(sender==ProgressAsCntrCheckbox) {
+				ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
+			}  
         }
 
+		// Sort options changed
         private void SelChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.AddedItems.Count != 0 || e.RemovedItems.Count != 0)
-            {
-                unsavedSettings = true;
-            }
+            ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
         }
     }
 }

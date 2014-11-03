@@ -165,8 +165,8 @@
     <comment>Text of Special Feed "Starred Articles"</comment>
   </data>
   <data name="TestConnectionSettingsButton" xml:space="preserve">
-    <value>Test Connection</value>
-    <comment>Text for Button to test connection in settings.</comment>
+    <value>Save Server Login</value>
+    <comment>Text for Button to save connection in settings.</comment>
   </data>
   <data name="FailedConnection" xml:space="preserve">
     <value>Connection Failed</value>
