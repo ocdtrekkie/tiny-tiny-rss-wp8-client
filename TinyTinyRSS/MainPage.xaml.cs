@@ -249,6 +249,7 @@ namespace TinyTinyRSS
                 {
                     Fresh.Text = AppResources.FreshFeeds;
                 }
+                await tsk;
                 // Starred
                 int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
                 if (starredCount != 0)

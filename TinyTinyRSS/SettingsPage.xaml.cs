@@ -43,7 +43,11 @@ namespace TinyTinyRSS
             BuildLocalizedApplicationBar();
             SetFields();
             this.AppVersion.Text = AppResources.SettingsAboutVersion + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            this.AppAuthor.Text = AppResources.SettingsAboutAuthor + "Stefan Prasse";
+            this.AppAuthor.Text = AppResources.SettingsAboutAuthor + "Stefan Prasse"; 
+            if (SystemTray.GetProgressIndicator(this) == null)
+            {
+                SystemTray.SetProgressIndicator(this, new ProgressIndicator());
+            }
         }
 
         private void BuildLocalizedApplicationBar()
@@ -241,6 +245,8 @@ namespace TinyTinyRSS
 
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
+            SystemTray.ProgressIndicator.IsVisible = true;
+            SystemTray.ProgressIndicator.IsIndeterminate = true; 
             string deviceId = HostInformation.PublisherHostId;
             if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
             {
@@ -249,10 +255,12 @@ namespace TinyTinyRSS
                     if (await PushNotificationHelper.AddNotificationChannel(UsernameField.Text, PasswdField.Password, ServerField.Text))
                     {
                         ConnectionSettings.getInstance().liveTileActive = true;
+                        await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                     else
                     {
                         LiveTileCheckbox.IsChecked = false;
+                        MessageBox.Show(AppResources.ErrorAddLiveTile);
                     }
                 }
                 else
@@ -265,6 +273,10 @@ namespace TinyTinyRSS
             {
                 if (ConnectionSettings.getInstance().liveTileActive == true)
                 {
+                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
+                    ConnectionSettings.getInstance().liveTileActive = false;
+                    Task t = PushNotificationHelper.ClosePushNotifications();
                     var values = new List<KeyValuePair<string, string>>
                     {
                         new KeyValuePair<string, string>("action", "deleteUser"),
@@ -288,12 +300,11 @@ namespace TinyTinyRSS
                         Logger.WriteLine("error deleting livetile user");
                         Logger.WriteLine(ex.Message);
                     }
-                    Task t = PushNotificationHelper.ClosePushNotifications();
-                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
-                    ConnectionSettings.getInstance().liveTileActive = false;
+                    await t;
                 }
             }
+            SystemTray.ProgressIndicator.IsVisible = false;
+            SystemTray.ProgressIndicator.IsIndeterminate = false;
         }
 
         /// <summary>
@@ -337,6 +348,12 @@ namespace TinyTinyRSS
             {
                 unsavedSettings = true;
             }
+        }
+
+        private async void btnGoToLockSettings_Click(object sender, RoutedEventArgs e)
+        {
+            // Launch URI for the lock screen settings screen.
+            await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings-lock:"));
         }
     }
 }

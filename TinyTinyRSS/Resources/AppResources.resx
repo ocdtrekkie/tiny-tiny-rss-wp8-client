@@ -367,9 +367,9 @@
     <value>Every Hour</value>
   </data>
   <data name="ErrorAddLiveTile" xml:space="preserve">
-    <value>Error activating live tile. Contact the developer, if this error happens always.</value>
+    <value>Error activating live tile. Contact the developer, if this error happens more often.</value>
     <comment>Message to show when live tile activation fails.</comment>
-    </data>
+  </data>
   <data name="SettingsAboutButtonProjectWeb" xml:space="preserve">
     <value>Project Website</value>
     <comment>Label for button that links to the project website</comment>
@@ -381,5 +381,13 @@
   <data name="UnsavedSettings" xml:space="preserve">
     <value>You've made changes the haven't been saved.</value>
     <comment>Messageboxtext for unsaved settings</comment>
+  </data>
+  <data name="SettingsLiveTileInfo" xml:space="preserve">
+    <value>When you've activated the live tile, the tile displays the count of new unread articles. This count can also be shown on your lockscreen. Simply choose the app from the lockscreen settings.</value>
+    <comment>Info about live tile</comment>
+  </data>
+  <data name="SettingsLiveTileLockScreenLink" xml:space="preserve">
+    <value>lockscreen settings</value>
+    <comment>Link to lockscreen settings</comment>
   </data>
 </root>

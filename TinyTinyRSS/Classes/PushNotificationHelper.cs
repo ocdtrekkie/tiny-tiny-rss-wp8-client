@@ -94,28 +94,26 @@ namespace TinyTinyRSS.Classes
                     var responseString = await response.Content.ReadAsStringAsync();
                     if (!responseString.Equals("1"))
                     {
-                        MessageBox.Show(AppResources.ErrorAddLiveTile);
                         Logger.WriteLine(responseString);
                         return false;
                     }
                     else
                     {
                         ConnectionSettings.getInstance().channelUri = channel.Uri;
+                        return true;
                     }
                 }
                 catch (HttpRequestException ex)
                 {
-                    MessageBox.Show(AppResources.ErrorAddLiveTile);
                     Logger.WriteLine(ex.Message);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Logger.WriteLine(ex.Message);
+               Logger.WriteLine(ex.Message);
                 return false;
             }
-            return true;
         }
 
         public static async Task ClosePushNotifications()

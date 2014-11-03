@@ -92,6 +92,8 @@
                      <CheckBox x:Name="LiveTileCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="LiveTileCheckbox_Click">
                       <TextBlock Text="{Binding LocalizedResources.SettingsActivateLiveTile, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
                     </CheckBox>
+                    <TextBlock x:Name="LiveTileInfoText" Text="{Binding LocalizedResources.SettingsLiveTileInfo, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap"/>
+                    <Button x:Name="goToLockscreen" Content="{Binding LocalizedResources.SettingsLiveTileLockScreenLink, Source={StaticResource LocalizedStrings}}" Click="btnGoToLockSettings_Click"  />
                 </StackPanel>
             </phone:PivotItem>
             <phone:PivotItem x:Name="AboutPivot">

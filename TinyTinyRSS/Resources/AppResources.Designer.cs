@@ -124,7 +124,7 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error activating live tile. Contact the developer, if this error happens always..
+        ///   Looks up a localized string similar to Error activating live tile. Contact the developer, if this error happens more often..
         /// </summary>
         public static string ErrorAddLiveTile {
             get {
@@ -435,6 +435,24 @@ namespace TinyTinyRSS.Resources {
         public static string SettingsLiveTile {
             get {
                 return ResourceManager.GetString("SettingsLiveTile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When you&apos;ve activated the live tile, the tile displays the count of new unread articles. This count can also be shown on your lockscreen. Simply choose the app from the lockscreen settings..
+        /// </summary>
+        public static string SettingsLiveTileInfo {
+            get {
+                return ResourceManager.GetString("SettingsLiveTileInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to lockscreen settings.
+        /// </summary>
+        public static string SettingsLiveTileLockScreenLink {
+            get {
+                return ResourceManager.GetString("SettingsLiveTileLockScreenLink", resourceCulture);
             }
         }
         
