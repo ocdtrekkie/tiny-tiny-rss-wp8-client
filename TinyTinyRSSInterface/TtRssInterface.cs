@@ -360,11 +360,17 @@ namespace TinyTinyRSS.Interface
 
         public async Task<Response> SendRequestAsync(string server, string requestUrl)
         {
+            return await SendRequestAsync(server, requestUrl, false);
+        }
+
+        public async Task<Response> SendRequestAsync(string server, string requestUrl, bool second)
+        {
             if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
             {
                 await Login(false);
             }
             requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
+            bool retry = false;
             try
             {
                 if (server == null)
@@ -401,9 +407,21 @@ namespace TinyTinyRSS.Interface
                     }
                 }
             }
-            catch (Exception e)
+            catch (WebException ex)
             {
-                throw new TtRssException(e.Message, e);
+                if (!second)
+                {
+                    retry = true;
+                }
+            }
+            if (retry)
+            {
+                return await SendRequestAsync(server, requestUrl, true);
+            }
+            else
+            {
+                Logger.WriteLine("Exception twice in SendRequestAsync.");
+                return null;
             }
         }
 
@@ -466,6 +484,13 @@ namespace TinyTinyRSS.Interface
                 }
             }
             catch (NullReferenceException ex)
+            {
+                if (!second)
+                {
+                    retry = true;
+                }
+            }
+            catch (WebException ex)
             {
                 if (!second)
                 {

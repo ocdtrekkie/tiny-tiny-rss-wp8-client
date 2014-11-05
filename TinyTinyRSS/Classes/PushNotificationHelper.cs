@@ -71,6 +71,10 @@ namespace TinyTinyRSS.Classes
 
         public static async Task<bool> AddNotificationChannel(string user, string password, string server)
         {
+            if (!ConnectionSettings.getInstance().liveTileActive)
+            {
+                return true;
+            }
             string deviceId = HostInformation.PublisherHostId;
 
             PushNotificationChannel channel = null;

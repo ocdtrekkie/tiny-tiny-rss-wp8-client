@@ -84,11 +84,13 @@ namespace TinyTinyRSS
 				ConnectionSettings.getInstance().username = UsernameField.Text;
 				ConnectionSettings.getInstance().server = ServerField.Text;
 				ConnectionSettings.getInstance().password = PasswdField.Password;
-				Task tsk = PushNotificationHelper.AddNotificationChannel(ConnectionSettings.getInstance().username, ConnectionSettings.getInstance().password, ConnectionSettings.getInstance().server);
+				Task<bool> tsk = PushNotificationHelper.AddNotificationChannel(ConnectionSettings.getInstance().username, ConnectionSettings.getInstance().password, ConnectionSettings.getInstance().server);
                 TestButton.Content = AppResources.SuccessfulConnection;
                 ErrorMessage.Text = "";
-				await tsk;
-				// TODO MessageBox bei Fehler.
+                if (!await tsk)
+                {
+                    MessageBox.Show(AppResources.SettingsUpdateLiveTileError);
+                }
                 MyProgressbar.Visibility = Visibility.Collapsed;
                 MyProgressbar.IsIndeterminate = false;				
                 return true;
