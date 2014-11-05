@@ -166,7 +166,7 @@ namespace TinyTinyRSS
 
         // Code, der ausgeführt werden soll, wenn die Anwendung deaktiviert wird (in den Hintergrund gebracht wird)
         // Dieser Code wird beim Schließen der Anwendung nicht ausgeführt
-        private async void Application_Deactivated(object sender, DeactivatedEventArgs e)
+        private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
             Logger.WriteLine("App suspended");
             FinalizeLogging(true);
@@ -175,7 +175,7 @@ namespace TinyTinyRSS
 
         // Code, der beim Schließen der Anwendung ausgeführt wird (z. B. wenn der Benutzer auf "Zurück" klickt)
         // Dieser Code wird beim Deaktivieren der Anwendung nicht ausgeführt
-        private async void Application_Closing(object sender, ClosingEventArgs e)
+        private void Application_Closing(object sender, ClosingEventArgs e)
         {
             FinalizeLogging(false);
             Logger.ClearLog();

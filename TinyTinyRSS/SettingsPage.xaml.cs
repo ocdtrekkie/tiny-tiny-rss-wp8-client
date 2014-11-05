@@ -78,9 +78,7 @@ namespace TinyTinyRSS
             {
                 server = string.Concat(server, "api/");
             }
-            bool unsavedBefore = unsavedSettings;
             ServerField.Text = server;
-            unsavedSettings = unsavedBefore;
             string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
             if (error.Length == 0)
             {
