@@ -48,7 +48,6 @@ namespace TinyTinyRSS
         private void SetFields()
         {
             UsernameField.Text = ConnectionSettings.getInstance().username;
-            SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             ServerField.Text = ConnectionSettings.getInstance().server;
             PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
@@ -266,7 +265,7 @@ namespace TinyTinyRSS
         }
 
 		// settings changed
-        private void Changed(object sender, RoutedEventArgs e)
+        private async void Changed(object sender, RoutedEventArgs e)
         {
 			if(sender==MarkReadCheckbox) {
 				ConnectionSettings.getInstance().markRead = MarkReadCheckbox.IsChecked.Value;
@@ -278,9 +277,11 @@ namespace TinyTinyRSS
         }
 
 		// Sort options changed
-        private void SelChanged(object sender, SelectionChangedEventArgs e)
+        private async void SelChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (SortBox != null) { 
             ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
+        }
         }
 
         private async void btnGoToLockSettings_Click(object sender, RoutedEventArgs e)

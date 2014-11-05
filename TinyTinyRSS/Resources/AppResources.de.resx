@@ -388,4 +388,8 @@
     <value>Sperrbildschirm Einstellungen</value>
     <comment>Link to lockscreen settings</comment>
   </data>
+  <data name="SettingsUpdateLiveTileError" xml:space="preserve">
+    <value>Deine neuen Logindaten konnten nicht zum Live Tile Benachrichtigungsserver gesendet werden. Versuche die Live Tile Checkbox erneut zu aktivieren oder schreibe mir eine E-Mail.</value>
+    <comment>Error message if live tile user update fails.</comment>
+  </data>
 </root>

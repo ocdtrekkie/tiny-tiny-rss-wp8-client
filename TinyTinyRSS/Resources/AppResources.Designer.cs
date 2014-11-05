@@ -547,6 +547,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your new credentials could not be sent to the live tile notfication server. Please try to uncheck/check the live tile checkbox or send me an e-mail..
+        /// </summary>
+        public static string SettingsUpdateLiveTileError {
+            get {
+                return ResourceManager.GetString("SettingsUpdateLiveTileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show all Articles.
         /// </summary>
         public static string ShowAllArticles {
@@ -601,7 +610,7 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Test Connection.
+        ///   Looks up a localized string similar to Save Server Login.
         /// </summary>
         public static string TestConnectionSettingsButton {
             get {

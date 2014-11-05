@@ -390,4 +390,8 @@
     <value>lockscreen settings</value>
     <comment>Link to lockscreen settings</comment>
   </data>
+  <data name="SettingsUpdateLiveTileError" xml:space="preserve">
+    <value>Your new credentials could not be sent to the live tile notfication server. Please try to uncheck/check the live tile checkbox or send me an e-mail.</value>
+    <comment>Error message if live tile user update fails.</comment>
+  </data>
 </root>
