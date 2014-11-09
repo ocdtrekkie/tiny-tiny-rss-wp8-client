@@ -44,7 +44,7 @@ namespace TinyTinyRSS
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
-            _moreArticles = false;
+            _moreArticles = true;
             _moreArticlesLoading = false;
             _selectedIndex = 0;
             _lastPivotIndex = -1;
@@ -245,11 +245,6 @@ namespace TinyTinyRSS
             openExtAppBarButton.Text = AppResources.OpenExtAppBarButtonText;
             openExtAppBarButton.Click += openExt_Click;
             ApplicationBar.Buttons.Add(openExtAppBarButton);
-
-            //archiveAppBarMenu = new ApplicationBarMenuItem();
-            //archiveAppBarMenu.Text = AppResources.ToogleArchiveAppBarButtonText;
-            //archiveAppBarMenu.Click += AppBarButton_Click;
-            //ApplicationBar.MenuItems.Add(archiveAppBarMenu);
 
             publishAppBarMenu = new ApplicationBarMenuItem();
             publishAppBarMenu.Text = AppResources.TooglePublishAppBarButtonText;
@@ -455,6 +450,7 @@ namespace TinyTinyRSS
                 List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0, _sortOrder);
                 if (headlines.Count == 0)
                 {
+					_moreArticles =false;
                     MessageBox.Show(AppResources.NoArticlesMessage);
                     if (NavigationService.CanGoBack)
                     {
@@ -468,7 +464,6 @@ namespace TinyTinyRSS
                 else
                 {
                     headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
-                    _moreArticles = headlines.Count == TtRssInterface.INITIALHEADLINECOUNT;
                     updateCount(false);
                 }
             }
@@ -511,13 +506,12 @@ namespace TinyTinyRSS
                     }
                     List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
 
-                    if (headlines.Count == 0)
+                    if (headlines.Count <= 1)
                     {
                         _moreArticles = false;
                     }
                     else
                     {
-                        _moreArticles = headlines.Count == TtRssInterface.ADDITIONALHEADLINECOUNT;
                         headlines.ForEach(x => ArticlesCollection.Add(new WrappedArticle(x)));
                         updateCount(false);
                     }

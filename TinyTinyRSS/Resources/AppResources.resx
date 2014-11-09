@@ -394,4 +394,7 @@
     <value>Your new credentials could not be sent to the live tile notfication server. Please try to uncheck/check the live tile checkbox or send me an e-mail.</value>
     <comment>Error message if live tile user update fails.</comment>
   </data>
+  <data name="SettingsAboutButtonPrivacyPolicy" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
 </root>

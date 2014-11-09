@@ -322,6 +322,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        public static string SettingsAboutButtonPrivacyPolicy {
+            get {
+                return ResourceManager.GetString("SettingsAboutButtonPrivacyPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project Website.
         /// </summary>
         public static string SettingsAboutButtonProjectWeb {
