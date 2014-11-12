@@ -6,7 +6,7 @@
     <Language code="de-DE" />
     <Language code="de" />
   </Languages>
-  <App xmlns="" ProductID="{ad6373d0-14b8-4908-8a40-2208f047aeaf}" Title="Tiny Tiny RSS Reader" RuntimeType="Silverlight" Version="2.0.0.0" Genre="apps.normal" Author="Stefan Prasse" Description="Client App to read your news hosted by a TinyTiny RSS Server (required)." Publisher="TheScientist" PublisherID="{4b22ace6-b3ff-4b70-92b2-c4bcb07a0645}" NotificationService="WNS">
+  <App xmlns="" ProductID="{ad6373d0-14b8-4908-8a40-2208f047aeaf}" Title="Tiny Tiny RSS Reader" RuntimeType="Silverlight" Version="2.0.1" Genre="apps.normal" Author="Stefan Prasse" Description="Client App to read your news hosted by a TinyTiny RSS Server (required)." Publisher="TheScientist" PublisherID="{4b22ace6-b3ff-4b70-92b2-c4bcb07a0645}" NotificationService="WNS">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
