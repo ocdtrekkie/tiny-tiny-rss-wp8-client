@@ -199,13 +199,14 @@ namespace TinyTinyRSS
             {
                 if (await TestSettings())
                 {
+                    ConnectionSettings.getInstance().liveTileActive = true;
                     if (await PushNotificationHelper.AddNotificationChannel(UsernameField.Text, PasswdField.Password, ServerField.Text))
                     {
-                        ConnectionSettings.getInstance().liveTileActive = true;
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                     else
                     {
+                        ConnectionSettings.getInstance().liveTileActive = false;
                         LiveTileCheckbox.IsChecked = false;
                         MessageBox.Show(AppResources.ErrorAddLiveTile);
                     }

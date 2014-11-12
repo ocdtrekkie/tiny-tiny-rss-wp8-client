@@ -94,6 +94,15 @@ namespace TinyTinyRSS.Classes
 
         internal static double GetWidthForOrientation(PageOrientation orientation)
         {
+            if (orientation.Equals(PageOrientation.LandscapeLeft) || orientation.Equals(PageOrientation.LandscapeRight))
+            {
+                return 800 - 125;
+            }
+            else
+            {
+                return 480 - 48;
+            }
+            /*
             switch (CurrentResolution)
             {
                 case Resolutions.HD720p:
@@ -132,7 +141,7 @@ namespace TinyTinyRSS.Classes
                     {
                         return 480 - 48;
                     }
-            }
-        }
+            } */
+        } 
     }
 }
