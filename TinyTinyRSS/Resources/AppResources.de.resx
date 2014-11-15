@@ -395,4 +395,8 @@
   <data name="SettingsAboutButtonPrivacyPolicy" xml:space="preserve">
     <value>Datenschutz</value>
   </data>
+  <data name="ShareAppBarButtonText" xml:space="preserve">
+    <value>Teilen</value>
+    <comment>Label for AppBarButton Share</comment>
+  </data>
 </root>

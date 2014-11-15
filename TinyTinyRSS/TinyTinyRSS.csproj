@@ -162,6 +162,7 @@
     <Content Include="Assets\AppBar\globe.png" />
     <Content Include="Assets\AppBar\mail-read.png" />
     <Content Include="Assets\AppBar\mail-unread.png" />
+    <Content Include="Assets\AppBar\share.png" />
     <Content Include="Assets\AppBar\star.png" />
     <Content Include="Assets\AppBar\feature.settings.png" />
     <Content Include="Assets\AppBar\openext.png" />

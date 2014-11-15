@@ -24,6 +24,8 @@ using Microsoft.Xna.Framework.Media;
 using System.Windows.Resources;
 using CaledosLab.Portable.Logging;
 using System.Windows.Controls.Primitives;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Foundation;
 
 namespace TinyTinyRSS
 {
@@ -32,7 +34,7 @@ namespace TinyTinyRSS
         private int feedId, _selectedIndex;
         private Collection<WrappedArticle> ArticlesCollection;
         private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
-        private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton;
+        private ApplicationBarIconButton toogleReadAppBarButton, toggleStarAppBarButton, openExtAppBarButton, shareLinkAppBarButton;
         private ApplicationBarMenuItem publishAppBarMenu, showUnreadOnlyAppBarMenu, markAllReadMenu, sort1AppBarMenu, sort2AppBarMenu;
         private int _sortOrder, _lastPivotIndex; 
 
@@ -48,6 +50,7 @@ namespace TinyTinyRSS
             _moreArticlesLoading = false;
             _selectedIndex = 0;
             _lastPivotIndex = -1;
+            RegisterForShare();
             if (!ConnectionSettings.getInstance().progressAsCntr)
             {
                 Scrollbar.Visibility = Visibility.Collapsed;
@@ -241,6 +244,11 @@ namespace TinyTinyRSS
             toggleStarAppBarButton.Click += AppBarButton_Click;
             ApplicationBar.Buttons.Add(toggleStarAppBarButton);
 
+            shareLinkAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/share.png", UriKind.Relative));
+            shareLinkAppBarButton.Text = AppResources.ShareAppBarButtonText;
+            shareLinkAppBarButton.Click += ShareAppBarButton_Click;
+            ApplicationBar.Buttons.Add(shareLinkAppBarButton);
+
             openExtAppBarButton = new ApplicationBarIconButton(new Uri("/Assets/AppBar/globe.png", UriKind.Relative));
             openExtAppBarButton.Text = AppResources.OpenExtAppBarButtonText;
             openExtAppBarButton.Click += openExt_Click;
@@ -270,6 +278,27 @@ namespace TinyTinyRSS
             sort2AppBarMenu.Text = options[1];
             sort2AppBarMenu.Click += AppBarButton_Click;
             ApplicationBar.MenuItems.Add(sort2AppBarMenu);
+        }
+
+        private void ShareAppBarButton_Click(object sender, EventArgs e)
+        {
+            DataTransferManager.ShowShareUI(); 
+        }
+
+        private void RegisterForShare()
+        {
+            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+            dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager,
+                DataRequestedEventArgs>(this.ShareLinkHandler);
+        }
+
+        private void ShareLinkHandler(DataTransferManager sender, DataRequestedEventArgs e)
+        {
+            Headline head = ArticlesCollection[_selectedIndex].Headline;
+            DataRequest request = e.Request;
+            request.Data.Properties.Description = "Shared by tt-RSS Reader for Windows Phone.";
+            request.Data.Properties.Title = head.title;
+            request.Data.SetWebLink(new Uri(head.link));
         }
 
         private async void AppBarButton_Click(object sender, EventArgs e)

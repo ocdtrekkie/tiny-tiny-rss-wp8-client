@@ -565,6 +565,15 @@ namespace TinyTinyRSS.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        public static string ShareAppBarButtonText {
+            get {
+                return ResourceManager.GetString("ShareAppBarButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show all Articles.
         /// </summary>
         public static string ShowAllArticles {
