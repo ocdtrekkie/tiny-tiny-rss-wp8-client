@@ -103,9 +103,16 @@ namespace TinyTinyRSS
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
                 e.Item.DataContext = item;
-
-                Article article = await item.getContent();
-                if (_selectedIndex == localSelected)
+                Article article = null;
+                try
+                {
+                    article = await item.getContent();
+                }
+                catch (NullReferenceException nre)
+                {
+                    Logger.WriteLine("error loading content for article.");
+                }
+                if (article != null && _selectedIndex == localSelected)
                 {
                     setHtml(article.content);
                     var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
@@ -117,8 +124,8 @@ namespace TinyTinyRSS
                             icon.Source = articlesFeed.icon;
                         }
                     }
+                    UpdateLocalizedApplicationBar(article);
                 }
-                UpdateLocalizedApplicationBar(article);
                 SetProgressBar(false);
                 if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
                 {
