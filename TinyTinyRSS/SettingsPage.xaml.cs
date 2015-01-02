@@ -62,7 +62,7 @@ namespace TinyTinyRSS
         {
             MyProgressbar.Visibility = Visibility.Visible;
             MyProgressbar.IsIndeterminate = true;
-
+            ErrorMessage.Text = "";
             // Try to fix some common mistakes when entering an url.
             string server = ServerField.Text;
             if (!server.StartsWith("http://") && !server.StartsWith("https://"))

@@ -92,6 +92,10 @@ namespace TinyTinyRSS.Interface
                 }
                 return e.Message;
             }
+            catch (NullReferenceException nre)
+            {
+                return "Error sending http request. Check server field.";
+            }
         }
 
         public async Task<bool> CheckLogin()
@@ -510,7 +514,10 @@ namespace TinyTinyRSS.Interface
 
         public T ParseContentOrError<T>(Response response)
         {
-            string contentString = response.content.ToString();
+            if (response == null)
+            {
+                return default(T);
+            }
             if (response.status == 1)
             {
                 Error error = response.getContent<Error>();
