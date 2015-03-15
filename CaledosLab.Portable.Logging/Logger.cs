@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Windows.Storage;
 
 namespace CaledosLab.Portable.Logging
 {
@@ -29,7 +30,7 @@ namespace CaledosLab.Portable.Logging
             set { _enabled = value; }
         }
         
-        private static List<string> buffer { get; set; }
+        private static IList<string> buffer { get; set; }
 
         public static void WriteLine(Exception e)
         {
@@ -51,7 +52,7 @@ namespace CaledosLab.Portable.Logging
             StringBuilder sb = new StringBuilder();
             sb.Append(DateTime.Now.ToString("yyyyMMddhhmss"));
             sb.Append("TID");
-            sb.Append(System.Threading.Thread.CurrentThread.ManagedThreadId);
+            sb.Append(Environment.CurrentManagedThreadId);
             sb.Append(" ");
             sb.Append(line);
 
@@ -73,22 +74,14 @@ namespace CaledosLab.Portable.Logging
             System.Diagnostics.Debug.WriteLine(sb);
         }
 
-        public static void Load(StreamReader stream)
+        public async static void Load(StorageFile file)
         {
-            buffer = new List<string>();
-
-            while (!stream.EndOfStream)
-            {
-                buffer.Add(stream.ReadLine());
-            }
+            buffer = await FileIO.ReadLinesAsync(file);
         }
 
-        public static void Save(StreamWriter stream)
+        public async static void Save(StorageFile file)
         {
-            foreach (string s in buffer)
-            {
-                stream.WriteLine(s);
-            }
+            await FileIO.WriteLinesAsync(file, buffer);
         }
 
         public static string GetStoredLog()
