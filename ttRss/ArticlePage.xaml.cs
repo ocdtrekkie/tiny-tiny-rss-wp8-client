@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -27,28 +28,27 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
-
-namespace ttRss
+namespace TinyTinyRSS
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class ArticlePage : Page
+    public sealed partial class ArticlePage : AbstractArticlePage
     {
-        private int feedId, _selectedIndex;
-        private Collection<WrappedArticle> ArticlesCollection;
-        private bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
+        private int _selectedIndex;
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         private StatusBar statusBar;
-        private int _sortOrder, _lastPivotIndex;
+        private int _lastPivotIndex;
 
         public ArticlePage()
         {
             this.Loaded += PageLoaded;
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait | DisplayOrientations.Landscape | DisplayOrientations.LandscapeFlipped;
+
+#if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+#endif
             statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(ApplicationView.GetForCurrentView().Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -73,14 +73,31 @@ namespace ttRss
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            await LoadHeadlines();
-            PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
+            if (!initialized)
+            {
+                await LoadHeadlines();
+                _selectedIndex = 0;
+                PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
+            }
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            feedId = (int)e.Parameter;
-            Logger.WriteLine("NavigatedTo ArticlePage for Feed " + feedId);
+            if(e.Parameter is NavigationObject) {
+                initialized = true;
+                NavigationObject nav = e.Parameter as NavigationObject;
+                feedId = nav.feedId;
+                _selectedIndex = nav.selectedIndex;
+                _sortOrder = nav._sortOrder;
+                _showUnreadOnly = nav._showUnreadOnly;
+                ArticlesCollection = nav.ArticlesCollection;
+                BuildLocalizedApplicationBar();
+                Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + feedId);
+            } else {
+                initialized = false;
+                feedId = (int)e.Parameter;
+                Logger.WriteLine("NavigatedTo ArticlePage for Feed " + feedId);
+            }
             base.OnNavigatedTo(e);
         }
 
@@ -99,7 +116,6 @@ namespace ttRss
                 if (PivotControl.SelectedIndex == 0 && _lastPivotIndex == -1)
                 {
                     _lastPivotIndex = 0;
-                    _selectedIndex = 0;
                 }
                 else if (forwardNavigated())
                 {
@@ -138,6 +154,7 @@ namespace ttRss
                     }
                     UpdateLocalizedApplicationBar(article);
                 }
+                e.Item.UpdateLayout();
                 SetProgressBar(false);
                 if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
                 {
@@ -153,7 +170,10 @@ namespace ttRss
                         await tsk;
                     }
                 }
-                await LoadMoreHeadlines();
+                if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
+                {
+                    await LoadMoreHeadlines();
+                }
             }
             catch (TtRssException ex)
             {
@@ -178,7 +198,7 @@ namespace ttRss
             }
         }
 
-        private async void updateCount(bool force)
+        protected override async void updateCount(bool force)
         {
             int actual = _selectedIndex + 1;
             if (_IsSpecial() || _showUnreadOnly)
@@ -257,27 +277,6 @@ namespace ttRss
             sort2AppBarMenu.Label = options[1];
         }
 
-        private void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-            DataTransferManager.ShowShareUI();
-        }
-
-        private void RegisterForShare()
-        {
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += new TypedEventHandler<DataTransferManager,
-                DataRequestedEventArgs>(this.ShareLinkHandler);
-        }
-
-        private void ShareLinkHandler(DataTransferManager sender, DataRequestedEventArgs e)
-        {
-            Headline head = ArticlesCollection[_selectedIndex].Headline;
-            DataRequest request = e.Request;
-            request.Data.Properties.Description = "Shared by tt-RSS Reader for Windows Phone.";
-            request.Data.Properties.Title = head.title;
-            request.Data.SetWebLink(new Uri(head.link));
-        }
-
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateField field;
@@ -331,10 +330,12 @@ namespace ttRss
                 _lastPivotIndex = -1;
                 if (PivotControl.SelectedIndex == 0)
                 {
+                    _selectedIndex = 0;
                     PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
                 }
                 else
                 {
+                    _selectedIndex = 0;
                     PivotControl.SelectedIndex = 0; // go back to first pivotItem
                 }
                 updateCount(_showUnreadOnly);
@@ -362,10 +363,12 @@ namespace ttRss
                 _lastPivotIndex = -1;
                 if (PivotControl.SelectedIndex == 0)
                 {
+                    _selectedIndex = 0;
                     PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
                 }
                 else
                 {
+                    _selectedIndex = 0;
                     PivotControl.SelectedIndex = 0; // go back to first pivotItem
                 }
                 updateCount(_showUnreadOnly);
@@ -401,136 +404,7 @@ namespace ttRss
             }
         }
 
-        private async void openExt_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender == openExtAppBarButton)
-            {
-                WrappedArticle article = ArticlesCollection[_selectedIndex];
-                if (article.Article != null)
-                {
-                    var uri = new Uri(article.Article.link);
-                    await Windows.System.Launcher.LaunchUriAsync(uri);
-                }
-                else
-                {
-                    Article art = await article.getContent();
-                    var uri = new Uri(art.link);
-                    await Windows.System.Launcher.LaunchUriAsync(uri);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get's the headlines of the shown feed from tt-rss. 
-        /// Depending on the settings, may only unread articles are loaded.
-        /// </summary>
-        /// <returns>true, cause void Tasks don't work.</returns>
-        private async Task<bool> LoadHeadlines()
-        {
-            try
-            {
-                SetProgressBar(true);
-                bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-                if (_IsSpecial() && AppBar.SecondaryCommands.Contains(showUnreadOnlyAppBarMenu))
-                {
-                    AppBar.SecondaryCommands.Remove(showUnreadOnlyAppBarMenu);
-                }
-                ArticlesCollection.Clear();
-                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0, _sortOrder);
-                if (headlines.Count == 0)
-                {
-                    _moreArticles = false;
-                    MessageDialog msgbox = new MessageDialog(loader.GetString("NoArticlesMessage"));
-                    await msgbox.ShowAsync();
-                    Frame rootFrame = Window.Current.Content as Frame;
-                    if (rootFrame.CanGoBack)
-                    {
-                        rootFrame.GoBack();
-                    }
-                    else
-                    {
-                        Frame.Navigate(typeof(MainPage));
-                    }
-                }
-                else
-                {
-                    foreach (Headline h in headlines)
-                    {
-                        ArticlesCollection.Add(new WrappedArticle(h));
-                    }
-                    updateCount(false);
-                }
-            }
-            catch (TtRssException ex)
-            {
-                checkException(ex);
-            }
-            finally
-            {
-                SetProgressBar(false);
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Check if the shown feed is a special on (archived, unread, etc.)
-        /// </summary>
-        /// <returns>True if feedId is in between -4 and 1</returns>
-        private bool _IsSpecial()
-        {
-            return feedId > -4 && feedId < 1;
-        }
-
-        /// <summary>
-        /// When a pivot item is loaded check if you need to load more articles, cause of lazy loading.
-        /// </summary>
-        private async Task LoadMoreHeadlines()
-        {
-            if (_moreArticles && !_moreArticlesLoading && _selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
-            {
-                try
-                {
-                    _moreArticlesLoading = true;
-                    SetProgressBar(true, true);
-                    bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-                    int skip = ArticlesCollection.Count;
-                    if (feedId == (int)FeedId.Fresh || _showUnreadOnly)
-                    {
-                        skip = ArticlesCollection.Count(e => e.Headline.unread);
-                    }
-                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
-
-                    if (headlines.Count <= 1)
-                    {
-                        _moreArticles = false;
-                    }
-                    else
-                    {
-                        foreach (Headline h in headlines)
-                        {
-                            ArticlesCollection.Add(new WrappedArticle(h));
-                        }
-                        updateCount(false);
-                    }
-                }
-                catch (TtRssException ex)
-                {
-                    checkException(ex);
-                }
-                finally
-                {
-                    _moreArticlesLoading = false;
-                    SetProgressBar(false);
-                }
-            }
-        }
-
-        private void SetProgressBar(bool on)
-        {
-            SetProgressBar(on, false);
-        }
-
-        private async void SetProgressBar(bool on, bool setText)
+        protected override async void SetProgressBar(bool on, bool setText)
         {
             if (_moreArticlesLoading && !on)
             {
@@ -590,37 +464,41 @@ namespace ttRss
                     checkException(ex);
                 }
             }
+            foreach (PageStackEntry page in Frame.BackStack)
+            {
+                Debug.WriteLine(page.SourcePageType.FullName);
+            }
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                if (initialized)
+                {
+                    NavigationObject parameter = new NavigationObject();
+                    parameter.selectedIndex = _selectedIndex;
+                    parameter.feedId = feedId;
+                    parameter._showUnreadOnly = _showUnreadOnly;
+                    parameter._sortOrder = _sortOrder;
+                    parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                    foreach (WrappedArticle article in ArticlesCollection)
+                    {
+                        parameter.ArticlesCollection.Add(article);
+                    }
+                    Frame.Navigate(typeof(HeadlinesPage), parameter);
+                }
+                else
+                {
+                    rootFrame.GoBack();
+                }
+            } 
         }
 #endif
 
-        private async void checkException(TtRssException ex)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
-            {
-                MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                await msgbox.ShowAsync();
-            }
-        }
-
-        private List<string> getSortOptions()
-        {
-            List<string> result = new List<string>();
-            switch (_sortOrder)
-            {
-                case 1:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortDefault"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortOld"));
-                    break;
-                case 2:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortDefault"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortNew"));
-                    break;
-                default:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortNew"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("SettingsSortOld"));
-                    break;
-            }
-            return result;
+            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            base.OnNavigatedFrom(e);
         }
 
         private bool forwardNavigated()
@@ -685,6 +563,11 @@ namespace ttRss
                 MyProgressBar.Visibility = Visibility.Collapsed;
                 MyProgressBarText.Visibility = Visibility.Collapsed;
             }
+        }
+
+        protected override int getSelectedIdx()
+        {
+            return _selectedIndex;
         }
     }
 }

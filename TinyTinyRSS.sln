@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ttRss", "ttRss\ttRss.csproj", "{0618E16B-21A7-42B0-8267-EE5772B5CE31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyTinyRSS", "ttRss\TinyTinyRSS.csproj", "{0618E16B-21A7-42B0-8267-EE5772B5CE31}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FD35A92C-6853-48C7-B702-29B610501BE2} = {FD35A92C-6853-48C7-B702-29B610501BE2}
 		{6E87464B-B064-40CA-8161-7C18C337ADFF} = {6E87464B-B064-40CA-8161-7C18C337ADFF}

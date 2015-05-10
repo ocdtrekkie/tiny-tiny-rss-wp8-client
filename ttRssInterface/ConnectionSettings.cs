@@ -16,6 +16,7 @@ namespace TinyTinyRSS.Interface
         public static string _passwordKey = "PasswordNew";
         public static string _showUnreadOnlyKey = "ShowUnreadOnly";
         public static string _sortOrderKey = "SortOrder";
+        public static string _headlinesViewKey = "HeadlinesView";
         public static string _progressBarAsCounterKey = "ProgressAsCntr";
         public static string _liveTileActivatedKey = "LiveTileActive";
         public static string _liveTileUpdateIntervalKey = "LiveTileUpdateInterval";
@@ -28,6 +29,7 @@ namespace TinyTinyRSS.Interface
         private string _markRead;
         private string _unreadOnly;
         private string _sortOrder;
+        private string _headlinesView;
         private string _progressAsCntr;
         private string _liveTileActivated;
         private string _liveTileUpdateInterval;
@@ -185,6 +187,25 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_sortOrderKey, value.ToString());
                 _sortOrder = value.ToString();
+            }
+        }
+
+        public int headlinesView
+        {
+            get
+            {
+                if (_headlinesView == null)
+                {
+                    _headlinesView = ReadSetting(_headlinesViewKey);
+                    if (_headlinesView.Equals(""))
+                        _headlinesView = "0";
+                }
+                return int.Parse(_headlinesView);
+            }
+            set
+            {
+                SaveSetting(_headlinesViewKey, value.ToString());
+                _headlinesView = value.ToString();
             }
         }
 

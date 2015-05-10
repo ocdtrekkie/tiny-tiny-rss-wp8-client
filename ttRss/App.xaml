@@ -1,6 +1,6 @@
 ﻿<Application
-    x:Class="ttRss.App"
+    x:Class="TinyTinyRSS.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:ttRss">
+    xmlns:local="using:TinyTinyRSS">
 </Application>

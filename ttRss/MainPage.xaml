@@ -22,7 +22,7 @@
         <Style TargetType="TextBlock" x:Key="ButtonTextStyle"> 
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Foreground"  Value="White" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="{StaticResource TextStyleMediumFontSize}" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
     </Page.Resources>
@@ -107,8 +107,8 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="18" Margin="5" Grid.Column="1"/>
-                                        <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="18" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="5" Grid.Column="1"/>
+                                        <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

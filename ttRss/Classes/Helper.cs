@@ -30,6 +30,31 @@ namespace TinyTinyRSS.Classes
             return toAppendTo;
         }
 
+        // The method traverses the visual tree lazily, layer by layer
+        // and returns the objects of the desired type
+        public static IEnumerable<T> GetChildrenOfType<T>(DependencyObject start) where T : class
+        {
+            var queue = new Queue<DependencyObject>();
+            queue.Enqueue(start);
+
+            while (queue.Count > 0)
+            {
+                var item = queue.Dequeue();
+
+                var realItem = item as T;
+                if (realItem != null)
+                {
+                    yield return realItem;
+                }
+
+                int count = VisualTreeHelper.GetChildrenCount(item);
+                for (int i = 0; i < count; i++)
+                {
+                    queue.Enqueue(VisualTreeHelper.GetChild(item, i));
+                }
+            }
+        }
+
         /// <summary>
         /// Find an element with the given name below the given element.
         /// </summary>

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
-using ttRss;
+using TinyTinyRSS;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
+using Windows.Phone.UI.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -44,6 +45,9 @@ namespace TinyTinyRSS
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+#if WINDOWS_PHONE_APP
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+#endif
             SetFields();
             string appVersion = string.Format("Version: {0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Major,
@@ -64,6 +68,7 @@ namespace TinyTinyRSS
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
+            SettingHeadlinesViewBox.SelectedIndex = ConnectionSettings.getInstance().headlinesView;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
         }
 		
@@ -108,8 +113,7 @@ namespace TinyTinyRSS
             {
                 TestButton.Content = loader.GetString("FailedConnection");
                 ErrorMessage.Text = error;
-                MyProgressbar.Visibility = Visibility.Collapsed;
-                MyProgressbar.IsIndeterminate = false;
+                await statusBar.ProgressIndicator.HideAsync();	
                 return false;
             }
         }
@@ -299,12 +303,20 @@ namespace TinyTinyRSS
 			}  
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+            base.OnNavigatedFrom(e);
+        }
+
 		// Sort options changed
         private void SelChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SortBox != null) { 
-            ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-        }
+            if (SortBox != null && sender== SortBox) { 
+                ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
+            } else if (SettingHeadlinesViewBox != null && sender== SettingHeadlinesViewBox) { 
+                ConnectionSettings.getInstance().headlinesView = SettingHeadlinesViewBox.SelectedIndex;
+            }  
         }
 
         private async void btnGoToLockSettings_Click(object sender, RoutedEventArgs e)
@@ -312,5 +324,18 @@ namespace TinyTinyRSS
             // Launch URI for the lock screen settings screen.
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings-lock:"));
         }
+
+#if WINDOWS_PHONE_APP
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+        }
+#endif
     }
 }

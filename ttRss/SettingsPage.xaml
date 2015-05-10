@@ -30,15 +30,15 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock HorizontalAlignment="Left" Margin="0,0,10,0" TextWrapping="Wrap" Text="" x:Uid="ServerSetting" VerticalAlignment="Center" Height="Auto" Width="Auto" FontSize="14"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="0,0,10,0" TextWrapping="Wrap" Text="" x:Uid="ServerSetting" VerticalAlignment="Center" Height="Auto" Width="Auto" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <TextBox x:Name="ServerField" VerticalAlignment="Center" InputScope="Url" Grid.Column="1" Margin="0" TextChanged="ConnectionSettingsChanged"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="0,20,10,20" Grid.Row="1" TextWrapping="Wrap" Text="" x:Uid="UserNameSettings" VerticalAlignment="Center" Height="Auto" Width="Auto" FontSize="14"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="0,20,10,20" Grid.Row="1" TextWrapping="Wrap" Text="" x:Uid="UserNameSettings" VerticalAlignment="Center" Height="Auto" Width="Auto" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <TextBox x:Name="UsernameField" Grid.Column="1" Margin="0" Grid.Row="1"  VerticalAlignment="Center" InputScope="Default" TextChanged="ConnectionSettingsChanged"/>
-                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="" x:Uid="PasswordSettings" VerticalAlignment="Center" Grid.Row="2" Height="Auto" Width="Auto" Margin="0,0,10,0" FontSize="14"/>
+                        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="" x:Uid="PasswordSettings" VerticalAlignment="Center" Grid.Row="2" Height="Auto" Width="Auto" Margin="0,0,10,0" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <PasswordBox x:Name="PasswdField" Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Center" SizeChanged="PasswdField_PasswordChanged"/>
                         <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Height="72" Grid.Row="3" Background="{StaticResource PhoneAccentBrush}" Content="" x:Uid="TestConnectionSettingsButton" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
                         <ProgressBar Name="MyProgressbar" Grid.Row="4" Grid.ColumnSpan="2" Visibility="Collapsed" />
-                        <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="14" />
+                        <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="{StaticResource TextStyleSmallFontSize}" />
                     </Grid>
                 </ScrollViewer>
             </PivotItem>
@@ -54,25 +54,35 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <CheckBox x:Name="MarkReadCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" Click="Changed">
-                            <TextBlock Text="" x:Uid="MarkReadSettings" TextWrapping="Wrap" FontSize="18"/>
+                            <TextBlock Text="" x:Uid="MarkReadSettings" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
                         <CheckBox x:Name="ShowUnreadOnlyCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Click="Changed">
-                            <TextBlock Text="" x:Uid="UnreadOnlySettings" TextWrapping="Wrap" FontSize="18"/>
+                            <TextBlock Text="" x:Uid="UnreadOnlySettings" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
                         <CheckBox x:Name="ProgressAsCntrCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Click="Changed">
-                            <TextBlock Text="" x:Uid="SettingsScrollarAsCounter" TextWrapping="Wrap" FontSize="18"/>
+                            <TextBlock Text="" x:Uid="SettingsScrollarAsCounter" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
-                        <TextBlock x:Name="SortLabel" Text="" x:Uid="SettingsSortLabel" Grid.Column="0" Grid.Row="3" FontSize="18" VerticalAlignment="Center" />
-                        <ComboBox Grid.Row="3" Grid.Column="1"  x:Name="SortBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
-                            <TextBlock Name="SortDefault" Text="" x:Uid="SettingsSortDefault" FontSize="18" />
-                            <TextBlock Name="SortNewFirst" Text="" x:Uid="SettingsSortNew" FontSize="18" />
-                            <TextBlock  Name="SortOldFirst" Text="" x:Uid="SettingsSortOld" FontSize="18" />
+                        <TextBlock x:Name="SortLabel" Text="" Grid.ColumnSpan="2" x:Uid="SettingsSortLabel" Grid.Column="0" Grid.Row="3" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SortBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
+                            <TextBlock Name="SortDefault" Text="" x:Uid="SettingsSortDefault" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            <TextBlock Name="SortNewFirst" Text="" x:Uid="SettingsSortNew" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            <TextBlock  Name="SortOldFirst" Text="" x:Uid="SettingsSortOld" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                        </ComboBox>
+                        <TextBlock x:Name="SettingHeadlinesView" Text="" Grid.ColumnSpan="2" x:Uid="SettingHeadlinesView" Grid.Column="0" Grid.Row="5" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="SettingHeadlinesViewBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
+                            <TextBlock Name="SettingHeadlinesViewNone" Text="" x:Uid="SettingHeadlinesViewNone" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            <TextBlock Name="SettingHeadlinesViewSpecial" Text="" x:Uid="SettingHeadlinesViewSpecial" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            <TextBlock Name="SettingHeadlinesViewList" Text="" x:Uid="SettingHeadlinesViewList" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            <TextBlock  Name="SettingHeadlinesViewAll" Text="" x:Uid="SettingHeadlinesViewAll" FontSize="{StaticResource TextStyleMediumFontSize}" />
                         </ComboBox>
                     </Grid>
                 </ScrollViewer>
@@ -83,11 +93,11 @@
                 </PivotItem.Header>
                 <StackPanel x:Name="LiveTileContent" Margin="12,0,12,0" Orientation="Vertical">
                     <CheckBox x:Name="LiveTileCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="LiveTileCheckbox_Click">
-                        <TextBlock Text="" x:Uid="SettingsActivateLiveTile" TextWrapping="Wrap" FontSize="18"/>
+                        <TextBlock Text="" x:Uid="SettingsActivateLiveTile" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                     </CheckBox>
-                    <TextBlock x:Name="LiveTileInfoText" Text="" x:Uid="SettingsLiveTileInfo" TextWrapping="Wrap" FontSize="14"/>
+                    <TextBlock x:Name="LiveTileInfoText" Text="" x:Uid="SettingsLiveTileInfo" TextWrapping="Wrap" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                     <Button x:Name="goToLockscreen" Click="btnGoToLockSettings_Click">
-                        <TextBlock Text="" x:Uid="SettingsLiveTileLockScreenLink" FontSize="18" />
+                        <TextBlock Text="" x:Uid="SettingsLiveTileLockScreenLink" FontSize="{StaticResource TextStyleMediumFontSize}" />
                     </Button>
                 </StackPanel>
             </PivotItem>
@@ -99,22 +109,22 @@
                 <ScrollViewer>
                     <StackPanel x:Name="AboutContent" Margin="12,0,12,0" Orientation="Vertical">
                         <TextBlock Text="" x:Uid="ApplicationName" FontSize="24" FontWeight="Bold"/>
-                        <TextBlock Name="AppVersion" FontSize="14"/>
-                        <TextBlock Name="AppAuthor" Margin="0,0,0,10" FontSize="14"/>
-                        <TextBlock Name="AboutText" Text="" x:Uid="SettingsAboutText" FontSize="14" TextWrapping="Wrap"/>
-                        <RadioButton Name="AboutRadio0" Content="" x:Uid="SettingsAboutRadioNoLog" GroupName="LogGroup" IsChecked="true" FontSize="18"/>
-                        <RadioButton Name="AboutRadio1" Content="" x:Uid="SettingsAboutRadioActualLog" GroupName="LogGroup" FontSize="18"/>
-                        <RadioButton Name="AboutRadio2" Content="" x:Uid="SettingsAboutRadioLastLog" GroupName="LogGroup" FontSize="18"/>
-                        <Button Name="AboutSendButton" Content="" x:Uid="SettingsAboutButtonSendLog" Click="AboutSendButton_Click" FontSize="18"/>
-                        <Button Name="ProjectPageButton" Click="ProjectPageButton_Click" BorderThickness="0" Padding="0">
-                            <TextBlock FontSize="14">
+                        <TextBlock Name="AppVersion" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock Name="AppAuthor" Margin="0,0,0,10" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock Name="AboutText" Text="" x:Uid="SettingsAboutText" FontSize="{StaticResource TextStyleSmallFontSize}" TextWrapping="Wrap"/>
+                        <RadioButton Name="AboutRadio0" Content="" x:Uid="SettingsAboutRadioNoLog" GroupName="LogGroup" IsChecked="true" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        <RadioButton Name="AboutRadio1" Content="" x:Uid="SettingsAboutRadioActualLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        <RadioButton Name="AboutRadio2" Content="" x:Uid="SettingsAboutRadioLastLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        <Button Name="AboutSendButton" Content="" x:Uid="SettingsAboutButtonSendLog" Click="AboutSendButton_Click" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        <Button Name="ProjectPageButton" Click="ProjectPageButton_Click" BorderThickness="0" Margin="-3">
+                            <TextBlock FontSize="{StaticResource TextStyleMediumFontSize}">
                                 <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonProjectWeb" />
                                 </Underline>
                             </TextBlock>
                         </Button>
-                        <Button Name="PrivacyPolicyButton" Click="ProjectPageButton_Click" BorderThickness="0" Padding="0">
-                            <TextBlock x:Name="TextPrivacy" TextAlignment="Center" FontSize="14">
+                        <Button Name="PrivacyPolicyButton" Click="ProjectPageButton_Click" BorderThickness="0" Margin="-3">
+                            <TextBlock x:Name="TextPrivacy" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}">
                                 <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonPrivacyPolicy" />
                                 </Underline>

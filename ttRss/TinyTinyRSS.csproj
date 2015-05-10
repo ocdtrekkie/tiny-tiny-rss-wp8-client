@@ -7,8 +7,8 @@
     <ProjectGuid>{0618E16B-21A7-42B0-8267-EE5772B5CE31}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ttRss</RootNamespace>
-    <AssemblyName>ttRss</AssemblyName>
+    <RootNamespace>TinyTinyRSS</RootNamespace>
+    <AssemblyName>TinyTinyRss</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -94,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractArticlePage.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -104,6 +105,7 @@
     <Compile Include="Classes\ExtendedFeed.cs" />
     <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\KeyedList.cs" />
+    <Compile Include="Classes\NavigationObject.cs" />
     <Compile Include="Classes\PushNotificationHelper.cs" />
     <Compile Include="Classes\ResolutionHelper.cs" />
     <Compile Include="Classes\WebBrowserHelper.cs" />
@@ -112,6 +114,9 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="HeadlinesPage.xaml.cs">
+      <DependentUpon>HeadlinesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -131,6 +136,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="ArticlePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HeadlinesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,78 @@
+﻿<local:AbstractArticlePage
+    x:Class="TinyTinyRSS.HeadlinesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TinyTinyRSS"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:lclasses="using:TinyTinyRSS.Classes" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <lclasses:BooleanToVisibilityConverter x:Key="VisibiltyConverter" />
+        <lclasses:StringToColumnConverter x:Key="LengthConverter" />
+        <lclasses:BoolToBoldConverter x:Key="BoldConverter" />
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar Name="AppBar">
+            <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
+                                x:Uid="MultiSelectAppBarButton" Icon="List" 
+                                Label="" Click="MultiSelectAppBarButton_Click" />
+            <AppBarButton x:Name="toogleReadAppBarButton" Icon="Mail" Click="AppBarButton_Click" />
+            <AppBarButton x:Name="toggleStarAppBarButton" Icon="Favorite" 
+                                Click="AppBarButton_Click" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="publishAppBarMenu" 
+                          Label="" x:Uid="TooglePublishAppBarButton" Click="AppBarButton_Click" />
+                <AppBarButton x:Name="showUnreadOnlyAppBarMenu" Click="AppBarButton_Click2" />
+                <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click2" 
+                          Label="" x:Uid="MarkAllArticlesRead" />
+                <AppBarButton x:Name="sort1AppBarMenu" Click="AppBarButton_Click2" />
+                <AppBarButton x:Name="sort2AppBarMenu" Click="AppBarButton_Click2" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Name="FeedTitle" Grid.Row="0" TextWrapping="Wrap" FontSize="{StaticResource TextStyleExtraLargeFontSize}" />
+        <ListView Name="HeadlinesView" ItemsSource="{Binding}"  Grid.Row="1" SelectionMode="Single" 
+                  SelectionChanged="HeadlinesView_SelectionChanged" >
+            <ListView.ItemTemplate>
+                <DataTemplate>
+
+                    <Grid Margin="5" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0 1 0 0" 
+                                BorderBrush="{StaticResource PhoneDisabledBrush}">
+                            <TextBlock x:Name="Headline" HorizontalAlignment="Left" TextWrapping="Wrap" 
+                                       FontSize="{StaticResource TextStyleLargeFontSize}" Text="{Binding Headline.title}" 
+                                       FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}" 
+                                       Foreground="{StaticResource PhoneForegroundBrush}"/>
+                        </Border>
+                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
+                                    Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
+                                   VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
+</local:AbstractArticlePage>

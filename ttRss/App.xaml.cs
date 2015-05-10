@@ -19,12 +19,12 @@ using TinyTinyRSS.Interface;
 using CaledosLab.Portable.Logging;
 using Windows.Storage;
 using TinyTinyRSS;
-using ttRss.Common;
+using TinyTinyRSS.Common;
 using Windows.Phone.UI.Input;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
-namespace ttRss
+namespace TinyTinyRSS
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -46,9 +46,6 @@ namespace ttRss
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#endif
         }
 
         /// <summary>
@@ -159,19 +156,6 @@ namespace ttRss
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();
         }
-
-#if WINDOWS_PHONE_APP
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
-        }
-#endif
 
         /// <summary>
         /// Closes the logger.

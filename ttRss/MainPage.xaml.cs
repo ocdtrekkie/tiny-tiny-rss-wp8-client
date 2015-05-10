@@ -20,9 +20,11 @@ using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.Resources;
-using ttRss;
+using TinyTinyRSS;
 using Windows.UI.Xaml.Navigation;
 using Windows.Graphics.Display;
+using Windows.Phone.UI.Input;
+using System.Diagnostics;
 
 namespace TinyTinyRSS
 {
@@ -78,31 +80,42 @@ namespace TinyTinyRSS
         /// <param name="e">Events</param>
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            Type target;
+            var setting = ConnectionSettings.getInstance().headlinesView;
+            if (setting == 0 || setting == 2)
+            {
+                target = typeof(ArticlePage);
+            }
+            else
+            {
+                target = typeof(HeadlinesPage);
+            }
+
             if (validConnection)
             {
                 if (sender == Fresh.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.Fresh);
+                    Frame.Navigate(target, (int)FeedId.Fresh);
                 }
                 else if (sender == Archived.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.Archived);
+                    Frame.Navigate(target, (int)FeedId.Archived);
                 }
                 else if (sender == Starred.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.Starred);
+                    Frame.Navigate(target, (int)FeedId.Starred);
                 }
                 else if (sender == All.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.All);
+                    Frame.Navigate(target, (int)FeedId.All);
                 }
                 else if (sender == Published.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.Published);
+                    Frame.Navigate(target, (int)FeedId.Published);
                 }
                 else if (sender == Recent.Parent)
                 {
-                    Frame.Navigate(typeof(ArticlePage), (int)FeedId.RecentlyRead);
+                    Frame.Navigate(target, (int)FeedId.RecentlyRead);
                 }
             }
             else
@@ -172,13 +185,23 @@ namespace TinyTinyRSS
         {
             if (!feedListUpdate)
             {
+                Type target;
+                var setting = ConnectionSettings.getInstance().headlinesView;
+                if (setting == 0 || setting == 1)
+                {
+                    target = typeof(ArticlePage);
+                }
+                else
+                {
+                    target = typeof(HeadlinesPage);
+                }
                 ExtendedFeed selected = AllFeedsList.SelectedItem as ExtendedFeed;
                 if (selected == null)
                 {
                     return;
                 }
                 AllFeedsList.SelectedItem = null;
-                Frame.Navigate(typeof(ArticlePage), selected.feed.id);
+                Frame.Navigate(target, selected.feed.id);
             }
         }
         private async Task UpdateAllFeedsList(bool refresh)

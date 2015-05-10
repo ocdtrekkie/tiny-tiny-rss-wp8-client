@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Windows.ApplicationModel.Resources;
 
 namespace TinyTinyRSS.Interface.Classes
 {
@@ -25,7 +26,12 @@ namespace TinyTinyRSS.Interface.Classes
             }
             set
             {
-                _content = "<html><body>" + value + "</body></html>";
+                ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+                _content = "<html><body>" + value +
+                    "<br /><a href=\"" + link +
+                    "\">" +
+                    loader.GetString("LoadOriginalLink") +
+                    "</a></body></html>";
             }
         }
         public int? feed_id {get; set;}

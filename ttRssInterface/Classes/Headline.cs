@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -9,15 +10,45 @@ using System.Windows;
 
 namespace TinyTinyRSS.Interface.Classes
 {
-    public sealed class Headline
+    public sealed class Headline : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public int id {get; set;}
-        public bool unread {get; set;}
+        private bool _unread;
+        private string _title;
+        private string _author;
+        private long _updated;
+        public bool unread
+        {
+            get { return _unread; }
+            set
+            {
+                _unread = value;
+                OnPropertyChanged("unread");
+            }
+        }
         public bool marked {get; set;}
         public bool published {get; set;}
-        public long updated {get; set;} //timestamp
+        public long updated
+        {
+            get { return _updated; }
+            set
+            {
+                _updated = value;
+                OnPropertyChanged("formattedDate");
+            }
+        }
         public bool is_updated {get; set;}
-        public string title {get; set;}
+        public string title
+        {
+            get { return _title; }
+            set
+            {
+                _title = value;
+                OnPropertyChanged("title");
+            }
+        }
         public string link {get; set;}
         public int? feed_id {get; set;}
         public object[] tags {get; set;}
@@ -26,8 +57,26 @@ namespace TinyTinyRSS.Interface.Classes
         public int comments_count {get; set;}
         public string comments_link {get; set;}
         public bool always_display_attachments {get; set;}
-        public string author {get; set;}
+        public string author
+        {
+            get { return _author; }
+            set
+            {
+                _author = value;
+                OnPropertyChanged("author");
+            }
+        }
         public int score { get; set; }
+
+        // Create the OnPropertyChanged method to raise the event 
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public string formattedDate
         {
@@ -35,7 +84,7 @@ namespace TinyTinyRSS.Interface.Classes
             {
                 if (updated > 0)
                 {
-                    DateTime updatedDate = TimeReturnUnix2DateUtc(updated).ToLocalTime();
+                    DateTime updatedDate = TimeReturnUnix2DateUtc(_updated).ToLocalTime();
                     string monthDay = updatedDate.ToString(CultureInfo.CurrentCulture.DateTimeFormat.MonthDayPattern, CultureInfo.CurrentCulture);
                     string fullMonth = CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[updatedDate.Month-1];
                     string shortMonth = CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(updatedDate.Month);

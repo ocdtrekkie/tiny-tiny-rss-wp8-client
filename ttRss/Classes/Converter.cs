@@ -55,4 +55,16 @@ namespace TinyTinyRSS.Classes
             return value.Equals(Visibility.Visible);
         }
     }
+    public class BoolToBoldConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            return System.Convert.ToBoolean(value) ? Windows.UI.Text.FontWeights.Bold : Windows.UI.Text.FontWeights.Normal;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            return value.Equals(Windows.UI.Text.FontWeights.Bold);
+        }
+    }
 }

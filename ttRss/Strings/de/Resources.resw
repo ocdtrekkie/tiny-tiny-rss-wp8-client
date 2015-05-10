@@ -194,7 +194,7 @@
     <comment>Label for textfield password in settings.</comment>
   </data>
   <data name="PublishedFeeds.Text" xml:space="preserve">
-    <value>Öffentlichte Artikel</value>
+    <value>Öffentliche Artikel</value>
     <comment>Text for Special Feed "Published"</comment>
   </data>
   <data name="RecentlyReadFeed.Text" xml:space="preserve">
@@ -302,7 +302,7 @@
     <comment>Text for Sort option Default in Settings</comment>
   </data>
   <data name="SettingsSortLabel.Text" xml:space="preserve">
-    <value>Sortierung</value>
+    <value>Sortierung:</value>
     <comment>Text of Label for Sort options in Settings</comment>
   </data>
   <data name="SettingsSortNew.Text" xml:space="preserve">
@@ -412,7 +412,7 @@
     <comment>Text for Special Feed "Fresh"</comment>
   </data>
   <data name="PublishedFeedsText" xml:space="preserve">
-    <value>Öffentlichte Artikel</value>
+    <value>Öffentliche Artikel</value>
     <comment>Text for Special Feed "Published"</comment>
   </data>
   <data name="RecentlyReadFeedText" xml:space="preserve">
@@ -429,5 +429,51 @@
   </data>
   <data name="StarredFeeds.Text" xml:space="preserve">
     <value>Favoriten</value>
+  </data>
+  <data name="ArticlesSortDefault" xml:space="preserve">
+    <value>Standard</value>
+    <comment>Text for Sort option Default in Settings</comment>
+  </data>
+  <data name="ArticlesSortNew" xml:space="preserve">
+    <value>Neuste zuerst</value>
+    <comment>Text for Sort option Newest first in Settings</comment>
+  </data>
+  <data name="ArticlesSortOld" xml:space="preserve">
+    <value>Älteste zuerst</value>
+    <comment>Text for Sort option OldestFirst in Settings</comment>
+  </data>
+  <data name="AllFeedsTitleText" xml:space="preserve">
+    <value>Alle Feeds</value>
+    <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="MultiSelectAppBarButton.Label" xml:space="preserve">
+    <value>Mehrfachauswahl</value>
+    <comment>Label for Appbar button to switch to multi selection</comment>
+  </data>
+  <data name="SettingHeadlinesView.Text" xml:space="preserve">
+    <value>Nutze Listenansicht für:</value>
+  </data>
+  <data name="SettingHeadlinesViewAll.Text" xml:space="preserve">
+    <value>Immer</value>
+  </data>
+  <data name="SettingHeadlinesViewList.Text" xml:space="preserve">
+    <value>Alle außer Sonderfeeds</value>
+  </data>
+  <data name="SettingHeadlinesViewNone.Text" xml:space="preserve">
+    <value>Niemals</value>
+  </data>
+  <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
+    <value>nur Sonderfeeds</value>
+  </data>
+  <data name="ToggleStarAppBarButtonText" xml:space="preserve">
+    <value>Favoriten Status wechseln</value>
+    <comment>Text for AppBarButton favorite on multiselection</comment>
+  </data>
+  <data name="ToggleUnreadAppBarButtonText" xml:space="preserve">
+    <value>Gelesen Status wechseln</value>
+    <comment>Text for AppBarButton read on multiselection</comment>
+  </data>
+  <data name="LoadOriginalLink" xml:space="preserve">
+    <value>Lade Originalseite</value>
   </data>
 </root>
