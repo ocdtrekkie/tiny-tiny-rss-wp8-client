@@ -176,7 +176,7 @@ namespace TinyTinyRSS
                     _moreArticlesLoading = true;
                     SetProgressBar(true, true);
                     bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
-                    
+                    // First get new items if existing
                     List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0, _sortOrder);
 
                     if (headlines.Count <= 0)
@@ -188,16 +188,8 @@ namespace TinyTinyRSS
                         bool newItems = false;
                         foreach (Headline h in headlines)
                         {
-                            bool contains = false;
-                            foreach (WrappedArticle a in ArticlesCollection)
-                            {
-                                if (a.Headline.id == h.id)
-                                {
-                                    contains = true;
-                                    break;
-                                }
-                            }
-                            if (!contains)
+                            
+                            if (!isHeadlineInArticleCollection(h))
                             {
                                 ArticlesCollection.Add(new WrappedArticle(h));
                                 newItems = true;
@@ -205,6 +197,24 @@ namespace TinyTinyRSS
                         }
                         _moreArticles = newItems;
                         updateCount(false);
+                    }
+                    // Then check if there are more items at the end.
+                    int skip = ArticlesCollection.Count;
+                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
+                    if (headlinesAfter.Count > 0)
+                    {
+                        bool newItems = false;
+                        foreach (Headline h in headlinesAfter)
+                        {
+
+                            if (!isHeadlineInArticleCollection(h))
+                            {
+                                ArticlesCollection.Add(new WrappedArticle(h));
+                                newItems = true;
+                            }
+                        }
+                        updateCount(false);
+                        _moreArticles = _moreArticles || newItems;
                     }
                 }
                 catch (TtRssException ex)
@@ -217,6 +227,19 @@ namespace TinyTinyRSS
                     SetProgressBar(false);
                 }
             }
+        }
+
+        private bool isHeadlineInArticleCollection(Headline headline) {
+            bool contains = false;
+            foreach (WrappedArticle a in ArticlesCollection)
+            {
+                if (a.Headline.id == headline.id)
+                {
+                    contains = true;
+                    break;
+                }
+            }
+            return contains;
         }
     }
 }

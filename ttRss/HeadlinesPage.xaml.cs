@@ -32,6 +32,7 @@ namespace TinyTinyRSS
     public sealed partial class HeadlinesPage : AbstractArticlePage
     {
         private StatusBar statusBar;
+        private int initialIndex = 0;
 
         public HeadlinesPage()
         {
@@ -77,6 +78,7 @@ namespace TinyTinyRSS
             }
             var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
             sv.ViewChanged += ViewChanged;
+            HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
         }
 
         private async void ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -96,6 +98,7 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
             if (e.Parameter is NavigationObject)
             {
                 initialized = true;
@@ -111,8 +114,8 @@ namespace TinyTinyRSS
                 _showUnreadOnly = nav._showUnreadOnly;
                 ArticlesCollection = nav.ArticlesCollection;
                 HeadlinesView.DataContext = ArticlesCollection;
-                HeadlinesView.ScrollIntoView(ArticlesCollection[nav.selectedIndex],ScrollIntoViewAlignment.Leading);
-                BuildLocalizedApplicationBar();
+                initialIndex = nav.selectedIndex;
+                UpdateLocalizedApplicationBar(true);
                 Logger.WriteLine("NavigatedTo HeadlinesPage from ArticlePage for Feed " + feedId);
             }
             else
@@ -121,7 +124,6 @@ namespace TinyTinyRSS
                 feedId = (int)e.Parameter;
                 Logger.WriteLine("NavigatedTo HeadlinesPage for Feed " + feedId);
             }
-            base.OnNavigatedTo(e);
         }
 
 #if WINDOWS_PHONE_APP
