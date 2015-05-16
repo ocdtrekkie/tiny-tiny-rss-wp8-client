@@ -19,6 +19,7 @@ namespace TinyTinyRSS.Interface
         public static string _headlinesViewKey = "HeadlinesView";
         public static string _progressBarAsCounterKey = "ProgressAsCntr";
         public static string _liveTileActivatedKey = "LiveTileActive";
+        public static string _UseDarkBackgroundKey = "UseDarkBackground";
         public static string _liveTileUpdateIntervalKey = "LiveTileUpdateInterval";
         public static string _channelUriKey = "LiveTileUpdateChannel";
 
@@ -34,6 +35,7 @@ namespace TinyTinyRSS.Interface
         private string _liveTileActivated;
         private string _liveTileUpdateInterval;
         private string _liveTileChannelUri;
+        private string _useDarkBackground;
 
         private ConnectionSettings()
         {
@@ -134,6 +136,23 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_liveTileActivatedKey, value.ToString());
                 _liveTileActivated = value.ToString();
+            }
+        }
+
+        public bool useDarkBackground
+        {
+            get
+            {
+                if (_useDarkBackground == null)
+                {
+                    _useDarkBackground = ReadSetting(_UseDarkBackgroundKey);
+                }
+                return _useDarkBackground.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_UseDarkBackgroundKey, value.ToString());
+                _useDarkBackground = value.ToString();
             }
         }
 

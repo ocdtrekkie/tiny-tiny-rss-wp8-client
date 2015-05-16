@@ -67,6 +67,7 @@ namespace TinyTinyRSS
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
+            DarkArticleBackgroundCheckbox.IsChecked = ConnectionSettings.getInstance().useDarkBackground;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             SettingHeadlinesViewBox.SelectedIndex = ConnectionSettings.getInstance().headlinesView;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
@@ -300,7 +301,9 @@ namespace TinyTinyRSS
 				ConnectionSettings.getInstance().showUnreadOnly = ShowUnreadOnlyCheckbox.IsChecked.Value;
 			} else if(sender==ProgressAsCntrCheckbox) {
 				ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
-			}  
+            } else if (sender == DarkArticleBackgroundCheckbox) {
+                ConnectionSettings.getInstance().useDarkBackground = DarkArticleBackgroundCheckbox.IsChecked.Value;
+            }  
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

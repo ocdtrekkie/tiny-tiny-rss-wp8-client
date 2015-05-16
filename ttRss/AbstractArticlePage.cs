@@ -200,6 +200,24 @@ namespace TinyTinyRSS
                     }
                     // Then check if there are more items at the end.
                     int skip = ArticlesCollection.Count;
+                    if (_IsSpecial())
+                    {
+                        switch (feedId)
+                        {
+                            case -3: ArticlesCollection.Count(e => e.Headline.unread);
+                                break;
+                            case -1: ArticlesCollection.Count(e => e.Headline.marked);
+                                break;
+                            case -2: ArticlesCollection.Count(e => e.Headline.published);
+                                break;
+                            default: break;
+                        }
+                    }
+                    else if (_showUnreadOnly)
+                    {
+                        skip = ArticlesCollection.Count(e => e.Headline.unread);
+                    }
+
                     List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
                     if (headlinesAfter.Count > 0)
                     {

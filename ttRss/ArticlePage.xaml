@@ -37,7 +37,7 @@
                     </StackPanel>
                 </Grid>
                 <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->
-                <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0"/>
+                <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="0,0"/>
                 <!--</ScrollViewer>-->
             </Grid>
         </DataTemplate>
@@ -68,7 +68,7 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Pivot Name="PivotControl" PivotItemLoading="PivotControl_LoadingPivotItem" PivotItemUnloading="resetPivot" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Pivot.Title>
-                <Grid HorizontalAlignment="Stretch" Name="PivotHeader" Width="355" 
+                <Grid HorizontalAlignment="Stretch" Name="PivotHeader"
                       Margin="0,-20,0,5" >
                     <Grid.RowDefinitions>
                         <RowDefinition/>

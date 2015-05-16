@@ -477,4 +477,7 @@
   <data name="LoadOriginalLink" xml:space="preserve">
     <value>Load original page</value>
   </data>
+  <data name="SettingsDarkBackground.Text" xml:space="preserve">
+    <value>Use dark background for article text</value>
+  </data>
 </root>

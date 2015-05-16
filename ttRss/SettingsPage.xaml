@@ -57,6 +57,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -71,14 +72,17 @@
                         <CheckBox x:Name="ProgressAsCntrCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.ColumnSpan="2" Click="Changed">
                             <TextBlock Text="" x:Uid="SettingsScrollarAsCounter" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
-                        <TextBlock x:Name="SortLabel" Text="" Grid.ColumnSpan="2" x:Uid="SettingsSortLabel" Grid.Column="0" Grid.Row="3" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
-                        <ComboBox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SortBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
+                        <CheckBox x:Name="DarkArticleBackgroundCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" Click="Changed">
+                            <TextBlock Text="" x:Uid="SettingsDarkBackground" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        </CheckBox>
+                        <TextBlock x:Name="SortLabel" Text="" Grid.ColumnSpan="2" x:Uid="SettingsSortLabel" Grid.Column="0" Grid.Row="4" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" x:Name="SortBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
                             <TextBlock Name="SortDefault" Text="" x:Uid="SettingsSortDefault" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock Name="SortNewFirst" Text="" x:Uid="SettingsSortNew" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock  Name="SortOldFirst" Text="" x:Uid="SettingsSortOld" FontSize="{StaticResource TextStyleMediumFontSize}" />
                         </ComboBox>
-                        <TextBlock x:Name="SettingHeadlinesView" Text="" Grid.ColumnSpan="2" x:Uid="SettingHeadlinesView" Grid.Column="0" Grid.Row="5" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
-                        <ComboBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="SettingHeadlinesViewBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
+                        <TextBlock x:Name="SettingHeadlinesView" Text="" Grid.ColumnSpan="2" x:Uid="SettingHeadlinesView" Grid.Column="0" Grid.Row="6" FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
+                        <ComboBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2"  x:Name="SettingHeadlinesViewBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
                             <TextBlock Name="SettingHeadlinesViewNone" Text="" x:Uid="SettingHeadlinesViewNone" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock Name="SettingHeadlinesViewSpecial" Text="" x:Uid="SettingHeadlinesViewSpecial" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock Name="SettingHeadlinesViewList" Text="" x:Uid="SettingHeadlinesViewList" FontSize="{StaticResource TextStyleMediumFontSize}" />
