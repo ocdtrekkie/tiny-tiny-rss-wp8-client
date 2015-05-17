@@ -44,7 +44,7 @@ namespace TinyTinyRSS
         {
             this.Loaded += PageLoaded;
             InitializeComponent();
-            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait | DisplayOrientations.Landscape | DisplayOrientations.LandscapeFlipped;
+            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
 
 #if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;

@@ -3,7 +3,7 @@
   <Identity Name="41231TheScientist.TinyTinyRSSReader" Publisher="CN=43EC541E-A7AC-483F-936F-571289112EAB" Version="3.0.1.0" />
   <mp:PhoneIdentity PhoneProductId="ad6373d0-14b8-4908-8a40-2208f047aeaf" PhonePublisherId="4b22ace6-b3ff-4b70-92b2-c4bcb07a0645" />
   <Properties>
-    <DisplayName>Tiny Tiny RSS</DisplayName>
+    <DisplayName>Tiny Tiny RSS Reader</DisplayName>
     <PublisherDisplayName>TheScientist</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -25,8 +25,6 @@
         </m3:DefaultTile>
         <m3:InitialRotationPreference>
           <m3:Rotation Preference="portrait" />
-          <m3:Rotation Preference="landscape" />
-          <m3:Rotation Preference="landscapeFlipped" />
         </m3:InitialRotationPreference>
       </m3:VisualElements>
     </Application>

@@ -36,13 +36,12 @@ namespace TinyTinyRSS.Interface.Classes
                 string colorStyle = "";
                 if (ConnectionSettings.getInstance().useDarkBackground)
                 {
-                    colorStyle = "<style type=\"text/css\" title=\"text/css\">" +
-                        "html, body { color: #fff!Important; background-color: #000;} " +
-                        "a:link {color: #81DAF5;}" +
-                        "img, iframe{width:100%;max-width:" + maxWidth.ToString() + "px;}</style>";
+                    colorStyle = "html, body { color: #fff!Important; background-color: #000;} " +
+                        "a:link {color: #81DAF5;} ";
                 }
-                _content = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
-                     + colorStyle + "</head>"
+                _content = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style type=\"text/css\" title=\"text/css\">"
+                    + colorStyle +
+                    "img, iframe{width:100%;max-width:" + maxWidth.ToString() + "px;}</style>" + "</head>"
                     + "<body>" + value +
                     "<br /><a href=\"" + link +
                     "\">" +

@@ -14,6 +14,9 @@
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AppxBundle>Never</AppxBundle>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -163,14 +166,21 @@
     <Content Include="Assets\IconicTileSmall.png" />
     <Content Include="Assets\LiveTile.png" />
     <Content Include="Assets\lockscreen.scale-100.png" />
+    <Content Include="Assets\lockscreen.scale-140.png" />
+    <Content Include="Assets\lockscreen.scale-240.png" />
     <Content Include="Assets\lockscreen.svg" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\SquareTile150x150.scale-100.png" />
+    <Content Include="Assets\SquareTile150x150.scale-140.png" />
     <Content Include="Assets\SquareTile150x150.scale-240.png" />
+    <Content Include="Assets\SquareTile71x71.scale-140.png" />
+    <Content Include="Assets\SquareTile71x71.scale-100.png" />
     <Content Include="Assets\SquareTile71x71.scale-240.png" />
     <Content Include="Assets\storeIcon.png" />
     <Content Include="Assets\storeIcon2.png" />
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\Tile.png" />
+    <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\de\Resources.resw" />
