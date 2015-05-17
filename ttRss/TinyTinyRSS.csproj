@@ -165,8 +165,6 @@
     <Content Include="Assets\IconicTileMediumLarge.png" />
     <Content Include="Assets\IconicTileSmall.png" />
     <Content Include="Assets\LiveTile.png" />
-    <Content Include="Assets\lockscreen.scale-100.png" />
-    <Content Include="Assets\lockscreen.scale-140.png" />
     <Content Include="Assets\lockscreen.scale-240.png" />
     <Content Include="Assets\lockscreen.svg" />
     <Content Include="Assets\Logo.png" />
