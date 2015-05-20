@@ -480,4 +480,10 @@
   <data name="SettingsDarkBackground.Text" xml:space="preserve">
     <value>Use dark background for article text</value>
   </data>
+  <data name="InfoIcons" xml:space="preserve">
+    <value>If your tile does not show an icon, please reinstall the app.</value>
+  </data>
+  <data name="RemindMe" xml:space="preserve">
+    <value>Remind me again</value>
+  </data>
 </root>

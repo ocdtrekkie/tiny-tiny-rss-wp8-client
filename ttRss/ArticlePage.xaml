@@ -37,7 +37,7 @@
                     </StackPanel>
                 </Grid>
                 <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->
-                <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="0,0"/>
+                <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0"/>
                 <!--</ScrollViewer>-->
             </Grid>
         </DataTemplate>

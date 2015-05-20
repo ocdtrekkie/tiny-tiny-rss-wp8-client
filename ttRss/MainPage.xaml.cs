@@ -45,6 +45,18 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+            if (ConnectionSettings.getInstance().firstStart)
+            {
+                MessageDialog msgbox = new MessageDialog(loader.GetString("InfoIcons"));
+                msgbox.Commands.Add(new UICommand("Ok",
+                new UICommandInvokedHandler(this.CommandInvokedHandler),"close"));
+                msgbox.Commands.Add(new UICommand(
+                    loader.GetString("RemindMe"),
+                    new UICommandInvokedHandler(this.CommandInvokedHandler), "remindme"));
+                // Set the command to be invoked when escape is pressed
+                msgbox.CancelCommandIndex = 1;
+                await msgbox.ShowAsync();
+            }            
             try
             {
                 statusBar.ProgressIndicator.ProgressValue = null; 
@@ -71,6 +83,14 @@ namespace TinyTinyRSS
             }
             statusBar.ProgressIndicator.Text = "";
             await statusBar.ProgressIndicator.HideAsync();
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
+            if (command.Id.Equals("close"))
+            {
+                ConnectionSettings.getInstance().firstStart = false;
+            }            
         }
 
         /// <summary>

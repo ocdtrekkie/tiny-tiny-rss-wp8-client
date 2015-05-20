@@ -41,7 +41,7 @@ namespace TinyTinyRSS.Interface.Classes
                 }
                 _content = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style type=\"text/css\" title=\"text/css\">"
                     + colorStyle +
-                    "img, iframe{width:100%;max-width:" + maxWidth.ToString() + "px;}</style>" + "</head>"
+                    "img, iframe{width:100%;max-width:" + maxWidth.ToString() + "px;height:auto;}</style>" + "</head>"
                     + "<body>" + value +
                     "<br /><a href=\"" + link +
                     "\">" +

@@ -158,9 +158,6 @@
   <ItemGroup>
     <Content Include="Assets\ApplicationIcon.scale-240.png" />
     <Content Include="Assets\FeedIcon.png" />
-    <Content Include="Assets\IconBase.svg" />
-    <Content Include="Assets\IconBaseVersuch.svg" />
-    <Content Include="Assets\IconBase_2.svg" />
     <Content Include="Assets\IconBase_3.svg" />
     <Content Include="Assets\IconicTileMediumLarge.png" />
     <Content Include="Assets\IconicTileSmall.png" />

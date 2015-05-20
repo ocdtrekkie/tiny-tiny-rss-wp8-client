@@ -479,4 +479,10 @@
   <data name="SettingsDarkBackground.Text" xml:space="preserve">
     <value>Nutze dunklen Hintergrund für Artikeltext</value>
   </data>
+  <data name="InfoIcons" xml:space="preserve">
+    <value>Wenn deine Kachel kein Icon anzeigt, installiere die App bitte erneut.</value>
+  </data>
+  <data name="RemindMe" xml:space="preserve">
+    <value>Erneut erinnern</value>
+  </data>
 </root>

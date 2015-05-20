@@ -36,6 +36,7 @@ namespace TinyTinyRSS.Interface
         private string _liveTileUpdateInterval;
         private string _liveTileChannelUri;
         private string _useDarkBackground;
+        private string _firstStart;
 
         private ConnectionSettings()
         {
@@ -118,6 +119,23 @@ namespace TinyTinyRSS.Interface
             set
             {
                 SaveSetting(_markReadKey, value.ToString());
+                _markRead = value.ToString();
+            }
+        }
+
+        public bool firstStart
+        {
+            get
+            {
+                if (_markRead == null)
+                {
+                    _markRead = ReadSetting("firstStartKey");
+                }
+                return !_markRead.ToLower().Equals("false");
+            }
+            set
+            {
+                SaveSetting("firstStartKey", value.ToString());
                 _markRead = value.ToString();
             }
         }
@@ -217,7 +235,7 @@ namespace TinyTinyRSS.Interface
                 {
                     _headlinesView = ReadSetting(_headlinesViewKey);
                     if (_headlinesView.Equals(""))
-                        _headlinesView = "0";
+                        _headlinesView = "3";
                 }
                 return int.Parse(_headlinesView);
             }
