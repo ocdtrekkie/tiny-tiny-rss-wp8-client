@@ -127,16 +127,16 @@ namespace TinyTinyRSS.Interface
         {
             get
             {
-                if (_markRead == null)
+                if (_firstStart == null)
                 {
-                    _markRead = ReadSetting("firstStartKey");
+                    _firstStart = ReadSetting("firstStartKey");
                 }
-                return !_markRead.ToLower().Equals("false");
+                return !_firstStart.ToLower().Equals("false");
             }
             set
             {
                 SaveSetting("firstStartKey", value.ToString());
-                _markRead = value.ToString();
+                _firstStart = value.ToString();
             }
         }
 
