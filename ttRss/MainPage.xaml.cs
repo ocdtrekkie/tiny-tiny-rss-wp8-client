@@ -31,6 +31,8 @@ namespace TinyTinyRSS
 
     public partial class MainPage : Page
     {
+        private static int pivotIdx = 0;
+
         private bool validConnection = false;
         private StatusBar statusBar;
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -40,6 +42,7 @@ namespace TinyTinyRSS
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+            MainPivot.SelectedIndex = pivotIdx;
             this.Loaded += PageLoaded;
         }
 
@@ -341,6 +344,11 @@ namespace TinyTinyRSS
                 e.Handled = true;
                 Frame.Navigate(typeof(ArticlePage), selected.cat.id);
             }
+        }
+
+        private void MainPivot_PivotItemLoaded(Pivot sender, PivotItemEventArgs args)
+        {
+            pivotIdx = sender.SelectedIndex;
         }
     }
 }

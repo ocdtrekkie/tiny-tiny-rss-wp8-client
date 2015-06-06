@@ -45,6 +45,9 @@ namespace TinyTinyRSS
         public App()
         {
             this.InitializeComponent();
+#if WINDOWS_PHONE_APP
+            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+#endif
             this.Suspending += this.OnSuspending;
         }
 
@@ -173,5 +176,27 @@ namespace TinyTinyRSS
             Logger.WriteLine("Channel Uri:" + ConnectionSettings.getInstance().channelUri);
             Logger.Save(file);
         }
+
+#if WINDOWS_PHONE_APP
+        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.SourcePageType == typeof(ArticlePage))
+            {
+                // Article Page hat eigenen Back Handler
+                return;
+            }
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                rootFrame.GoBack();
+            }
+            if (!e.Handled && rootFrame!=null && rootFrame.SourcePageType == typeof(MainPage))
+                Application.Current.Exit();
+        }
+#endif
+
     }
 }

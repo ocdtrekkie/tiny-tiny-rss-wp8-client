@@ -45,9 +45,6 @@ namespace TinyTinyRSS
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#endif
             SetFields();
             string appVersion = string.Format("Version: {0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Major,
@@ -306,12 +303,6 @@ namespace TinyTinyRSS
             }  
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-            base.OnNavigatedFrom(e);
-        }
-
 		// Sort options changed
         private void SelChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -327,18 +318,5 @@ namespace TinyTinyRSS
             // Launch URI for the lock screen settings screen.
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings-lock:"));
         }
-
-#if WINDOWS_PHONE_APP
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
-        }
-#endif
     }
 }

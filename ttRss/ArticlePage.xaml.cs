@@ -75,7 +75,11 @@ namespace TinyTinyRSS
         {
             if (!initialized)
             {
-                await LoadHeadlines();
+                bool result = await LoadHeadlines();
+                if (!result)
+                {
+                    return;
+                }
                 _selectedIndex = 0;
                 PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
             }
@@ -127,6 +131,14 @@ namespace TinyTinyRSS
                 }
                 int localSelected = _selectedIndex;
                 SetProgressBar(true);
+                if (ConnectionSettings.getInstance().useDarkBackground)
+                {
+                    string colorStyle = "<html><head>"
+                     + "<style type=\"text/css\" title=\"text/css\">html, body { color: #fff!Important; background-color: #000;} "
+                     + "a:link {color: #81DAF5;} </style></head>"
+                     + "<body></body></html>";
+                    setHtml(colorStyle);
+                }
                 updateCount(false);
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];

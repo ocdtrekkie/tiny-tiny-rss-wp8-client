@@ -39,9 +39,6 @@ namespace TinyTinyRSS
             this.Loaded += PageLoaded;
             InitializeComponent();
             Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#endif
             statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
@@ -57,7 +54,11 @@ namespace TinyTinyRSS
         {
             if (!initialized)
             {
-                await LoadHeadlines();
+                bool result = await LoadHeadlines();
+                if (!result)
+                {
+                    return;
+                }
                 HeadlinesView.DataContext = ArticlesCollection;
             }
             if (feedId<=0)
@@ -126,41 +127,8 @@ namespace TinyTinyRSS
             }
         }
 
-#if WINDOWS_PHONE_APP
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            if (!_IsSpecial() && ArticlesCollection.Count > 0)
-            {
-                try
-                {
-                    Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
-                    if (theFeed != null)
-                    {
-                        theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
-                    }
-                }
-                catch (TtRssException ex)
-                {
-                    checkException(ex);
-                }
-            }
-            foreach (PageStackEntry page in Frame.BackStack)
-            {
-                Debug.WriteLine(page.SourcePageType.FullName);
-            }
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                rootFrame.GoBack();
-            }
-        }
-#endif
-
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
             base.OnNavigatedFrom(e);
         }
 

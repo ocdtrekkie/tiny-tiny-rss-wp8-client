@@ -175,6 +175,7 @@
     <Content Include="Assets\storeIcon2.png" />
     <Content Include="Assets\StoreLogo.scale-240.png" />
     <Content Include="Assets\Tile.png" />
+    <Content Include="Strings\style.css" />
     <None Include="Package.StoreAssociation.xml" />
   </ItemGroup>
   <ItemGroup>

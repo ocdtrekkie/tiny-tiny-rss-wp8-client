@@ -39,7 +39,7 @@
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivotsteuerelement-->
-        <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle">
+        <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle" PivotItemLoaded="MainPivot_PivotItemLoaded">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SpecialFeedsPivot">
                 <PivotItem.Header>
@@ -97,7 +97,7 @@
                         <ListView x:Name="AllFeedsList" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
                                         SelectionChanged="AllFeedsList_SelectionChanged"                                  
-                                        Background="Transparent" VerticalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                        Background="Transparent" VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Grid HorizontalAlignment="Stretch" Margin="0,0,20,0">

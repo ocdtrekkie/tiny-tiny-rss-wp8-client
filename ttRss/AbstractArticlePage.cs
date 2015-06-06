@@ -103,6 +103,7 @@ namespace TinyTinyRSS
                     {
                         Frame.Navigate(typeof(MainPage));
                     }
+                    return false;
                 }
                 else
                 {
@@ -116,6 +117,7 @@ namespace TinyTinyRSS
             catch (TtRssException ex)
             {
                 checkException(ex);
+                return false;
             }
             finally
             {
@@ -130,6 +132,15 @@ namespace TinyTinyRSS
             {
                 MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
                 await msgbox.ShowAsync();
+                Frame rootFrame = Window.Current.Content as Frame;
+                if (rootFrame != null && rootFrame.CanGoBack)
+                {
+                    rootFrame.GoBack();
+                }
+                else
+                {
+                    Frame.Navigate(typeof(MainPage));
+                }
             }
         }
 

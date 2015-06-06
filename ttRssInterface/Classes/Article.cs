@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Windows.ApplicationModel.Resources;
 using Windows.Graphics.Display;
 using Windows.UI.ViewManagement;
@@ -39,14 +40,12 @@ namespace TinyTinyRSS.Interface.Classes
                     colorStyle = "html, body { color: #fff!Important; background-color: #000;} " +
                         "a:link {color: #81DAF5;} ";
                 }
-                _content = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style type=\"text/css\" title=\"text/css\">"
-                    + colorStyle +
-                    "img, iframe{width:100%;max-width:" + maxWidth.ToString() + "px;height:auto;}</style>" + "</head>"
-                    + "<body>" + value +
-                    "<br /><a href=\"" + link +
-                    "\">" +
-                    loader.GetString("LoadOriginalLink") +
-                    "</a></body></html>";
+                 _content = "<html><head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">"
+                     + "<style type=\"text/css\" title=\"text/css\">" + colorStyle +"</style>"
+                    + "<link href=\"ms-appx-web:///Strings/style.css\" rel=\"stylesheet\" /></head>"
+                    + "<body>" + value
+                    + "<br /><a href=\"" + link + "\">" + loader.GetString("LoadOriginalLink")
+                    + "</a></body></html>";
             }
         }
         public int? feed_id { get; set; }
