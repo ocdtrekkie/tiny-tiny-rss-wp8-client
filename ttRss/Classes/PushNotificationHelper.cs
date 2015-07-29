@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TinyTinyRSS.Interface;
+using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface;
 using Windows.Networking.PushNotifications;
 using Windows.Security.Cryptography;
@@ -145,7 +146,14 @@ namespace TinyTinyRSS.Classes
             }
             if (fresh == -1)
             {
-                fresh = await TtRssInterface.getInterface().getUnReadCount(true);
+                try
+                {
+                    fresh = await TtRssInterface.getInterface().getUnReadCount(true);
+                }
+                catch (TtRssException)
+                {
+                    fresh = 0;
+                }
             }
             ITileSquare150x150IconWithBadge tileContent = TileContentFactory.CreateTileSquare150x150IconWithBadge();
 

@@ -36,9 +36,7 @@
                         <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Grid>
-                <!--<ScrollViewer x:Name="ScrollContent" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Grid.Row="3">-->
-                <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="5,0"/>
-                <!--</ScrollViewer>-->
+                <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="{Binding}"/>                
             </Grid>
         </DataTemplate>
     </Page.Resources>

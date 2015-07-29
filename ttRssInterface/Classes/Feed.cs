@@ -31,6 +31,23 @@ namespace TinyTinyRSS.Interface.Classes
             }
         }
 
+        public string formattedUnread
+        {
+            get
+            {
+                string value;
+                if (this.unread > 0)
+                {
+                    value = "(" + unread + ")";
+                }
+                else
+                {
+                    value = "(-)";
+                }
+                return value;
+            }
+        }
+
         public BitmapImage icon
         {
             get

@@ -142,6 +142,10 @@ namespace TinyTinyRSS
                     Frame.Navigate(typeof(MainPage));
                 }
             }
+            else
+            {
+                throw ex;
+            }
         }
 
         protected List<string> getSortOptions()

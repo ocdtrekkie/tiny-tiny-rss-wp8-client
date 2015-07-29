@@ -75,7 +75,14 @@ namespace TinyTinyRSS
             }
             else
             {
-                FeedTitle.Text = TtRssInterface.getInterface().getFeedById(feedId).title;
+                try
+                {
+                    FeedTitle.Text = TtRssInterface.getInterface().getFeedById(feedId).title;
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
             }
             var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
             sv.ViewChanged += ViewChanged;
@@ -289,24 +296,31 @@ namespace TinyTinyRSS
             if (sender == markAllReadMenu)
             {
                 SetProgressBar(true);
-                bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
-                if (success)
+                try
                 {
-                    foreach (WrappedArticle wa in ArticlesCollection)
+                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                    if (success)
                     {
-                        if (wa.Headline.unread)
+                        foreach (WrappedArticle wa in ArticlesCollection)
                         {
-                            wa.Headline.unread = false;
-                        }
-                        if (wa.Article != null && wa.Article.unread)
-                        {
-                            wa.Article.unread = false;
+                            if (wa.Headline.unread)
+                            {
+                                wa.Headline.unread = false;
+                            }
+                            if (wa.Article != null && wa.Article.unread)
+                            {
+                                wa.Article.unread = false;
+                            }
                         }
                     }
+                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                    SetProgressBar(false);
+                    await tsk;
                 }
-                Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                SetProgressBar(false);
-                await tsk;
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
                 return;
             }
             else if (sender == showUnreadOnlyAppBarMenu)

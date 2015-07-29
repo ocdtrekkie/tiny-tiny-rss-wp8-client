@@ -1,0 +1,504 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllFeedsSpecialFeed.Text" xml:space="preserve">
+    <value>Все статьи</value>
+    <comment>Текст для особого канала "Все статьи"</comment>
+  </data>
+  <data name="AllFeedsTitle.Text" xml:space="preserve">
+    <value>Все статьи</value>
+    <comment>Заголовок для пункта меню "Все статьи" на главной странице</comment>
+  </data>
+  <data name="AppBarSortLabel" xml:space="preserve">
+    <value>Сортировка: </value>
+    <comment>Текст для кнопки сортировки в приложении</comment>
+  </data>
+  <data name="ArchivedFeeds.Text" xml:space="preserve">
+    <value>Архив статей</value>
+    <comment>Текст для особого канала "Архив статей"</comment>
+  </data>
+  <data name="CancelAppBarButtonText" xml:space="preserve">
+    <value>Отмена</value>
+    <comment>Текст для кнопки "Отмена" в настройках</comment>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Категории</value>
+    <comment>Заголовок для закладки "Категории" на главной странице</comment>
+  </data>
+  <data name="ErrorAddLiveTile" xml:space="preserve">
+    <value>Ошибка включения живой плитки. Обратитесь к разработчику, если ошибка будет повторяться.</value>
+    <comment>Сообщение при ошибке включения живой плитки.</comment>
+  </data>
+  <data name="FailedConnection" xml:space="preserve">
+    <value>Ошибка соединения</value>
+    <comment>Сообщение при ошибке соединения с сервером.</comment>
+  </data>
+  <data name="FreshFeeds.Text" xml:space="preserve">
+    <value>Новые статьи</value>
+    <comment>Текст для особого канала "Новые статьи"</comment>
+  </data>
+  <data name="LoadMoreArticles" xml:space="preserve">
+    <value>...обновление статей</value>
+    <comment>Сообщение в области уведомлений при загрузке статей.</comment>
+  </data>
+  <data name="LoginProgress" xml:space="preserve">
+    <value>Обновление статей...</value>
+    <comment>Сообщение для страницы входа</comment>
+  </data>
+  <data name="MarkAllArticlesRead.Label" xml:space="preserve">
+    <value>Пометить всё как прочитано</value>
+    <comment>Заголовок для пункта меню "Пометить все статьи как прочитаные"</comment>
+  </data>
+  <data name="MarkReadAppBarButtonText" xml:space="preserve">
+    <value>В прочитано</value>
+    <comment>Текст для кнопки "В прочитано"</comment>
+  </data>
+  <data name="MarkReadSettings.Text" xml:space="preserve">
+    <value>Помечать как прочитано автоматически</value>
+    <comment>Текст для настройки "Помечать как прочитано автоматически"</comment>
+  </data>
+  <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
+    <value>В непрочитано</value>
+    <comment>Текст для кнопки "В непрочитано"</comment>
+  </data>
+  <data name="NoArticlesMessage" xml:space="preserve">
+    <value>Статьи не найдены.</value>
+    <comment>Сообщение для страницы статьи, если ничего не найдено.</comment>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>Соединение не установлено. Проверьте ваши настройки.</value>
+    <comment>Текст для сообщения при недоступности сервера.</comment>
+  </data>
+  <data name="OpenExtAppBarButton.Label" xml:space="preserve">
+    <value>Открыть в браузере</value>
+    <comment>Текст для кнопки "Открыть в браузере"</comment>
+  </data>
+  <data name="PasswordSettings.Text" xml:space="preserve">
+    <value>Пароль</value>
+    <comment>Текст настройки пароля.</comment>
+  </data>
+  <data name="PublishedFeeds.Text" xml:space="preserve">
+    <value>Опубликовано</value>
+    <comment>Текст для особого канала "Опубликовано"</comment>
+  </data>
+  <data name="RecentlyReadFeed.Text" xml:space="preserve">
+    <value>Недавно прочитано</value>
+    <comment>Текст для кнопки показа недавно прочитаных статей.</comment>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>Обновить</value>
+    <comment>Текст для кнопки "Обновить" (счётчик статей) </comment>
+  </data>
+  <data name="ResourceFlowDirection" xml:space="preserve">
+    <value>LeftToRight</value>
+    <comment>Управляет направлением расположениея всех элементов. Устанавливается как традиционное направление для языка этого файла</comment>
+  </data>
+  <data name="ResourceLanguage" xml:space="preserve">
+    <value>ru-RU</value>
+    <comment>Управляет языком и устанавливает шрифты и выравнивания для всех элементов. Устанавливается как язык этого файла.</comment>
+  </data>
+  <data name="SaveAppBarButtonText" xml:space="preserve">
+    <value>Применить</value>
+    <comment>Текст для кнопки Сохранить (Настройки)</comment>
+  </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>Сохранить настройки?</value>
+    <comment>Заголовок для сообщения несохраненных настроек</comment>
+  </data>
+  <data name="ServerSetting.Text" xml:space="preserve">
+    <value>Сервер</value>
+    <comment>Текст для настройки сервера.</comment>
+  </data>
+  <data name="SettingsAboutAuthor" xml:space="preserve">
+    <value>Автор: </value>
+    <comment>Текст для поля Автор страницы "О программе"</comment>
+  </data>
+  <data name="SettingsAboutButtonPrivacyPolicy.Text" xml:space="preserve">
+    <value>Политика безопасности</value>
+  </data>
+  <data name="SettingsAboutButtonProjectWeb.Text" xml:space="preserve">
+    <value>Сайт проекта</value>
+    <comment>Текст для кнопки перехода на сайт проекта</comment>
+  </data>
+  <data name="SettingsAboutButtonSendLog.Content" xml:space="preserve">
+    <value>Написать  E-Mail</value>
+    <comment>Текст для кнопки почты.</comment>
+  </data>
+  <data name="SettingsAboutHead.Text" xml:space="preserve">
+    <value>О программе</value>
+    <comment>Заголовок "О программе" в настройках</comment>
+  </data>
+  <data name="SettingsAboutRadioActualLog.Content" xml:space="preserve">
+    <value>Лог-файл текущего сеанса</value>
+    <comment>Текст для посылки лога текущего сеанса по почте.</comment>
+  </data>
+  <data name="SettingsAboutRadioLastLog.Content" xml:space="preserve">
+    <value>Лог-файл последнего сеанса</value>
+    <comment>Текст для посылки лога последнего сеанса по почте.</comment>
+  </data>
+  <data name="SettingsAboutRadioNoLog.Content" xml:space="preserve">
+    <value>Не посылать логи</value>
+    <comment>Настройка "Не посылать логи"</comment>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>Эта кнопка посылает мне письмо с вашим отзывом. Если это отзыв об ошибке, вы можете прикрепить к письму лог-файл.</value>
+    <comment>Приглашение посылать логи.</comment>
+  </data>
+  <data name="SettingsAboutVersion" xml:space="preserve">
+    <value>Версия: </value>
+    <comment>Текст для поля Версия страницы "О программе"</comment>
+  </data>
+  <data name="SettingsActivateLiveTile.Text" xml:space="preserve">
+    <value>Включить живую плитку</value>
+    <comment>Текст для опции "Включить живую плитку".</comment>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="SettingsConnectionHead.Text" xml:space="preserve">
+    <value>Соединение</value>
+    <comment>Заголовок страницы "Соединение" в настройках.</comment>
+  </data>
+  <data name="SettingsHead.Text" xml:space="preserve">
+    <value>Настройки</value>
+    <comment>Заголовок  страницы настроек.</comment>
+  </data>
+  <data name="SettingsLiveTile.Text" xml:space="preserve">
+    <value>Живая плитка</value>
+    <comment>Текст для страницы "Живая плитка" в настройках</comment>
+  </data>
+  <data name="SettingsLiveTileInfo.Text" xml:space="preserve">
+    <value>Когда вы включаете живую плитку, она показывает количество непрочтённых статей. Это количество может быть также показано на экране блокировки. Для этого выберите это приложение в настройках экрана блокировки.</value>
+    <comment>Информация о живой плитке</comment>
+  </data>
+  <data name="SettingsLiveTileLockScreenLink.Text" xml:space="preserve">
+    <value>Настройка экрана блокировки</value>
+    <comment>Ссылка на настройки экрана блокировки</comment>
+  </data>
+  <data name="SettingsMailException" xml:space="preserve">
+    <value>При посылке письма с отчётом возникла ошибка</value>
+    <comment>Сообщение при  ошибке посылки письма с отчётом.</comment>
+  </data>
+  <data name="SettingsScrollarAsCounter.Text" xml:space="preserve">
+    <value>Использовать полосу прокрутки вместо счётчика на странице статьи</value>
+    <comment>Выбор между полосой прокрутки и счётчиком в настройках</comment>
+  </data>
+  <data name="SettingsSortDefault.Text" xml:space="preserve">
+    <value>По умолчанию</value>
+    <comment>Текст для сортировки по умолчанию в настройках</comment>
+  </data>
+  <data name="SettingsSortLabel.Text" xml:space="preserve">
+    <value>Сортировка:</value>
+    <comment>Текст для сортировок в настройках</comment>
+  </data>
+  <data name="SettingsSortNew.Text" xml:space="preserve">
+    <value>Сначала новые</value>
+    <comment>Текст для для сортировки "Сначала новые" в настройках</comment>
+  </data>
+  <data name="SettingsSortOld.Text" xml:space="preserve">
+    <value>Сначала старые</value>
+    <comment>Текст для для сортировки "Сначала старые" в настройках</comment>
+  </data>
+  <data name="SettingsTileUpdatePeriod" xml:space="preserve">
+    <value>Период обновления</value>
+    <comment>Текст для  опции "Период обновления"</comment>
+  </data>
+  <data name="SettingsUpdateDay" xml:space="preserve">
+    <value>Ежедневно</value>
+  </data>
+  <data name="SettingsUpdateHalfHour" xml:space="preserve">
+    <value>Каждые полчаса</value>
+  </data>
+  <data name="SettingsUpdateHour" xml:space="preserve">
+    <value>Каждый час</value>
+  </data>
+  <data name="SettingsUpdateLiveTileError" xml:space="preserve">
+    <value>Your new credentials could not be sent to the live tile notfication server. Please try to uncheck/check the live tile checkbox or send me an e-mail.</value>
+    <comment>Error Сообщение if live tile user update fails.</comment>
+  </data>
+  <data name="ShareAppBarButton.Label" xml:space="preserve">
+    <value>Поделиться</value>
+    <comment>Текст для кнопки "Поделиться"</comment>
+  </data>
+  <data name="ShowAllArticles" xml:space="preserve">
+    <value>Все статьи</value>
+    <comment>Текст пункта меню "Все статьи".</comment>
+  </data>
+  <data name="ShowOnlyUnreadArticles" xml:space="preserve">
+    <value>Только непрочитанные</value>
+    <comment>Текст пункта меню "Только непрочитанные".</comment>
+  </data>
+  <data name="SpecialFeeds.Text" xml:space="preserve">
+    <value>Особые каналы</value>
+    <comment>Заголовок панели "Особые каналы"</comment>
+  </data>
+  <data name="StarAppBarButtonText" xml:space="preserve">
+    <value>В избранное</value>
+    <comment>Текст кнопки "Добавить в  избранное"</comment>
+  </data>
+  <data name="SuccessfulConnection" xml:space="preserve">
+    <value>Успешное соединение</value>
+    <comment>Сообщение об успешном соединении  (в настройках)</comment>
+  </data>
+  <data name="TestConnectionSettingsButton.Content" xml:space="preserve">
+    <value>Сохранить соединение</value>
+    <comment>Текст для кнопки "Сохранить соединение" в настройках.</comment>
+  </data>
+  <data name="ToogleArchiveAppBarButtonText" xml:space="preserve">
+    <value>В архиве (+/-)</value>
+    <comment>Текст для переключения нахождения статьи в архиве</comment>
+  </data>
+  <data name="TooglePublishAppBarButton.Label" xml:space="preserve">
+    <value>Опубликовано (+/-)</value>
+    <comment>Текст для переключения нахождения статьи в опубликованных</comment>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Без категории</value>
+    <comment>Заголовок для статей без категории</comment>
+  </data>
+  <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <value>Произошла неожиданная ошибка. Приложение будет закрыто.</value>
+    <comment>Текст для сообщения об ошибке.</comment>
+  </data>
+  <data name="UnreadOnlySettings.Text" xml:space="preserve">
+    <value>Показывать только непрочтённые статьи</value>
+    <comment>Текст для настройки "Показывать только непрочтённые статьи"</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>Ваши изменения не были сохранены.</value>
+    <comment>сообщения о несохранённых изменениях</comment>
+  </data>
+  <data name="UnStarAppBarButtonText" xml:space="preserve">
+    <value>Из избранного</value>
+    <comment>Text of кнопки "удалить из избранных"</comment>
+  </data>
+  <data name="UserNameSettings.Text" xml:space="preserve">
+    <value>Имя пользователя</value>
+    <comment>Текст для поля "Имя пользователя" в настройках.</comment>
+  </data>
+  <data name="AllFeedsSpecialFeedText" xml:space="preserve">
+    <value>Все статьи</value>
+    <comment>Текст для особого канала "Все статьи"</comment>
+  </data>
+  <data name="ApplicationName.Text" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Название приложения</comment>
+  </data>
+  <data name="ApplicationTitle.Title" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Название приложения</comment>
+  </data>
+  <data name="ArchivedFeedsText" xml:space="preserve">
+    <value>Архив</value>
+    <comment>Текст для особого канала "Архив"</comment>
+  </data>
+  <data name="FreshFeedsText" xml:space="preserve">
+    <value>Новые</value>
+    <comment>Текст для особого канала "Новые"</comment>
+  </data>
+  <data name="PublishedFeedsText" xml:space="preserve">
+    <value>Опубликовано</value>
+    <comment>Текст для особого канала "Опубликовано"</comment>
+  </data>
+  <data name="RecentlyReadFeedText" xml:space="preserve">
+    <value>Недавно прочитано</value>
+    <comment>Текст для кнопки недавно прочитаных статей .</comment>
+  </data>
+  <data name="StarredFeedsText" xml:space="preserve">
+    <value>Избранное</value>
+    <comment>Текст для особого канала  "Избранное"</comment>
+  </data>
+  <data name="TestConnectionSettingsButtonText" xml:space="preserve">
+    <value>Сохранить данные сервера</value>
+  </data>
+  <data name="StarredFeeds.Text" xml:space="preserve">
+    <value>Избранное</value>
+  </data>
+  <data name="ArticlesSortDefault" xml:space="preserve">
+    <value>По умолчанию</value>
+    <comment>Текст для  настройки "По умолчанию" </comment>
+  </data>
+  <data name="ArticlesSortNew" xml:space="preserve">
+    <value>Сначала новые</value>
+    <comment>Текст для  настройки "Сначала новые"</comment>
+  </data>
+  <data name="ArticlesSortOld" xml:space="preserve">
+    <value>Сначала  старые</value>
+    <comment>Текст для  настройки "Сначала старые"</comment>
+  </data>
+  <data name="AllFeedsTitleText" xml:space="preserve">
+    <value>Все статьи</value>
+    <comment>Заголовок для  элемента "Все статьи" на главной странице</comment>
+  </data>
+  <data name="MultiSelectAppBarButton.Label" xml:space="preserve">
+    <value>Выбор нескольких</value>
+    <comment>Текст для кнопки мультивыбора</comment>
+  </data>
+  <data name="SettingHeadlinesView.Text" xml:space="preserve">
+    <value>Использовать список:</value>
+  </data>
+  <data name="SettingHeadlinesViewAll.Text" xml:space="preserve">
+    <value>Всегда</value>
+  </data>
+  <data name="SettingHeadlinesViewList.Text" xml:space="preserve">
+    <value>Все, кроме особых каналов</value>
+  </data>
+  <data name="SettingHeadlinesViewNone.Text" xml:space="preserve">
+    <value>Никогда</value>
+  </data>
+  <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
+    <value>Только особые каналы</value>
+  </data>
+  <data name="ToggleStarAppBarButtonText" xml:space="preserve">
+    <value>В избранное (+/-)</value>
+    <comment>Текст для кнопки переключения в избранное</comment>
+  </data>
+  <data name="ToggleUnreadAppBarButtonText" xml:space="preserve">
+    <value>Прочитано  (+/-)</value>
+    <comment>Текст для кнопки  переключения прочитано</comment>
+  </data>
+  <data name="LoadOriginalLink" xml:space="preserve">
+    <value>Загрузить оригинал</value>
+  </data>
+  <data name="SettingsDarkBackground.Text" xml:space="preserve">
+    <value>Использовать тёмный фон для статей</value>
+  </data>
+  <data name="InfoIcons" xml:space="preserve">
+    <value>Если плитка не показывает значек, переустановите приложение.</value>
+  </data>
+  <data name="RemindMe" xml:space="preserve">
+    <value>Напомнить ещё раз</value>
+  </data>
+  <data name="PinFlyout.Text" xml:space="preserve">
+    <value>Прикрепить к особым каналам</value>
+    <comment>Текст для пункта меню "Прикрепить к особым каналам"</comment>
+  </data>
+  <data name="UnpinFlyout.Text" xml:space="preserve">
+    <value>Открепить от особых каналов</value>
+    <comment>Текст для пункта меню  "Открепить от особых каналов"</comment>
+  </data>
+  <data name="InfoAppBarButton.Label" xml:space="preserve">
+    <value>Помощь</value>
+    <comment>Текст для кнопки Помощь</comment>
+  </data>
+  <data name="SwipeMarginLabel.Text" xml:space="preserve">
+    <value>Space around article content to swipe</value>
+    <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+</root>

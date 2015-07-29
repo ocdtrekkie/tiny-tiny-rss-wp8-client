@@ -131,14 +131,6 @@ namespace TinyTinyRSS
                 }
                 int localSelected = _selectedIndex;
                 SetProgressBar(true);
-                if (ConnectionSettings.getInstance().useDarkBackground)
-                {
-                    string colorStyle = "<html><head>"
-                     + "<style type=\"text/css\" title=\"text/css\">html, body { color: #fff!Important; background-color: #000;} "
-                     + "a:link {color: #81DAF5;} </style></head>"
-                     + "<body></body></html>";
-                    setHtml(colorStyle);
-                }
                 updateCount(false);
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
@@ -148,7 +140,7 @@ namespace TinyTinyRSS
                 {
                     article = await item.getContent();
                 }
-                catch (NullReferenceException)
+                catch (TtRssException)
                 {
                     Logger.WriteLine("error loading content for article.");
                 }
@@ -172,14 +164,22 @@ namespace TinyTinyRSS
                 {
                     List<int> idList = new List<int>();
                     idList.Add(article.id);
-                    bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
-                    if (success)
+                    try
                     {
-                        Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                        article.unread = false;
-                        item.Headline.unread = false;
-                        UpdateLocalizedApplicationBar(article);
-                        await tsk;
+                        bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
+
+                        if (success)
+                        {
+                            Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                            article.unread = false;
+                            item.Headline.unread = false;
+                            UpdateLocalizedApplicationBar(article);
+                            await tsk;
+                        }
+                    }
+                    catch (TtRssException ex)
+                    {
+                        checkException(ex);
                     }
                 }
                 if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
@@ -202,7 +202,10 @@ namespace TinyTinyRSS
             var wc = Helper.FindDescendantByName(myPivotItem, "WebContent") as WebView;
             if (wc != null)
             {
+                int margin = ConnectionSettings.getInstance().swipeMargin;
+                wc.Margin = new Thickness(margin, 0, margin, 0);
                 wc.NavigateToString(content);
+                wc.Visibility = Visibility.Visible;
             }
             else
             {
@@ -309,28 +312,35 @@ namespace TinyTinyRSS
             else if (sender == markAllReadMenu)
             {
                 SetProgressBar(true);
-                bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
-                if (success)
+                try
                 {
-                    foreach (WrappedArticle wa in ArticlesCollection)
+                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                    if (success)
                     {
-                        if (wa.Headline.unread)
+                        foreach (WrappedArticle wa in ArticlesCollection)
                         {
-                            wa.Headline.unread = false;
+                            if (wa.Headline.unread)
+                            {
+                                wa.Headline.unread = false;
+                            }
+                            if (wa.Article != null && wa.Article.unread)
+                            {
+                                wa.Article.unread = false;
+                            }
                         }
-                        if (wa.Article != null && wa.Article.unread)
+                        if (_selectedIndex == selectedIndex)
                         {
-                            wa.Article.unread = false;
+                            UpdateLocalizedApplicationBar(current);
                         }
                     }
-                    if (_selectedIndex == selectedIndex)
-                    {
-                        UpdateLocalizedApplicationBar(current);
-                    }
+                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                    SetProgressBar(false);
+                    await tsk;
                 }
-                Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                SetProgressBar(false);
-                await tsk;
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
                 return;
             }
             else if (sender == showUnreadOnlyAppBarMenu)
@@ -550,6 +560,7 @@ namespace TinyTinyRSS
             if (wc != null)
             {
                 wc.NavigateToString("");
+                wc.Visibility = Visibility.Collapsed;
             }
             else
             {

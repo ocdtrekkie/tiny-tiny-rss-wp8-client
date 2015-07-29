@@ -68,6 +68,7 @@ namespace TinyTinyRSS
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
             SettingHeadlinesViewBox.SelectedIndex = ConnectionSettings.getInstance().headlinesView;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
+            SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
         }
 		
 		// Test and save connection settings.        
@@ -317,6 +318,11 @@ namespace TinyTinyRSS
         {
             // Launch URI for the lock screen settings screen.
             await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings-lock:"));
+        }
+
+        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            ConnectionSettings.getInstance().swipeMargin = Convert.ToInt32(e.NewValue);
         }
     }
 }

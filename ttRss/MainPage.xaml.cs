@@ -25,6 +25,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.Graphics.Display;
 using Windows.Phone.UI.Input;
 using System.Diagnostics;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace TinyTinyRSS
 {
@@ -48,18 +49,7 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-            if (ConnectionSettings.getInstance().firstStart)
-            {
-                MessageDialog msgbox = new MessageDialog(loader.GetString("InfoIcons"));
-                msgbox.Commands.Add(new UICommand("Ok",
-                new UICommandInvokedHandler(this.CommandInvokedHandler),"close"));
-                msgbox.Commands.Add(new UICommand(
-                    loader.GetString("RemindMe"),
-                    new UICommandInvokedHandler(this.CommandInvokedHandler), "remindme"));
-                // Set the command to be invoked when escape is pressed
-                msgbox.CancelCommandIndex = 1;
-                await msgbox.ShowAsync();
-            }            
+                      
             try
             {
                 statusBar.ProgressIndicator.ProgressValue = null; 
@@ -140,6 +130,14 @@ namespace TinyTinyRSS
                 {
                     Frame.Navigate(target, (int)FeedId.RecentlyRead);
                 }
+                else
+                {
+                    Button button = sender as Button;
+                    if (button.Name.StartsWith("Button"))
+                    {
+                        Frame.Navigate(target, ((Feed)button.DataContext).id);
+                    }
+                }
             }
             else
             {
@@ -159,6 +157,11 @@ namespace TinyTinyRSS
             {
                 Frame.Navigate(typeof(SettingsPage));
             }
+            else if (sender.Equals(this.infoAppBarButton))
+            {
+                var uri = new Uri("https://thescientist.eu/?p=1057");
+                await Windows.System.Launcher.LaunchUriAsync(uri);
+            }
             else if (sender.Equals(this.refreshAppBarButton))
             {
                 if (!validConnection)
@@ -175,14 +178,8 @@ namespace TinyTinyRSS
                 try
                 {
                     await TtRssInterface.getInterface().getCounters();
-                    if (MainPivot.SelectedItem == AllFeedsPivot)
-                    {
-                        await UpdateAllFeedsList(true);
-                    }
-                    else
-                    {
-                        await UpdateSpecialFeeds();
-                    }
+                    await UpdateAllFeedsList(true);
+                    await UpdateSpecialFeeds();
                 }
                 catch (TtRssException ex)
                 {
@@ -248,13 +245,100 @@ namespace TinyTinyRSS
                     select feedByTitle;
 
                 groupedFeeds.Source = ordered;
+                setFavorites();
                 feedListUpdate = false;
-               
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
             }
+        }
+
+        private void setFavorites()
+        {
+            // Set Favorites
+
+            HashSet<string> favs = ConnectionSettings.getInstance().favFeeds;
+            var rows = Math.Ceiling(favs.Count / 3.0);
+            while (SpecialFeedsGrid.RowDefinitions.Count < rows + 2)
+            {
+                SpecialFeedsGrid.RowDefinitions.Add(new RowDefinition());
+            }
+            int row = 2;
+            int col = 0;
+            foreach (string fav in favs)
+            {
+                if (col > 2)
+                {
+                    col = 0;
+                    row++;
+                }
+                int feedId;
+                if (!int.TryParse(fav, out feedId))
+                {
+                    continue;
+                }
+                Feed feed = TtRssInterface.getInterface().getFeedById(feedId);
+                if (feed == null)
+                {
+                    continue;
+                }
+                Button button;
+                Button buttonByName = SpecialFeedsGrid.FindName("Button" + row + col) as Button;
+                if (buttonByName == null || !(buttonByName is Button))
+                {
+                    button = new Button();
+                    button.Name = "Button" + row + col;
+                    button.Click += Button_Click;
+                    object buttonStyle;
+                    this.Resources.TryGetValue("ButtonStyle", out buttonStyle);
+                    button.Style = buttonStyle as Style;
+                    button.Height = SpecialFeedsGrid.RowDefinitions[0].ActualHeight;
+                    Grid.SetColumn(button, col);
+                    Grid.SetRow(button, row);
+                    object flyout;
+                    this.Resources.TryGetValue("RemoveFlyout", out flyout);
+                    var menuFlyout = flyout as MenuFlyout;
+                    menuFlyout.Items[0].DataContext = feed;
+                    button.Holding += TextBlock_Holding;
+                    FlyoutBase.SetAttachedFlyout(button, menuFlyout);
+                    SpecialFeedsGrid.Children.Add(button);
+                }
+                else
+                {
+                    button = buttonByName;
+                }
+                button.DataContext = feed;
+                TextBlock btnContent = new TextBlock();
+                object textStyle;
+                this.Resources.TryGetValue("ButtonTextStyle", out textStyle);
+                btnContent.Style = textStyle as Style;
+                Grid.SetColumn(button, col);
+                btnContent.Text = feed.title + Environment.NewLine + feed.formattedUnread;
+                button.Content = btnContent;
+                col++;
+            }
+            // Remove additional lines
+            UIElement toRemove;
+            do
+            {
+                if (col > 2)
+                {
+                    col = 0;
+                    row++;
+                    if (SpecialFeedsGrid.RowDefinitions.Count > row)
+                    {
+                        SpecialFeedsGrid.RowDefinitions.RemoveAt(row);
+                    }
+                }
+                toRemove = SpecialFeedsGrid.FindName("Button" + row + col) as UIElement;
+                if (toRemove != null)
+                {
+                    SpecialFeedsGrid.Children.Remove(toRemove);
+                }
+                col++;
+            } while (toRemove != null);
+
         }
 
         private async Task UpdateSpecialFeeds()
@@ -349,6 +433,36 @@ namespace TinyTinyRSS
         private void MainPivot_PivotItemLoaded(Pivot sender, PivotItemEventArgs args)
         {
             pivotIdx = sender.SelectedIndex;
+        }
+
+        private void TextBlock_Holding(object sender, Windows.UI.Xaml.Input.HoldingRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem item = sender as MenuFlyoutItem;
+
+            if (item != null && item.DataContext is ExtendedFeed)
+            {
+                ConnectionSettings.getInstance().addFavFeed(((ExtendedFeed)item.DataContext).feed.id.ToString());
+                setFavorites();
+                MainPivot.SelectedIndex = 0;
+            }
+        }
+
+        private void MenuFlyoutUnpin_Click(object sender, RoutedEventArgs e)
+        {
+            MenuFlyoutItem item = sender as MenuFlyoutItem;
+
+            if (item != null && item.DataContext is Feed)
+            {
+                ConnectionSettings.getInstance().removeFavFeed(((Feed)item.DataContext).id.ToString());
+                setFavorites();                
+            }            
         }
     }
 }

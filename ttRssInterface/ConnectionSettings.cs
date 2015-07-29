@@ -22,6 +22,8 @@ namespace TinyTinyRSS.Interface
         public static string _UseDarkBackgroundKey = "UseDarkBackground";
         public static string _liveTileUpdateIntervalKey = "LiveTileUpdateInterval";
         public static string _channelUriKey = "LiveTileUpdateChannel";
+        public static string _favFeedsKey = "FavoriteFeeds";
+        public static string _swipeMarginKey = "SwipeMargin";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -37,6 +39,8 @@ namespace TinyTinyRSS.Interface
         private string _liveTileChannelUri;
         private string _useDarkBackground;
         private string _firstStart;
+        private string _favFeeds;
+        private string _swipeMargin;
 
         private ConnectionSettings()
         {
@@ -125,6 +129,8 @@ namespace TinyTinyRSS.Interface
 
         public bool firstStart
         {
+            // don't use keys twice
+            // used: firstStartKey
             get
             {
                 if (_firstStart == null)
@@ -227,6 +233,25 @@ namespace TinyTinyRSS.Interface
             }
         }
 
+        public int swipeMargin
+        {
+            get
+            {
+                if (_swipeMargin == null)
+                {
+                    _swipeMargin = ReadSetting(_swipeMarginKey);
+                    if (_swipeMargin.Equals(""))
+                        _swipeMargin = "5";
+                }
+                return int.Parse(_swipeMargin);
+            }
+            set
+            {
+                SaveSetting(_swipeMarginKey, value.ToString());
+                _swipeMargin = value.ToString();
+            }
+        }
+
         public int headlinesView
         {
             get
@@ -280,6 +305,47 @@ namespace TinyTinyRSS.Interface
                 SaveSetting(_channelUriKey, value);
                 _liveTileChannelUri = value;
             }
+        }
+
+        public HashSet<string> favFeeds
+        {
+            get
+            {
+                if (_favFeeds == null)
+                {
+                    _favFeeds = ReadSetting(_favFeedsKey);
+                }
+                string[] splitted = _favFeeds.Split(new char[] { ',' },StringSplitOptions.RemoveEmptyEntries);
+                return new HashSet<string>(splitted);
+            }
+        }
+
+        public void addFavFeed(string id)
+        {
+            if (_favFeeds == null || _favFeeds.Length == 0)
+            {
+                _favFeeds = id;
+            }
+            else
+            {
+                _favFeeds = _favFeeds + "," + id;
+            }
+            SaveSetting(_favFeedsKey, _favFeeds);
+        }
+
+        public void removeFavFeed(string id)
+        {
+            HashSet<string> local = new HashSet<string>(favFeeds);
+            if (local == null || local.Count == 0)
+            {
+                return;
+            }
+            else
+            {
+                local.Remove(id);
+            }
+            _favFeeds = string.Join(",", local.ToArray());
+            SaveSetting(_favFeedsKey, _favFeeds);
         }
 
         private static void SaveSetting(string key, string value)

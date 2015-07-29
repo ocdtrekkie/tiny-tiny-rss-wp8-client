@@ -191,6 +191,11 @@ namespace TinyTinyRSS.Interface
                 Logger.WriteLine(e.StackTrace);
                 return 0;
             }
+            catch (TtRssException e)
+            {
+                Logger.WriteLine(e.StackTrace);
+                return 0;
+            }
         }
 
         public async Task<int> getCountForCategory(bool forceUpdate, int feedId)
@@ -249,7 +254,7 @@ namespace TinyTinyRSS.Interface
             }
             catch (TtRssException e)
             {
-                throw e;
+                return null;
             }
         }
 
@@ -464,13 +469,6 @@ namespace TinyTinyRSS.Interface
                     throw new TtRssException("Error occured: " + error.error, e);
                 }
             }
-            catch (NullReferenceException ex)
-            {
-                if (!second)
-                {
-                    retry = true;
-                }
-            }
             catch (Exception ex)
             {
                 if (!second)
@@ -485,7 +483,7 @@ namespace TinyTinyRSS.Interface
             else
             {
                 Logger.WriteLine("NullReferenceException twice in SendRequestArrayAsync.");
-                return null;
+                throw new TtRssException(NONETWORKERROR);
             }
         }
 

@@ -177,6 +177,9 @@
     <Content Include="Assets\Tile.png" />
     <Content Include="Strings\style.css" />
     <None Include="Package.StoreAssociation.xml" />
+    <PRIResource Include="Strings\ru\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\de\Resources.resw" />

@@ -66,7 +66,6 @@ namespace TinyTinyRSS
             }
 #endif
 
-            System.Threading.Tasks.Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
             try
             {
                 // init logger
@@ -85,8 +84,6 @@ namespace TinyTinyRSS
             {
                 // yeah we can't log the error.
             }
-            // Initial login
-            await loginTask;
 
             Frame rootFrame = Window.Current.Content as Frame;
 

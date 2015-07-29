@@ -19,12 +19,15 @@
             <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <Style TargetType="TextBlock" x:Key="ButtonTextStyle"> 
+        <Style TargetType="TextBlock" x:Key="ButtonTextStyle">
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Foreground"  Value="White" />
             <Setter Property="FontSize" Value="{StaticResource TextStyleMediumFontSize}" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
+        <MenuFlyout x:Key="RemoveFlyout">
+             <MenuFlyoutItem x:Uid="UnpinFlyout" Text="" Click="MenuFlyoutUnpin_Click" />
+        </MenuFlyout>
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>
@@ -32,6 +35,8 @@
                           x:Uid="SettingsAppBarButton" Label="" />
             <AppBarButton x:Name="refreshAppBarButton" Icon="Refresh" Click="AppBarButton_Click" 
                           Label="" x:Uid="RefreshAppBarButton" />
+            <AppBarButton x:Name="infoAppBarButton" Icon="Help" Click="AppBarButton_Click" 
+                          Label="" x:Uid="InfoAppBarButton" />
         </CommandBar>
 
     </Page.BottomAppBar>
@@ -46,7 +51,7 @@
                     <TextBlock Text="" x:Uid="SpecialFeeds" />
                 </PivotItem.Header>
                 <ScrollViewer>
-                    <Grid VerticalAlignment="Top">
+                    <Grid VerticalAlignment="Top" Name="SpecialFeedsGrid">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" x:Name="gridCol" />
                             <ColumnDefinition Width="*"/>
@@ -107,7 +112,13 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="5" Grid.Column="1"/>
+                                        <TextBlock Holding="TextBlock_Holding" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="5" Grid.Column="1">
+                                            <FlyoutBase.AttachedFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem x:Uid="PinFlyout" Text="" Click="MenuFlyoutItem_Click" DataContext="{Binding}" />
+                                                </MenuFlyout>
+                                            </FlyoutBase.AttachedFlyout>
+                                        </TextBlock>
                                         <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </Grid>
                                 </DataTemplate>

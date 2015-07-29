@@ -182,7 +182,7 @@
     <comment>Message to show, when ArticleView has nothing to display.</comment>
   </data>
   <data name="NoConnection" xml:space="preserve">
-    <value>No connection could be established. Check your settings.</value>
+    <value>No connection could be established. Check your settings or wait for a better signal.</value>
     <comment>Text for MessageBox if Server could not be reached.</comment>
   </data>
   <data name="OpenExtAppBarButton.Label" xml:space="preserve">
@@ -485,5 +485,21 @@
   </data>
   <data name="RemindMe" xml:space="preserve">
     <value>Remind me again</value>
+  </data>
+  <data name="PinFlyout.Text" xml:space="preserve">
+    <value>Pin to Special Feeds View</value>
+    <comment>Text for Menu Item to pin a feed as favorite</comment>
+  </data>
+  <data name="UnpinFlyout.Text" xml:space="preserve">
+    <value>Remove from View</value>
+    <comment>Label for MenuItem to unpin favorite feed</comment>
+  </data>
+  <data name="InfoAppBarButton.Label" xml:space="preserve">
+    <value>Help</value>
+    <comment>Label for AppBarButton Help</comment>
+  </data>
+  <data name="SwipeMarginLabel.Text" xml:space="preserve">
+    <value>Space around article content to swipe</value>
+    <comment>Text for slider in settings to set margin of webview</comment>
   </data>
 </root>
