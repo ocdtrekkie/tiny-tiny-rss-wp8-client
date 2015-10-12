@@ -156,6 +156,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\30.ico" />
     <Content Include="Assets\ApplicationIcon.scale-240.png" />
     <Content Include="Assets\FeedIcon.png" />
     <Content Include="Assets\IconBase_3.svg" />

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.IO;
-using System.Net;
 using Newtonsoft.Json;
 using TinyTinyRSS.Interface.Classes;
 using System.Threading.Tasks;
@@ -11,7 +8,8 @@ using TinyTinyRSSInterface.Classes;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
 using CaledosLab.Portable.Logging;
-
+using Windows.Web.Http.Filters;
+using Windows.Security.Cryptography.Certificates;
 
 namespace TinyTinyRSS.Interface
 {
@@ -389,7 +387,14 @@ namespace TinyTinyRSS.Interface
                 {
                     server = ConnectionSettings.getInstance().server;
                 }
-                HttpClient httpClient = new HttpClient();
+                // Create a Base Protocol Filter to add certificate errors I want to ignore...
+                var allowSelfSigned = new HttpBaseProtocolFilter();
+                // Untrused because this is a self signed cert that is not installed
+                if (ConnectionSettings.getInstance().allowSelfSignedCert)
+                {
+                    allowSelfSigned.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+                }
+                HttpClient httpClient = new HttpClient(allowSelfSigned);
                 HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
                 msg.Content = new HttpStringContent(requestUrl);
                 msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
@@ -443,7 +448,14 @@ namespace TinyTinyRSS.Interface
                 {
                     server = ConnectionSettings.getInstance().server;
                 }
-                HttpClient httpClient = new HttpClient();
+                // Create a Base Protocol Filter to add certificate errors I want to ignore...
+                var allowSelfSigned = new HttpBaseProtocolFilter();
+                // Untrused because this is a self signed cert that is not installed
+                if (ConnectionSettings.getInstance().allowSelfSignedCert)
+                {
+                    allowSelfSigned.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+                }
+                HttpClient httpClient = new HttpClient(allowSelfSigned);
                 HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
                 msg.Content = new HttpStringContent(requestUrl);
                 msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");

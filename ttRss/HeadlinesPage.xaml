@@ -60,8 +60,8 @@
                                        FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}" 
                                        Foreground="{StaticResource PhoneForegroundBrush}"/>
                         </Border>
-                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="{Binding Path=Headline.author, Converter={StaticResource LengthConverter}}" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                         <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
                                     Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
                                    VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>

@@ -24,6 +24,7 @@ namespace TinyTinyRSS.Interface
         public static string _channelUriKey = "LiveTileUpdateChannel";
         public static string _favFeedsKey = "FavoriteFeeds";
         public static string _swipeMarginKey = "SwipeMargin";
+        public static string _allowSelfSignedKey = "AllowSelfSigned";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -41,6 +42,7 @@ namespace TinyTinyRSS.Interface
         private string _firstStart;
         private string _favFeeds;
         private string _swipeMargin;
+        private string _allowSelfSigned;
 
         private ConnectionSettings()
         {
@@ -211,6 +213,23 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_showUnreadOnlyKey, value.ToString());
                 _unreadOnly = value.ToString();
+            }
+        }
+
+        public bool allowSelfSignedCert
+        {
+            get
+            {
+                if (_allowSelfSigned == null)
+                {
+                    _allowSelfSigned = ReadSetting(_allowSelfSignedKey);
+                }
+                return _allowSelfSigned.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_allowSelfSignedKey, value.ToString());
+                _allowSelfSigned = value.ToString();
             }
         }
 

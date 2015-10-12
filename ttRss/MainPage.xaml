@@ -25,9 +25,6 @@
             <Setter Property="FontSize" Value="{StaticResource TextStyleMediumFontSize}" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
-        <MenuFlyout x:Key="RemoveFlyout">
-             <MenuFlyoutItem x:Uid="UnpinFlyout" Text="" Click="MenuFlyoutUnpin_Click" />
-        </MenuFlyout>
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar>

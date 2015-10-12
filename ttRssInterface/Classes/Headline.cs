@@ -109,5 +109,12 @@ namespace TinyTinyRSS.Interface.Classes
             // Rückgabe des DateTime Objektes
             return universalTime.AddSeconds(utime);
         }
+        public string iconurl
+        {
+            get
+            {
+                return InterfaceHelper.getIcon(feed_id);
+            }
+        }
     }
 }

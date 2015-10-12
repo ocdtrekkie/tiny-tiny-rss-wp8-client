@@ -23,6 +23,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="5"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
@@ -36,9 +37,12 @@
                         <TextBox x:Name="UsernameField" Grid.Column="1" Margin="0" Grid.Row="1"  VerticalAlignment="Center" InputScope="Default" TextChanged="ConnectionSettingsChanged"/>
                         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="" x:Uid="PasswordSettings" VerticalAlignment="Center" Grid.Row="2" Height="Auto" Width="Auto" Margin="0,0,10,0" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <PasswordBox x:Name="PasswdField" Grid.Column="1" Margin="0" Grid.Row="2" VerticalAlignment="Center" SizeChanged="PasswdField_PasswordChanged"/>
-                        <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Height="72" Grid.Row="3" Background="{StaticResource PhoneAccentBrush}" Content="" x:Uid="TestConnectionSettingsButton" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
-                        <ProgressBar Name="MyProgressbar" Grid.Row="4" Grid.ColumnSpan="2" Visibility="Collapsed" />
-                        <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="5" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="{StaticResource TextStyleSmallFontSize}" />
+                        <CheckBox x:Name="UnsignedSslCb"  Grid.Column="1" Margin="0" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Changed">
+                            <TextBlock Text="" x:Uid="SettingsUnsignedSsl" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        </CheckBox>
+                        <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Grid.Row="4" Background="{StaticResource PhoneAccentBrush}" Content="" x:Uid="TestConnectionSettingsButton" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
+                        <ProgressBar Name="MyProgressbar" Grid.Row="5" Grid.ColumnSpan="2" Visibility="Collapsed" />
+                        <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="{StaticResource TextStyleSmallFontSize}" />
                     </Grid>
                 </ScrollViewer>
             </PivotItem>

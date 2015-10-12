@@ -52,7 +52,7 @@ namespace TinyTinyRSS
                     Package.Current.Id.Version.Build,
                     Package.Current.Id.Version.Revision);
             this.AppVersion.Text = loader.GetString("SettingsAboutVersion") + appVersion;
-            this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse"; 
+            this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse";
         }
 
 		// init settings from saved values.
@@ -69,6 +69,7 @@ namespace TinyTinyRSS
             SettingHeadlinesViewBox.SelectedIndex = ConnectionSettings.getInstance().headlinesView;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
             SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
+            UnsignedSslCb.IsChecked = ConnectionSettings.getInstance().allowSelfSignedCert;
         }
 		
 		// Test and save connection settings.        
@@ -301,7 +302,9 @@ namespace TinyTinyRSS
 				ConnectionSettings.getInstance().progressAsCntr = ProgressAsCntrCheckbox.IsChecked.Value;
             } else if (sender == DarkArticleBackgroundCheckbox) {
                 ConnectionSettings.getInstance().useDarkBackground = DarkArticleBackgroundCheckbox.IsChecked.Value;
-            }  
+            } else if (sender == UnsignedSslCb) {
+                ConnectionSettings.getInstance().allowSelfSignedCert = UnsignedSslCb.IsChecked.Value;
+            }
         }
 
 		// Sort options changed

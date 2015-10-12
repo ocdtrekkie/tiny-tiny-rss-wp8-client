@@ -182,7 +182,7 @@
     <comment>Сообщение для страницы статьи, если ничего не найдено.</comment>
   </data>
   <data name="NoConnection" xml:space="preserve">
-    <value>Соединение не установлено. Проверьте ваши настройки.</value>
+    <value>Соединение не установлено. Проверьте настройки или дождитесь лучшего уровня сигнала.</value>
     <comment>Текст для сообщения при недоступности сервера.</comment>
   </data>
   <data name="OpenExtAppBarButton.Label" xml:space="preserve">
@@ -194,7 +194,7 @@
     <comment>Текст настройки пароля.</comment>
   </data>
   <data name="PublishedFeeds.Text" xml:space="preserve">
-    <value>Опубликовано</value>
+    <value>Публикации</value>
     <comment>Текст для особого канала "Опубликовано"</comment>
   </data>
   <data name="RecentlyReadFeed.Text" xml:space="preserve">
@@ -413,7 +413,7 @@
     <comment>Текст для особого канала "Новые"</comment>
   </data>
   <data name="PublishedFeedsText" xml:space="preserve">
-    <value>Опубликовано</value>
+    <value>Публикации</value>
     <comment>Текст для особого канала "Опубликовано"</comment>
   </data>
   <data name="RecentlyReadFeedText" xml:space="preserve">
@@ -489,7 +489,7 @@
     <value>Прикрепить к особым каналам</value>
     <comment>Текст для пункта меню "Прикрепить к особым каналам"</comment>
   </data>
-  <data name="UnpinFlyout.Text" xml:space="preserve">
+  <data name="UnpinFlyout" xml:space="preserve">
     <value>Открепить от особых каналов</value>
     <comment>Текст для пункта меню  "Открепить от особых каналов"</comment>
   </data>
@@ -498,7 +498,11 @@
     <comment>Текст для кнопки Помощь</comment>
   </data>
   <data name="SwipeMarginLabel.Text" xml:space="preserve">
-    <value>Space around article content to swipe</value>
+    <value>Место вокруг статьи для перелистывания</value>
     <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+  <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
+    <value>Allow unsigned or self signed SSL certificates</value>
+    <comment>Login option to allow unsigned or selfsigned certificates</comment>
   </data>
 </root>

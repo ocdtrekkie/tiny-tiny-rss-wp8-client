@@ -48,7 +48,7 @@ namespace TinyTinyRSS.Interface.Classes
             }
         }
 
-        public BitmapImage icon
+        public string icon
         {
             get
             {

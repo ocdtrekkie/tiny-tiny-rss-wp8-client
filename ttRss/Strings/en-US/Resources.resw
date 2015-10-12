@@ -490,7 +490,7 @@
     <value>Pin to Special Feeds View</value>
     <comment>Text for Menu Item to pin a feed as favorite</comment>
   </data>
-  <data name="UnpinFlyout.Text" xml:space="preserve">
+  <data name="UnpinFlyout" xml:space="preserve">
     <value>Remove from View</value>
     <comment>Label for MenuItem to unpin favorite feed</comment>
   </data>
@@ -501,5 +501,9 @@
   <data name="SwipeMarginLabel.Text" xml:space="preserve">
     <value>Space around article content to swipe</value>
     <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+  <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
+    <value>Allow unsigned or self signed SSL certificates</value>
+    <comment>Login option to allow unsigned or selfsigned certificates</comment>
   </data>
 </root>

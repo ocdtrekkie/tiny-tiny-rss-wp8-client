@@ -147,7 +147,7 @@ namespace TinyTinyRSS
                 if (article != null && _selectedIndex == localSelected)
                 {
                     setHtml(article.content);
-                    var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
+                    /*var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
                     if (icon != null)
                     {
                         Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
@@ -155,7 +155,7 @@ namespace TinyTinyRSS
                         {
                             icon.Source = articlesFeed.icon;
                         }
-                    }
+                    }*/
                     UpdateLocalizedApplicationBar(article);
                 }
                 e.Item.UpdateLayout();
@@ -591,6 +591,15 @@ namespace TinyTinyRSS
         protected override int getSelectedIdx()
         {
             return _selectedIndex;
+        }
+
+        private void Icon_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image img = sender as Image;
+            if(img!=null)
+            {
+                img.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

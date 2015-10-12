@@ -489,7 +489,7 @@
     <value>An Sonderfeeds-Ansicht pinnen</value>
     <comment>Text for Menu Item to pin a feed as favorite</comment>
   </data>
-  <data name="UnpinFlyout.Text" xml:space="preserve">
+  <data name="UnpinFlyout" xml:space="preserve">
     <value>Aus Ansicht Entfernen</value>
     <comment>Label for MenuItem to unpin favorite feed</comment>
   </data>
@@ -500,5 +500,9 @@
   <data name="SwipeMarginLabel.Text" xml:space="preserve">
     <value>Rand von Artikelinhalt zum Swipen</value>
     <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+  <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
+    <value>Erlaube unsignierte bzw. selbstsignierte SSL-Zertifikate</value>
+    <comment>Login option to allow unsigned or selfsigned certificates</comment>
   </data>
 </root>

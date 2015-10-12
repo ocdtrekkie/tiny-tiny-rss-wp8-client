@@ -1,30 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Windows;
-using TinyTinyRSSInterface;
 using TinyTinyRSS.Interface;
 using System.Threading.Tasks;
 using TinyTinyRSS.Interface.Classes;
-using System.Collections.ObjectModel;
-using TinyTinyRSSInterface.Classes;
 using TinyTinyRSS.Classes;
 using CaledosLab.Portable.Logging;
-using System.IO;
-using Windows.ApplicationModel.Background;
-using Windows.UI.Notifications;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml;
 using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.Resources;
-using TinyTinyRSS;
 using Windows.UI.Xaml.Navigation;
 using Windows.Graphics.Display;
-using Windows.Phone.UI.Input;
-using System.Diagnostics;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace TinyTinyRSS
@@ -296,12 +284,14 @@ namespace TinyTinyRSS
                     button.Height = SpecialFeedsGrid.RowDefinitions[0].ActualHeight;
                     Grid.SetColumn(button, col);
                     Grid.SetRow(button, row);
-                    object flyout;
-                    this.Resources.TryGetValue("RemoveFlyout", out flyout);
-                    var menuFlyout = flyout as MenuFlyout;
-                    menuFlyout.Items[0].DataContext = feed;
+                    MenuFlyout m = new MenuFlyout();
+                    MenuFlyoutItem mn = new MenuFlyoutItem();
+                    mn.Text = loader.GetString("UnpinFlyout");
+                    mn.DataContext = feed;
+                    mn.Click += MenuFlyoutUnpin_Click;
+                    m.Items.Add(mn);
                     button.Holding += TextBlock_Holding;
-                    FlyoutBase.SetAttachedFlyout(button, menuFlyout);
+                    FlyoutBase.SetAttachedFlyout(button, m);
                     SpecialFeedsGrid.Children.Add(button);
                 }
                 else
