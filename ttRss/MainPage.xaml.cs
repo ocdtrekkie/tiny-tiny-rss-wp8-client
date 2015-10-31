@@ -23,14 +23,12 @@ namespace TinyTinyRSS
         private static int pivotIdx = 0;
 
         private bool validConnection = false;
-        private StatusBar statusBar;
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         private bool feedListUpdate = false;
         public MainPage()
         {
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
-            statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             MainPivot.SelectedIndex = pivotIdx;
             this.Loaded += PageLoaded;
         }
@@ -40,9 +38,8 @@ namespace TinyTinyRSS
                       
             try
             {
-                statusBar.ProgressIndicator.ProgressValue = null; 
-                statusBar.ProgressIndicator.Text = loader.GetString("LoginProgress");
-                await statusBar.ProgressIndicator.ShowAsync();
+                ProgressBar.Visibility = Visibility.Visible; 
+                ProgressBarText.Text = loader.GetString("LoginProgress");
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
                 if (validConnection)
                 {
@@ -62,8 +59,8 @@ namespace TinyTinyRSS
             {
                 checkException(ex);
             }
-            statusBar.ProgressIndicator.Text = "";
-            await statusBar.ProgressIndicator.HideAsync();
+            ProgressBar.Visibility = Visibility.Collapsed;
+            ProgressBarText.Text = "";
         }
 
         private void CommandInvokedHandler(IUICommand command)
@@ -162,7 +159,8 @@ namespace TinyTinyRSS
                     await msgbox.ShowAsync();
                     return;
                 }
-                await statusBar.ProgressIndicator.ShowAsync();
+
+                ProgressBar.Visibility = Visibility.Visible;
                 try
                 {
                     await TtRssInterface.getInterface().getCounters();
@@ -173,7 +171,7 @@ namespace TinyTinyRSS
                 {
                     checkException(ex);
                 }
-                await statusBar.ProgressIndicator.HideAsync();
+                ProgressBar.Visibility = Visibility.Collapsed;
             }
         }
 

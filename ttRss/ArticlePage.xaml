@@ -64,6 +64,8 @@
     </Page.BottomAppBar>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
+        <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="ProgressBar" Visibility="Collapsed"  Background="{StaticResource PhoneBackgroundBrush}"/>
+        <TextBlock Name="ProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="14"/>
         <Pivot Name="PivotControl" PivotItemLoading="PivotControl_LoadingPivotItem" PivotItemUnloading="resetPivot" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Pivot.Title>
                 <Grid HorizontalAlignment="Stretch" Name="PivotHeader"
@@ -77,11 +79,9 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <ProgressBar Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Name="MyProgressBar" Visibility="Collapsed"  Background="{StaticResource PhoneBackgroundBrush}"/>
-                    <TextBlock Name="MyProgressBarText" Grid.Row="1" Grid.Column="0" TextWrapping="NoWrap" Visibility="Collapsed" FontSize="14"/>
                     <TextBlock Name="Counter" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed"/>
                     <ProgressBar Name="Scrollbar" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Maximum="1" Minimum="0" SmallChange="1" Value="0"
-                                 Background="{ThemeResource PhoneBackgroundBrush}" Foreground="{ThemeResource PhoneForegroundBrush}" Opacity="0.6" />
+                                 Opacity="0.6" />
                 </Grid>
             </Pivot.Title>
             <Pivot.HeaderTemplate>

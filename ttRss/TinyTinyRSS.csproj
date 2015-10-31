@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,10 +10,13 @@
     <RootNamespace>TinyTinyRSS</RootNamespace>
     <AssemblyName>TinyTinyRss</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <TargetPlatformVersion>8.1</TargetPlatformVersion>
-    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AppxBundle>Never</AppxBundle>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
@@ -24,7 +27,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -33,14 +36,14 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
@@ -50,7 +53,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -62,7 +65,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -72,7 +75,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_PHONE_APP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
@@ -86,10 +89,6 @@
     <ProjectReference Include="..\CaledosLab.Portable.Logging\CaledosLab.Portable.Logging.csproj">
       <Project>{9e0be204-58e7-4517-999e-679792fdbfcf}</Project>
       <Name>CaledosLab.Portable.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NotificationsExtensions\NotificationsExtensions.csproj">
-      <Project>{6e87464b-b064-40ca-8161-7c18c337adff}</Project>
-      <Name>NotificationsExtensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\ttRssInterface\ttRssInterface.csproj">
       <Project>{fd35a92c-6853-48c7-b702-29b610501be2}</Project>
@@ -132,6 +131,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -156,7 +156,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\30.ico" />
     <Content Include="Assets\ApplicationIcon.scale-240.png" />
     <Content Include="Assets\FeedIcon.png" />
     <Content Include="Assets\IconBase_3.svg" />
@@ -166,6 +165,7 @@
     <Content Include="Assets\lockscreen.scale-240.png" />
     <Content Include="Assets\lockscreen.svg" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\SquareTile150x150.scale-100.png" />
     <Content Include="Assets\SquareTile150x150.scale-140.png" />
     <Content Include="Assets\SquareTile150x150.scale-240.png" />
@@ -188,11 +188,21 @@
   <ItemGroup>
     <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
-    <VisualStudioVersion>12.0</VisualStudioVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == '' ">
-    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.10240.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
+    <SDKReference Include="WindowsMobile, Version=10.0.10240.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="NotificationsExtensions">
+      <HintPath>..\..\..\Tiles\NotificationsExtensions\bin\Debug\NotificationsExtensions.winmd</HintPath>
+    </Reference>
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+    <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

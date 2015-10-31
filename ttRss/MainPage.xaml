@@ -22,7 +22,7 @@
         <Style TargetType="TextBlock" x:Key="ButtonTextStyle">
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Foreground"  Value="White" />
-            <Setter Property="FontSize" Value="{StaticResource TextStyleMediumFontSize}" />
+            <Setter Property="FontSize" Value="16" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
     </Page.Resources>
@@ -41,6 +41,8 @@
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivotsteuerelement-->
+        <ProgressBar Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
+        <TextBlock Name="ProgressBarText" Height="12" />
         <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle" PivotItemLoaded="MainPivot_PivotItemLoaded">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SpecialFeedsPivot">

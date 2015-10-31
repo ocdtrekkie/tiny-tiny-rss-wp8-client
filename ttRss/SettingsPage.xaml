@@ -9,6 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+        <ProgressBar Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
         <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SettingsPivot">

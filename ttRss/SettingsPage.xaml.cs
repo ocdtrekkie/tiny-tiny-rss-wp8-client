@@ -1,19 +1,12 @@
 ﻿using CaledosLab.Portable.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
-using TinyTinyRSS;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.UI.Notifications;
@@ -22,12 +15,8 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.Web.Http;
-using Windows.Phone.UI.Input;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkID=390556
 
@@ -39,12 +28,10 @@ namespace TinyTinyRSS
     public sealed partial class SettingsPage : Page
     {
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-        private StatusBar statusBar;
         public SettingsPage()
         {
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
-            statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             SetFields();
             string appVersion = string.Format("Version: {0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Major,
@@ -75,7 +62,7 @@ namespace TinyTinyRSS
 		// Test and save connection settings.        
         private async Task<bool> TestSettings()
         {
-            await statusBar.ProgressIndicator.ShowAsync();
+            ProgressBar.Visibility = Visibility.Visible;
             ErrorMessage.Text = "";
             // Try to fix some common mistakes when entering an url.
             string server = ServerField.Text;
@@ -106,14 +93,14 @@ namespace TinyTinyRSS
                     MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsUpdateLiveTileError"));
                     await msgbox.ShowAsync();
                 }
-                await statusBar.ProgressIndicator.HideAsync();	
+                ProgressBar.Visibility = Visibility.Collapsed;
                 return true;
             }
             else
             {
                 TestButton.Content = loader.GetString("FailedConnection");
                 ErrorMessage.Text = error;
-                await statusBar.ProgressIndicator.HideAsync();	
+                ProgressBar.Visibility = Visibility.Collapsed;
                 return false;
             }
         }
@@ -216,7 +203,7 @@ namespace TinyTinyRSS
 		// Live tile activated/deactivated
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
-            await statusBar.ProgressIndicator.ShowAsync();
+            ProgressBar.Visibility = Visibility.Visible;
             string deviceId = PushNotificationHelper.GetDeviceID();
             if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
             {
@@ -277,7 +264,7 @@ namespace TinyTinyRSS
                     await t;
                 }
             }
-            await statusBar.ProgressIndicator.HideAsync();
+            ProgressBar.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>

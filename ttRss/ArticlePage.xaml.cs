@@ -2,30 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using TinyTinyRSS;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
-using Windows.Phone.UI.Input;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace TinyTinyRSS
@@ -519,7 +505,9 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+#if WINDOWS_PHONE_APP
             HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
+#endif
             base.OnNavigatedFrom(e);
         }
 

@@ -1,5 +1,4 @@
 ﻿using CaledosLab.Portable.Logging;
-using NotificationsExtensions.BadgeContent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
