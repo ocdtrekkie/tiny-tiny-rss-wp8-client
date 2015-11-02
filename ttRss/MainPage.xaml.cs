@@ -8,7 +8,6 @@ using TinyTinyRSS.Classes;
 using CaledosLab.Portable.Logging;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml;
-using Windows.UI.ViewManagement;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Navigation;
@@ -38,7 +37,7 @@ namespace TinyTinyRSS
                       
             try
             {
-                ProgressBar.Visibility = Visibility.Visible; 
+                ProgressBar.IsActive=true; 
                 ProgressBarText.Text = loader.GetString("LoginProgress");
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
                 if (validConnection)
@@ -59,7 +58,7 @@ namespace TinyTinyRSS
             {
                 checkException(ex);
             }
-            ProgressBar.Visibility = Visibility.Collapsed;
+            ProgressBar.IsActive = false;
             ProgressBarText.Text = "";
         }
 
@@ -160,7 +159,8 @@ namespace TinyTinyRSS
                     return;
                 }
 
-                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsActive = true;
+                ProgressBarText.Text = loader.GetString("LoginProgress");
                 try
                 {
                     await TtRssInterface.getInterface().getCounters();
@@ -171,7 +171,8 @@ namespace TinyTinyRSS
                 {
                     checkException(ex);
                 }
-                ProgressBar.Visibility = Visibility.Collapsed;
+                ProgressBar.IsActive = false;
+                ProgressBarText.Text = "";
             }
         }
 
@@ -289,6 +290,7 @@ namespace TinyTinyRSS
                     mn.Click += MenuFlyoutUnpin_Click;
                     m.Items.Add(mn);
                     button.Holding += TextBlock_Holding;
+                    button.RightTapped += TextBlock_RightTapped;
                     FlyoutBase.SetAttachedFlyout(button, m);
                     SpecialFeedsGrid.Children.Add(button);
                 }
@@ -451,6 +453,13 @@ namespace TinyTinyRSS
                 ConnectionSettings.getInstance().removeFavFeed(((Feed)item.DataContext).id.ToString());
                 setFavorites();                
             }            
+        }
+
+        private void TextBlock_RightTapped(object sender, Windows.UI.Xaml.Input.RightTappedRoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
         }
     }
 }

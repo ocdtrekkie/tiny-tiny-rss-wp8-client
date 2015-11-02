@@ -112,6 +112,7 @@
     <Compile Include="Classes\ResolutionHelper.cs" />
     <Compile Include="Classes\WebBrowserHelper.cs" />
     <Compile Include="Classes\WrappedArticle.cs" />
+    <Compile Include="Controls\BackButton.xaml.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
@@ -141,6 +142,10 @@
     <Page Include="ArticlePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BackButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="HeadlinesPage.xaml">
       <SubType>Designer</SubType>

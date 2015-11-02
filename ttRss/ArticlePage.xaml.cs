@@ -9,6 +9,7 @@ using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
 using Windows.ApplicationModel.Resources;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,8 +23,6 @@ namespace TinyTinyRSS
     public sealed partial class ArticlePage : AbstractArticlePage
     {
         private int _selectedIndex;
-        private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
-        private StatusBar statusBar;
         private int _lastPivotIndex;
 
         public ArticlePage()
@@ -32,10 +31,7 @@ namespace TinyTinyRSS
             InitializeComponent();
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
 
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed += HardwareButtons_BackPressed;
-#endif
-            statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
+            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(ApplicationView.GetForCurrentView().Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
@@ -55,6 +51,34 @@ namespace TinyTinyRSS
                 Scrollbar.IsIndeterminate = false;
             }
             BuildLocalizedApplicationBar();
+        }
+
+        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame != null && rootFrame.CanGoBack)
+            {
+                e.Handled = true;
+                if (initialized)
+                {
+                    NavigationObject parameter = new NavigationObject();
+                    parameter.selectedIndex = _selectedIndex;
+                    parameter.feedId = feedId;
+                    parameter._showUnreadOnly = _showUnreadOnly;
+                    parameter._sortOrder = _sortOrder;
+                    parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                    foreach (WrappedArticle article in ArticlesCollection)
+                    {
+                        parameter.ArticlesCollection.Add(article);
+                    }
+                    Frame.Navigate(typeof(HeadlinesPage), parameter);
+                }
+                else
+                {
+                    rootFrame.GoBack();
+                }
+            }
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
@@ -420,94 +444,28 @@ namespace TinyTinyRSS
             }
             ApplicationViewOrientation orientation = ApplicationView.GetForCurrentView().Orientation;
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(orientation);
-            if (!orientation.Equals(ApplicationViewOrientation.Portrait))
-            {
+           
                 if (on)
                 {
-                    MyProgressBar.IsIndeterminate = true;
-                    MyProgressBar.Visibility = Visibility.Visible;
-                    MyProgressBarText.Text = setText ? loader.GetString("loadmorearticles") : "";
+                    ProgressBar.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    MyProgressBar.Visibility = Visibility.Collapsed;
-                    MyProgressBarText.Text = "";
-                }
-            }
-            else
-            {
-                if (on)
-                {
-                    await statusBar.ProgressIndicator.ShowAsync();
-                }
-                else
-                {
-                    await statusBar.ProgressIndicator.HideAsync();
+                    ProgressBar.Visibility = Visibility.Collapsed;
                 }
                 if (setText)
                 {
-                    statusBar.ProgressIndicator.Text = loader.GetString("LoadMoreArticles");
+                ProgressBarText.Text = loader.GetString("LoadMoreArticles");
                 }
                 else
                 {
-                    statusBar.ProgressIndicator.Text = "";
+                ProgressBarText.Text = "";
                 }
-            }
         }
-#if WINDOWS_PHONE_APP
-        void HardwareButtons_BackPressed(object sender, BackPressedEventArgs e)
-        {
-            if (!_IsSpecial() && ArticlesCollection.Count > 0)
-            {
-                try
-                {
-                    Feed theFeed = TtRssInterface.getInterface().getFeedById(feedId);
-                    if (theFeed != null)
-                    {
-                        theFeed.unread = ArticlesCollection.Count(x => x.Headline.unread);
-                    }
-                }
-                catch (TtRssException ex)
-                {
-                    checkException(ex);
-                }
-            }
-            foreach (PageStackEntry page in Frame.BackStack)
-            {
-                Debug.WriteLine(page.SourcePageType.FullName);
-            }
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            if (rootFrame != null && rootFrame.CanGoBack)
-            {
-                e.Handled = true;
-                if (initialized)
-                {
-                    NavigationObject parameter = new NavigationObject();
-                    parameter.selectedIndex = _selectedIndex;
-                    parameter.feedId = feedId;
-                    parameter._showUnreadOnly = _showUnreadOnly;
-                    parameter._sortOrder = _sortOrder;
-                    parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
-                    foreach (WrappedArticle article in ArticlesCollection)
-                    {
-                        parameter.ArticlesCollection.Add(article);
-                    }
-                    Frame.Navigate(typeof(HeadlinesPage), parameter);
-                }
-                else
-                {
-                    rootFrame.GoBack();
-                }
-            } 
-        }
-#endif
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-#if WINDOWS_PHONE_APP
-            HardwareButtons.BackPressed -= HardwareButtons_BackPressed;
-#endif
+            SystemNavigationManager.GetForCurrentView().BackRequested -= App_BackRequested;
             base.OnNavigatedFrom(e);
         }
 
@@ -560,20 +518,6 @@ namespace TinyTinyRSS
         {
             ApplicationViewOrientation orientation = ApplicationView.GetForCurrentView().Orientation;
             PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(orientation);
-            if (!orientation.Equals(ApplicationViewOrientation.Portrait))
-            {
-                await statusBar.HideAsync();
-                PivotHeader.Margin = new Thickness(0, 0, 0, 5);
-                MyProgressBar.Visibility = Visibility.Visible;
-                MyProgressBarText.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                await statusBar.ShowAsync();
-                PivotHeader.Margin = new Thickness(0, -20, 0, 5);
-                MyProgressBar.Visibility = Visibility.Collapsed;
-                MyProgressBarText.Visibility = Visibility.Collapsed;
-            }
         }
 
         protected override int getSelectedIdx()

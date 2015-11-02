@@ -3,18 +3,31 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TinyTinyRSS"
+    xmlns:Controls="using:TinyTinyRSS.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <ProgressBar Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
-        <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ProgressBar Grid.Row="0" Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
+        <Pivot Grid.Row="1" Name="MainPivot" Title="" x:Uid="ApplicationTitle">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SettingsPivot">
                 <PivotItem.Header>
-                    <TextBlock Text="" x:Uid="SettingsConnectionHead"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                    <Controls:BackButton Grid.Column="0" />
+                    <TextBlock Grid.Column="1" Text="" x:Uid="SettingsConnectionHead"/>
+                    </Grid>
+
                 </PivotItem.Header>
                 <!--ContentPanel - zusätzliche Inhalte hier platzieren-->
                 <ScrollViewer>
@@ -113,20 +126,20 @@
                         <RadioButton Name="AboutRadio1" Content="" x:Uid="SettingsAboutRadioActualLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <RadioButton Name="AboutRadio2" Content="" x:Uid="SettingsAboutRadioLastLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <Button Name="AboutSendButton" Content="" x:Uid="SettingsAboutButtonSendLog" Click="AboutSendButton_Click" FontSize="{StaticResource TextStyleMediumFontSize}"/>
-                        <Button Name="ProjectPageButton" Click="ProjectPageButton_Click" BorderThickness="0" Margin="-3">
+                        <HyperlinkButton Name="ProjectPageButton" NavigateUri="https://thescientist.eu/tt-rss-reader-for-wp-8/">
                             <TextBlock FontSize="{StaticResource TextStyleMediumFontSize}">
                                 <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonProjectWeb" />
                                 </Underline>
                             </TextBlock>
-                        </Button>
-                        <Button Name="PrivacyPolicyButton" Click="ProjectPageButton_Click" BorderThickness="0" Margin="-3">
+                        </HyperlinkButton>
+                        <HyperlinkButton NavigateUri="https://thescientist.eu/tt-rss-reader-for-wp-8/" Name="PrivacyPolicyButton">
                             <TextBlock x:Name="TextPrivacy" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}">
-                                <Underline>
+                                 <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonPrivacyPolicy" />
                                 </Underline>
                             </TextBlock>
-                        </Button>
+                        </HyperlinkButton>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

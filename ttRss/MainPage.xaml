@@ -15,14 +15,14 @@
         <Style TargetType="Button" x:Key="ButtonStyle">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="Margin" Value="8,8" />
             <Setter Property="Background" Value="{StaticResource PhoneAccentBrush}" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
         <Style TargetType="TextBlock" x:Key="ButtonTextStyle">
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Foreground"  Value="White" />
-            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontSize" Value="{StaticResource TextStyleMediumFontSize}" />
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
     </Page.Resources>
@@ -39,11 +39,19 @@
     </Page.BottomAppBar>
 
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0">
         <!--Pivotsteuerelement-->
-        <ProgressBar Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
-        <TextBlock Name="ProgressBarText" Height="12" />
-        <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle" PivotItemLoaded="MainPivot_PivotItemLoaded">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ProgressRing Grid.Row="0" Grid.Column="0" Name="ProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
+        <TextBlock Grid.Row="0" Grid.Column="1" Name="ProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
+        <Pivot Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Name="MainPivot" Title="" x:Uid="ApplicationTitle" PivotItemLoaded="MainPivot_PivotItemLoaded">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SpecialFeedsPivot">
                 <PivotItem.Header>
@@ -111,7 +119,7 @@
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
                                         <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                        <TextBlock Holding="TextBlock_Holding" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="5" Grid.Column="1">
+                                        <TextBlock Holding="TextBlock_Holding" RightTapped="TextBlock_RightTapped" TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleLargeFontSize}" Margin="5" Grid.Column="1">
                                             <FlyoutBase.AttachedFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyoutItem x:Uid="PinFlyout" Text="" Click="MenuFlyoutItem_Click" DataContext="{Binding}" />

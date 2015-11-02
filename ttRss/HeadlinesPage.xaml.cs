@@ -2,28 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using TinyTinyRSS;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
-using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
-using Windows.Phone.UI.Input;
-using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -31,7 +17,6 @@ namespace TinyTinyRSS
 {
     public sealed partial class HeadlinesPage : AbstractArticlePage
     {
-        private StatusBar statusBar;
         private int initialIndex = 0;
 
         public HeadlinesPage()
@@ -39,7 +24,6 @@ namespace TinyTinyRSS
             this.Loaded += PageLoaded;
             InitializeComponent();
             Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
-            statusBar = Windows.UI.ViewManagement.StatusBar.GetForCurrentView();
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
@@ -170,7 +154,7 @@ namespace TinyTinyRSS
             return HeadlinesView.SelectedIndex;
         }
 
-        protected override async void SetProgressBar(bool on, bool showText)
+        protected override void SetProgressBar(bool on, bool showText)
         {
             if (_moreArticlesLoading && !on)
             {
@@ -178,19 +162,19 @@ namespace TinyTinyRSS
             }
             if (on)
             {
-                await statusBar.ProgressIndicator.ShowAsync();
+                ProgressBar.Visibility = Visibility.Visible;
             }
             else
             {
-                await statusBar.ProgressIndicator.HideAsync();
+                ProgressBar.Visibility = Visibility.Collapsed;
             }
             if (showText)
             {
-                statusBar.ProgressIndicator.Text = loader.GetString("LoadMoreArticles");
+                ProgressBarText.Text = loader.GetString("LoadMoreArticles");
             }
             else
             {
-                statusBar.ProgressIndicator.Text = "";
+                ProgressBarText.Text = "";
             }
         }
 
