@@ -62,7 +62,7 @@ namespace TinyTinyRSS
 		// Test and save connection settings.        
         private async Task<bool> TestSettings()
         {
-            ProgressBar.Visibility = Visibility.Visible;
+            MyProgressbar.Visibility = Visibility.Visible;
             ErrorMessage.Text = "";
             // Try to fix some common mistakes when entering an url.
             string server = ServerField.Text;
@@ -93,14 +93,14 @@ namespace TinyTinyRSS
                     MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsUpdateLiveTileError"));
                     await msgbox.ShowAsync();
                 }
-                ProgressBar.Visibility = Visibility.Collapsed;
+                MyProgressbar.Visibility = Visibility.Collapsed;
                 return true;
             }
             else
             {
                 TestButton.Content = loader.GetString("FailedConnection");
                 ErrorMessage.Text = error;
-                ProgressBar.Visibility = Visibility.Collapsed;
+                MyProgressbar.Visibility = Visibility.Collapsed;
                 return false;
             }
         }
@@ -203,7 +203,7 @@ namespace TinyTinyRSS
 		// Live tile activated/deactivated
         private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
         {
-            ProgressBar.Visibility = Visibility.Visible;
+            LiveTileProgress.Visibility = Visibility.Visible;
             string deviceId = PushNotificationHelper.GetDeviceID();
             if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
             {
@@ -264,7 +264,7 @@ namespace TinyTinyRSS
                     await t;
                 }
             }
-            ProgressBar.Visibility = Visibility.Collapsed;
+            LiveTileProgress.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>

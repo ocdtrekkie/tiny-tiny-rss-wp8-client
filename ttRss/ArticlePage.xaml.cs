@@ -1,5 +1,4 @@
 ﻿using CaledosLab.Portable.Logging;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -7,7 +6,6 @@ using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
-using Windows.ApplicationModel.Resources;
 using Windows.Graphics.Display;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -32,7 +30,6 @@ namespace TinyTinyRSS
             DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
 
             SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
-            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(ApplicationView.GetForCurrentView().Orientation);
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
@@ -443,15 +440,13 @@ namespace TinyTinyRSS
                 return;
             }
             ApplicationViewOrientation orientation = ApplicationView.GetForCurrentView().Orientation;
-            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(orientation);
-           
-                if (on)
+            if (on)
                 {
-                    ProgressBar.Visibility = Visibility.Visible;
+                    ProgressBar.IsActive = true;
                 }
                 else
                 {
-                    ProgressBar.Visibility = Visibility.Collapsed;
+                    ProgressBar.IsActive = false;
                 }
                 if (setText)
                 {
@@ -512,12 +507,6 @@ namespace TinyTinyRSS
             {
                 Logger.WriteLine("WebBrowser not found");
             }
-        }
-
-        private async void Page_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ApplicationViewOrientation orientation = ApplicationView.GetForCurrentView().Orientation;
-            PivotHeader.Width = ResolutionHelper.GetWidthForOrientation(orientation);
         }
 
         protected override int getSelectedIdx()

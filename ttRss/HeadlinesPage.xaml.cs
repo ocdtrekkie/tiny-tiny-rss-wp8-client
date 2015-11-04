@@ -162,11 +162,11 @@ namespace TinyTinyRSS
             }
             if (on)
             {
-                ProgressBar.Visibility = Visibility.Visible;
+                ProgressBar.IsActive = true;
             }
             else
             {
-                ProgressBar.Visibility = Visibility.Collapsed;
+                ProgressBar.IsActive = false;
             }
             if (showText)
             {

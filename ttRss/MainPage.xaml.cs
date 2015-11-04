@@ -280,7 +280,6 @@ namespace TinyTinyRSS
                     object buttonStyle;
                     this.Resources.TryGetValue("ButtonStyle", out buttonStyle);
                     button.Style = buttonStyle as Style;
-                    button.Height = SpecialFeedsGrid.RowDefinitions[0].ActualHeight;
                     Grid.SetColumn(button, col);
                     Grid.SetRow(button, row);
                     MenuFlyout m = new MenuFlyout();
@@ -299,6 +298,7 @@ namespace TinyTinyRSS
                     button = buttonByName;
                 }
                 button.DataContext = feed;
+                button.Height = SpecialFeedsGrid.RowDefinitions[0].ActualHeight;
                 TextBlock btnContent = new TextBlock();
                 object textStyle;
                 this.Resources.TryGetValue("ButtonTextStyle", out textStyle);
@@ -460,6 +460,23 @@ namespace TinyTinyRSS
             FrameworkElement senderElement = sender as FrameworkElement;
             FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
             flyoutBase.ShowAt(senderElement);
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Button button = (Button) Fresh.Parent;
+            button.Height = gridCol.ActualWidth;
+            button = (Button) Starred.Parent;
+            button.Height = gridCol.ActualWidth;
+            button = (Button) Archived.Parent;
+            button.Height = gridCol.ActualWidth;
+            button = (Button) All.Parent;
+            button.Height = gridCol.ActualWidth;
+            button = (Button) Recent.Parent;
+            button.Height = gridCol.ActualWidth;
+            button = (Button) Published.Parent;
+            button.Height = gridCol.ActualWidth;
+            setFavorites();
         }
     }
 }

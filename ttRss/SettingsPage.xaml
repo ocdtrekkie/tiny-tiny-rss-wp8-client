@@ -10,12 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <ProgressBar Grid.Row="0" Name="ProgressBar" IsIndeterminate="True" Visibility="Collapsed" Foreground="{StaticResource PhoneAccentBrush}" />
-        <Pivot Grid.Row="1" Name="MainPivot" Title="" x:Uid="ApplicationTitle">
+        <Pivot Name="MainPivot" Title="" x:Uid="ApplicationTitle">
             <!--Pivotelement eins-->
             <PivotItem x:Name="SettingsPivot">
                 <PivotItem.Header>
@@ -55,7 +50,7 @@
                             <TextBlock Text="" x:Uid="SettingsUnsignedSsl" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
                         <Button x:Name="TestButton" HorizontalAlignment="Center" VerticalAlignment="Center" BorderThickness="0" Grid.Row="4" Background="{StaticResource PhoneAccentBrush}" Content="" x:Uid="TestConnectionSettingsButton" Grid.ColumnSpan="2" Click="TestButtonClicked"/>
-                        <ProgressBar Name="MyProgressbar" Grid.Row="5" Grid.ColumnSpan="2" Visibility="Collapsed" />
+                        <ProgressBar Name="MyProgressbar" Grid.Row="5" Grid.ColumnSpan="2" Visibility="Collapsed" IsIndeterminate="True" />
                         <TextBlock x:Name="ErrorMessage" Grid.Column="0" Margin="0" Grid.Row="6" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Height="72" Grid.ColumnSpan="2" FontSize="{StaticResource TextStyleSmallFontSize}" />
                     </Grid>
                 </ScrollViewer>
@@ -105,6 +100,7 @@
                     <CheckBox x:Name="LiveTileCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="LiveTileCheckbox_Click">
                         <TextBlock Text="" x:Uid="SettingsActivateLiveTile" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                     </CheckBox>
+                    <ProgressBar x:Name="LiveTileProgress" IsIndeterminate="True" Visibility="Collapsed" />
                     <TextBlock x:Name="LiveTileInfoText" Text="" x:Uid="SettingsLiveTileInfo" TextWrapping="Wrap" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                     <Button x:Name="goToLockscreen" Click="btnGoToLockSettings_Click">
                         <TextBlock Text="" x:Uid="SettingsLiveTileLockScreenLink" FontSize="{StaticResource TextStyleMediumFontSize}" />
