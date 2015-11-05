@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Package
-      xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-      xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-      xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-      IgnorableNamespaces="uap mp">
-  <Identity Name="41231TheScientist.TinyTinyRSSReader" Publisher="CN=43EC541E-A7AC-483F-936F-571289112EAB" Version="3.1.1.0" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
+  <Identity Name="41231TheScientist.TinyTinyRSSReader" Publisher="CN=43EC541E-A7AC-483F-936F-571289112EAB" Version="3.9.0.0" />
   <mp:PhoneIdentity PhoneProductId="ad6373d0-14b8-4908-8a40-2208f047aeaf" PhonePublisherId="4b22ace6-b3ff-4b70-92b2-c4bcb07a0645" />
   <Properties>
     <DisplayName>Tiny Tiny RSS Reader</DisplayName>
@@ -12,25 +8,26 @@
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-        <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
     <Application Id="xad6373d0y14b8y4908y8a40y2208f047aeafx" Executable="$targetnametoken$.exe" EntryPoint="ttRss.App">
-      <uap:VisualElements DisplayName="Tiny Tiny RSS" Square150x150Logo="Assets\SquareTile150x150.png" 
-                          Square44x44Logo="Assets\ApplicationIcon.png" Description="TT-RSS Client"  
-                          BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Tiny Tiny RSS" Square150x150Logo="Assets\medium.png" Square44x44Logo="Assets\applist.png" Description="TT-RSS Client" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\lockscreen.png" />
-        <uap:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
+        <uap:DefaultTile Square71x71Logo="Assets\small.png" ShortName="Tiny Tiny RSS">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreenBunt.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
+          <uap:Rotation Preference="landscape" />
+          <uap:Rotation Preference="portraitFlipped" />
+          <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>

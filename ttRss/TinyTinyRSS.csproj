@@ -20,6 +20,8 @@
     <AppxBundle>Never</AppxBundle>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>neutral</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>6F94B6951C4570C223BC6F5A64471610A0FE56FE</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>TinyTinyRSS_StoreKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -133,6 +135,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="project.json" />
+    <None Include="TinyTinyRSS_StoreKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -162,24 +165,30 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\ApplicationIcon.scale-240.png" />
-    <Content Include="Assets\FeedIcon.png" />
-    <Content Include="Assets\IconBase_3.svg" />
-    <Content Include="Assets\IconicTileMediumLarge.png" />
-    <Content Include="Assets\IconicTileSmall.png" />
+    <Content Include="Assets\applist.scale-100.png" />
+    <Content Include="Assets\applist.scale-200.png" />
+    <Content Include="Assets\applist.scale-400.png" />
+    <Content Include="Assets\LiveTile.DeviceFamily-Mobile.png" />
     <Content Include="Assets\LiveTile.png" />
-    <Content Include="Assets\lockscreen.scale-240.png" />
+    <Content Include="Assets\lockscreen.scale-100.png" />
+    <Content Include="Assets\lockscreen.scale-200.png" />
+    <Content Include="Assets\lockscreen.scale-400.png" />
     <Content Include="Assets\lockscreen.svg" />
-    <Content Include="Assets\Logo.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\SquareTile150x150.scale-100.png" />
-    <Content Include="Assets\SquareTile150x150.scale-140.png" />
-    <Content Include="Assets\SquareTile150x150.scale-240.png" />
-    <Content Include="Assets\SquareTile71x71.scale-140.png" />
-    <Content Include="Assets\SquareTile71x71.scale-100.png" />
-    <Content Include="Assets\SquareTile71x71.scale-240.png" />
+    <Content Include="Assets\medium.scale-100.png" />
+    <Content Include="Assets\medium.scale-200.png" />
+    <Content Include="Assets\medium.scale-400.png" />
+    <Content Include="Assets\small.scale-100.png" />
+    <Content Include="Assets\small.scale-200.png" />
+    <Content Include="Assets\small.scale-400.png" />
+    <Content Include="Assets\SplashScreenBunt.scale-200.png" />
+    <Content Include="Assets\SplashScreenBunt.scale-400.png" />
     <Content Include="Assets\storeIcon.png" />
+    <Content Include="Assets\StoreIcon.svg" />
     <Content Include="Assets\storeIcon2.png" />
+    <Content Include="Assets\StoreLogo.scale-100.png" />
+    <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-240.png" />
+    <Content Include="Assets\StoreLogo.scale-400.png" />
     <Content Include="Assets\Tile.png" />
     <Content Include="Strings\style.css" />
     <None Include="Package.StoreAssociation.xml" />
@@ -203,7 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="NotificationsExtensions">
-      <HintPath>..\..\..\Tiles\NotificationsExtensions\bin\Debug\NotificationsExtensions.winmd</HintPath>
+      <HintPath>..\..\NotificationsExtensions.winmd</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

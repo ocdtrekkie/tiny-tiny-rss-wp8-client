@@ -10,6 +10,7 @@ using System.Windows;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface;
+using Windows.Foundation.Metadata;
 using Windows.Networking.PushNotifications;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
@@ -156,7 +157,6 @@ namespace TinyTinyRSS.Classes
                 }
             }
             ITileSquare150x150IconWithBadge tileContent = TileContentFactory.CreateTileSquare150x150IconWithBadge();
-
             tileContent.ImageIcon.Src = "ms-appx:///Assets/LiveTile.png";
             TileUpdateManager.CreateTileUpdaterForApplication().Update(tileContent.CreateNotification());
 

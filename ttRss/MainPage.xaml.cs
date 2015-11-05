@@ -11,7 +11,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Navigation;
-using Windows.Graphics.Display;
 using Windows.UI.Xaml.Controls.Primitives;
 
 namespace TinyTinyRSS
@@ -27,7 +26,6 @@ namespace TinyTinyRSS
         public MainPage()
         {
             InitializeComponent();
-            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             MainPivot.SelectedIndex = pivotIdx;
             this.Loaded += PageLoaded;
         }

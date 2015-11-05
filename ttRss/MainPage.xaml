@@ -7,8 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    x:Class="TinyTinyRSS.MainPage"
-    SizeChanged="Page_SizeChanged">
+    x:Class="TinyTinyRSS.MainPage">
 
     <Page.Resources>
         <converter:IntToStringConverter x:Key="IntStringConverter" />

@@ -7,11 +7,9 @@ using TinyTinyRSS.Interface;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
-using Windows.Graphics.Display;
 using Windows.Storage;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,7 +29,6 @@ namespace TinyTinyRSS
         public SettingsPage()
         {
             InitializeComponent();
-            DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             SetFields();
             string appVersion = string.Format("Version: {0}.{1}.{2}.{3}",
                     Package.Current.Id.Version.Major,

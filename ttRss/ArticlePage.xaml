@@ -78,14 +78,14 @@
         <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="ProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
         <Controls:BackButton Grid.Row="1" Grid.Column="0" />
         <ProgressBar Name="Scrollbar" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Maximum="5" Minimum="0" SmallChange="1" Value="0"
-                                 Opacity="0.6" Margin="5,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
+                                 Opacity="0.6" Margin="5,0,25,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
         <TextBlock Name="Counter" Grid.Row="1" Grid.Column="2" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed" Margin="0,0,5,0"/>
         <Pivot Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Name="PivotControl" PivotItemLoading="PivotControl_LoadingPivotItem" PivotItemUnloading="resetPivot" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,0,0">
+            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,0,0">
+            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,0,0">
+            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
         </Pivot>
     </Grid>

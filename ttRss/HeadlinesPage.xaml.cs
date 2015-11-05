@@ -7,7 +7,6 @@ using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
-using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -23,7 +22,6 @@ namespace TinyTinyRSS
         {
             this.Loaded += PageLoaded;
             InitializeComponent();
-            Windows.Graphics.Display.DisplayInformation.AutoRotationPreferences = DisplayOrientations.Portrait;
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
