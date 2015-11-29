@@ -73,7 +73,7 @@ class WPN{
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         $response = curl_getinfo( $ch );
@@ -172,46 +172,40 @@ class TtRssAPI {
         curl_close($ch);
         return $output;
     }
+
+    function iterate() {
+        $result = $this->db->query("SELECT deviceId,channel FROM users WHERE channelInactive=(0)");
+        if (!$result) {
+           return -1;
+        }
+        /* fetch object array */
+        while ($row = $result->fetch_object()) {
+            $deviceId = $row->deviceId;         
+            $cnt = $this->getUnreadCount($deviceId);
+            // Call WNS
+            $wns = new WPN();           
+            $xml_data = $wns->build_badge_xml($cnt);
+            $response = $wns->post_badge($row->channel, $xml_data);
+            if($response->error) { 
+                logError("Error sending badge. ".$response->message . " httpCode:" . $response->httpCode, "cron");                 
+                if($response->httpCode == 410 || $response->httpCode == 404) {
+                   logError("Set inactive: " .$deviceId, "cron");    
+                   $this->db->query("UPDATE users SET channelInactive=(1)"
+                   . "WHERE deviceId='$deviceId'");
+                }
+            }
+        }
+        /* free result set */
+        $result->close();
+    }
 }
 $options = getopt("p:");
 if ($options["p"] != 'myHash') {
     echo "You are not allowed to run this script.";
     return -1;
 } else {
-    $db = new \mysqli('localhost', 'ttrssapi', 'YT6TMbjVJBeKdN4j', 'ttrss-api');
-	$result = $db->query("SELECT deviceId,channel FROM users WHERE channelInactive=(0)");
-	if (!$result) {
-	   return -1;
-	}
-	/* fetch object array */
-	while ($row = $result->fetch_object()) {
-		$deviceId = $row->deviceId; 
-		$pid = pcntl_fork();
-		if ($pid === -1) {
-			logError("Error forking process for " . $deviceId, "cron");  
-		} elseif ($pid === 0) {				
-			$api = new TtRssAPI;        
-			$cnt = $api->getUnreadCount($deviceId);
-			// Call WNS
-			$wns = new WPN();           
-			$xml_data = $wns->build_badge_xml($cnt);
-			$response = $wns->post_badge($row->channel, $xml_data);
-			if($response->error) { 
-				logError("Error sending badge. ".$response->message . " httpCode:" . $response->httpCode, "cron");                 
-				if($response->httpCode == 410 || $response->httpCode == 404) {
-				   logError("Set inactive: " .$deviceId, "cron");    
-				   $db->query("UPDATE users SET channelInactive=(1)"
-				   . "WHERE deviceId='$deviceId'");
-				}
-			}
-			break;
-		} else {
-			continue;
-		}
-	}		
-	pcntl_wait($status);
-	echo $status;
-	/* free result set */
-	$result->close();
-	return 1;
+$api = new TtRssAPI;
+$api->iterate();
+
+return 1;
 }
