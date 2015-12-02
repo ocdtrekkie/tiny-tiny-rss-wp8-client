@@ -12,33 +12,7 @@
 
     <Page.Resources>
         <lclasses:StringToColumnConverter x:Key="LengthConverter" />
-        <DataTemplate x:Key="PivotTemplate">
-            <Grid Margin="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
-                    <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                    <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                    <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
-                        <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
-                    </StackPanel>
-                </Grid>
-                <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="{Binding}"/>
-            </Grid>
-        </DataTemplate>
+        
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar Name="AppBar">
@@ -81,11 +55,11 @@
                                  Opacity="0.6" Margin="5,0,25,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
         <TextBlock Name="Counter" Grid.Row="1" Grid.Column="2" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed" Margin="0,0,5,0"/>
         <Pivot Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Name="PivotControl" PivotItemLoading="PivotControl_LoadingPivotItem" PivotItemUnloading="resetPivot" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
         </Pivot>
     </Grid>
