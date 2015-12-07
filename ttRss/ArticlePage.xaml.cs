@@ -58,7 +58,6 @@ namespace TinyTinyRSS
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = _selectedIndex;
-                    parameter.feedId = feedId;
                     parameter._showUnreadOnly = _showUnreadOnly;
                     parameter._sortOrder = _sortOrder;
                     parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -94,17 +93,15 @@ namespace TinyTinyRSS
             if(e.Parameter is NavigationObject) {
                 initialized = true;
                 NavigationObject nav = e.Parameter as NavigationObject;
-                feedId = nav.feedId;
                 _selectedIndex = nav.selectedIndex;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
                 ArticlesCollection = nav.ArticlesCollection;
                 BuildLocalizedApplicationBar();
-                Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + feedId);
+                Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
             } else {
                 initialized = false;
-                feedId = (int)e.Parameter;
-                Logger.WriteLine("NavigatedTo ArticlePage for Feed " + feedId);
+                Logger.WriteLine("NavigatedTo ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             base.OnNavigatedTo(e);
         }
@@ -223,13 +220,13 @@ namespace TinyTinyRSS
             if (_IsSpecial() || _showUnreadOnly)
             {
                 int max;
-                if (feedId == (int)FeedId.Fresh)
+                if (ConnectionSettings.getInstance().selectedFeed == (int)FeedId.Fresh)
                 {
                     max = await TtRssInterface.getInterface().getUnReadCount(force);
                 }
                 else
                 {
-                    int ifOfFeed = feedId;
+                    int ifOfFeed = ConnectionSettings.getInstance().selectedFeed;
                     if (ifOfFeed == (int)FeedId.RecentlyRead)
                     {
                         ifOfFeed = (int)FeedId.All;
@@ -318,7 +315,7 @@ namespace TinyTinyRSS
                 SetProgressBar(true);
                 try
                 {
-                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
                     if (success)
                     {
                         foreach (WrappedArticle wa in ArticlesCollection)

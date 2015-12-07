@@ -43,9 +43,9 @@ namespace TinyTinyRSS
                 }
                 HeadlinesView.DataContext = ArticlesCollection;
             }
-            if (feedId<=0)
+            if (ConnectionSettings.getInstance().selectedFeed <= 0)
             {
-                switch (feedId)
+                switch (ConnectionSettings.getInstance().selectedFeed)
                 {
                     case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
                     case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
@@ -59,7 +59,7 @@ namespace TinyTinyRSS
             {
                 try
                 {
-                    FeedTitle.Text = TtRssInterface.getInterface().getFeedById(feedId).title;
+                    FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
                 }
                 catch (TtRssException ex)
                 {
@@ -99,20 +99,20 @@ namespace TinyTinyRSS
                     Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
                 }
                 NavigationObject nav = e.Parameter as NavigationObject;
-                feedId = nav.feedId;
+                ConnectionSettings.getInstance().selectedFeed = nav.feedId;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
                 ArticlesCollection = nav.ArticlesCollection;
                 HeadlinesView.DataContext = ArticlesCollection;
                 initialIndex = nav.selectedIndex;
                 UpdateLocalizedApplicationBar(true);
-                Logger.WriteLine("NavigatedTo HeadlinesPage from ArticlePage for Feed " + feedId);
+                Logger.WriteLine("NavigatedTo HeadlinesPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             else
             {
                 initialized = false;
-                feedId = (int)e.Parameter;
-                Logger.WriteLine("NavigatedTo HeadlinesPage for Feed " + feedId);
+                ConnectionSettings.getInstance().selectedFeed = (int)e.Parameter;
+                Logger.WriteLine("NavigatedTo HeadlinesPage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
         }
 
@@ -280,7 +280,7 @@ namespace TinyTinyRSS
                 SetProgressBar(true);
                 try
                 {
-                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
                     if (success)
                     {
                         foreach (WrappedArticle wa in ArticlesCollection)
@@ -354,7 +354,7 @@ namespace TinyTinyRSS
             {
                 NavigationObject parameter = new NavigationObject();
                 parameter.selectedIndex = HeadlinesView.SelectedIndex;
-                parameter.feedId = feedId;
+                parameter.feedId = ConnectionSettings.getInstance().selectedFeed;
                 parameter._showUnreadOnly = _showUnreadOnly;
                 parameter._sortOrder = _sortOrder; 
                 parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
