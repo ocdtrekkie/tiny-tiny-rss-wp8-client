@@ -19,7 +19,6 @@ namespace TinyTinyRSS
 {
     public abstract class AbstractArticlePage : Page
     {
-        protected int feedId;
         protected Collection<WrappedArticle> ArticlesCollection;
         protected ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
@@ -88,7 +87,7 @@ namespace TinyTinyRSS
                 SetProgressBar(true);
                 bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                 ArticlesCollection.Clear();
-                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0, _sortOrder);
+                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
                 if (headlines.Count == 0)
                 {
                     _moreArticles = false;
@@ -101,7 +100,10 @@ namespace TinyTinyRSS
                     }
                     else
                     {
-                        Frame.Navigate(typeof(MainPage));
+                        if (!(this is MainPage))
+                        {
+                            Frame.Navigate(typeof(MainPage));
+                        }
                     }
                     return false;
                 }
@@ -176,7 +178,7 @@ namespace TinyTinyRSS
         /// <returns>True if feedId is in between -4 and 1</returns>
         protected bool _IsSpecial()
         {
-            return feedId > -4 && feedId < 1;
+            return ConnectionSettings.getInstance().selectedFeed > -4 && ConnectionSettings.getInstance().selectedFeed < 1;
         }
 
         /// <summary>
@@ -192,7 +194,7 @@ namespace TinyTinyRSS
                     SetProgressBar(true, true);
                     bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                     // First get new items if existing
-                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, 0, _sortOrder);
+                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
 
                     if (headlines.Count <= 0)
                     {
@@ -217,7 +219,7 @@ namespace TinyTinyRSS
                     int skip = ArticlesCollection.Count;
                     if (_IsSpecial())
                     {
-                        switch (feedId)
+                        switch (ConnectionSettings.getInstance().selectedFeed)
                         {
                             case -3: ArticlesCollection.Count(e => e.Headline.unread);
                                 break;
@@ -233,7 +235,7 @@ namespace TinyTinyRSS
                         skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }
 
-                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(feedId, unReadOnly, skip, _sortOrder);
+                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, skip, _sortOrder);
                     if (headlinesAfter.Count > 0)
                     {
                         bool newItems = false;

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CaledosLab.Portable.Logging;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,18 +21,17 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace TinyTinyRSS
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : AbstractArticlePage
     {
         private bool validConnection = false;
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         private bool feedListUpdate = false;
+		private int initialIndex = 0;
         public Rect TogglePaneButtonRect
         {
             get;
@@ -41,19 +42,71 @@ namespace TinyTinyRSS
         {
             this.InitializeComponent();
             this.Loaded += PageLoaded;
+            ArticlesCollection = new ObservableCollection<WrappedArticle>();
+            _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+            _sortOrder = ConnectionSettings.getInstance().sortOrder;
+            _moreArticles = true;
+            _moreArticlesLoading = false;
+            //RegisterForShare();
+            //BuildLocalizedApplicationBar();
+            //UpdateLocalizedApplicationBar(true);
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+		
+			// TODO if server empty goto settingspage
             try
             {
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
                 if (validConnection)
                 {
                     await TtRssInterface.getInterface().getCounters();
-                    await UpdateSpecialFeeds();
-                    await UpdateAllFeedsList(true);
+                    Task specialFeedsTask = UpdateSpecialFeeds();
+                    Task allFeedsTask = UpdateAllFeedsList(true);
+					Task<bool> headlinesTask = null;
+					if (!initialized)
+					{
+						headlinesTask = LoadHeadlines();
+					}
+					if (ConnectionSettings.getInstance().selectedFeed <= 0)
+					{
+						switch (ConnectionSettings.getInstance().selectedFeed)
+						{
+							case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
+							case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
+							case -2: FeedTitle.Text = loader.GetString("PublishedFeedsText"); break;
+							case -6: FeedTitle.Text = loader.GetString("RecentlyReadFeedText"); break;
+							case -4: FeedTitle.Text = loader.GetString("AllFeedsTitleText"); break;
+							case 0: FeedTitle.Text = loader.GetString("ArchivedFeedsText"); break;
+						}
+					}
+					else
+					{
+						try
+						{
+							FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
+						}
+						catch (TtRssException ex)
+						{
+							checkException(ex);
+						}
+					}
+					await specialFeedsTask;
+					await allFeedsTask;
                     await PushNotificationHelper.UpdateNotificationChannel();
+                    if (!initialized)
+					{
+						bool result = await headlinesTask;
+						if (!result)
+						{
+							return;
+						}
+						HeadlinesView.DataContext = ArticlesCollection;
+					}
+					var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
+					sv.ViewChanged += ViewChanged;
+					HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
                 }
                 else
                 {
@@ -77,6 +130,10 @@ namespace TinyTinyRSS
         private void TogglePaneButton_Checked(object sender, RoutedEventArgs e)
         {
             this.CheckTogglePaneButtonSizeChanged();
+        }
+
+        protected override void SetProgressBar(bool on, bool showText)
+        {
         }
 
         /// <summary>
@@ -269,6 +326,126 @@ namespace TinyTinyRSS
             {
                 MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
                 await msgbox.ShowAsync();
+            }
+        }
+
+        private async void ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (e.IsIntermediate)
+            {
+                return;
+            }
+            ScrollViewer sv = (ScrollViewer)sender;
+            var verticalOffsetValue = sv.VerticalOffset;
+            var maxVerticalOffsetValue = sv.ExtentHeight - sv.ViewportHeight;
+            if (verticalOffsetValue >= 0.95 * maxVerticalOffsetValue)
+            {
+                await LoadMoreHeadlines();
+            }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is NavigationObject)
+            {
+                initialized = true;
+                // Fix Backstack
+                if (Frame.BackStack.Count > 1)
+                {
+                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
+                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
+                }
+                NavigationObject nav = e.Parameter as NavigationObject;
+                _sortOrder = nav._sortOrder;
+                _showUnreadOnly = nav._showUnreadOnly;
+                ArticlesCollection = nav.ArticlesCollection;
+                HeadlinesView.DataContext = ArticlesCollection;
+                initialIndex = nav.selectedIndex;
+                //UpdateLocalizedApplicationBar(true);
+                Logger.WriteLine("NavigatedTo HeadlinesPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+            }
+            else
+            {
+                initialized = false;
+                Logger.WriteLine("NavigatedTo HeadlinesPage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+        }
+
+        /*private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MultiSelectAppBarButton.IsChecked == true)
+            {
+                if (HeadlinesView.SelectedItem != null)
+                {
+                    UpdateLocalizedApplicationBar(false);
+                }
+                else
+                {
+                    UpdateLocalizedApplicationBar(true);
+                }
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Multiple;
+            }
+            else
+            {
+                HeadlinesView.SelectedItems.Clear();
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+                UpdateLocalizedApplicationBar(true);
+            }
+        }*/
+
+        protected override void updateCount(bool p)
+        {
+            //nothing.
+        }
+        protected override int getSelectedIdx()
+        {
+            return HeadlinesView.SelectedIndex;
+        }
+
+        private void HeadlinesView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (HeadlinesView.SelectionMode == ListViewSelectionMode.Single)
+            {
+                NavigationObject parameter = new NavigationObject();
+                parameter.selectedIndex = HeadlinesView.SelectedIndex;
+                parameter.feedId = ConnectionSettings.getInstance().selectedFeed;
+                parameter._showUnreadOnly = _showUnreadOnly;
+                parameter._sortOrder = _sortOrder; 
+                parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                foreach (WrappedArticle article in ArticlesCollection)
+                {
+                    parameter.ArticlesCollection.Add(article);
+                }
+
+                Frame.Navigate(typeof(ArticlePage), parameter);
+            }
+            else
+            {
+                if (HeadlinesView.SelectedItems == null || HeadlinesView.SelectedItems.Count == 0)
+                {
+                    //UpdateLocalizedApplicationBar(true);
+                    return;
+                }
+                else
+                {
+                    //UpdateLocalizedApplicationBar(false);
+                    return;
+                }
+            }
+        }
+
+        private void Icon_ImageFailed(object sender, ExceptionRoutedEventArgs e)
+        {
+            Image img = sender as Image;
+            if (img != null)
+            {
+                img.Visibility = Visibility.Collapsed;
             }
         }
     }

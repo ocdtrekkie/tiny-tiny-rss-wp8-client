@@ -25,6 +25,7 @@ namespace TinyTinyRSS.Interface
         public static string _favFeedsKey = "FavoriteFeeds";
         public static string _swipeMarginKey = "SwipeMargin";
         public static string _allowSelfSignedKey = "AllowSelfSigned";
+        public static string _selectedFeedKey = "SelectedFeed";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -43,6 +44,7 @@ namespace TinyTinyRSS.Interface
         private string _favFeeds;
         private string _swipeMargin;
         private string _allowSelfSigned;
+        private string _selectedFeed;
 
         private ConnectionSettings()
         {
@@ -249,6 +251,25 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_sortOrderKey, value.ToString());
                 _sortOrder = value.ToString();
+            }
+        }
+
+        public int selectedFeed
+        {
+            get
+            {
+                if (_selectedFeed == null)
+                {
+                    _selectedFeed = ReadSetting(_selectedFeedKey);
+                    if (_selectedFeed.Equals(""))
+                        _selectedFeed = "-3";
+                }
+                return int.Parse(_selectedFeed);
+            }
+            set
+            {
+                SaveSetting(_selectedFeedKey, value.ToString());
+                _selectedFeed = value.ToString();
             }
         }
 

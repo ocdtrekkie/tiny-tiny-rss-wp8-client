@@ -416,7 +416,9 @@ namespace TinyTinyRSS.Interface
                 if (!second)
                 {
                     retry = true;
-                }
+                } else {				
+					Logger.WriteLine(ex.Message);
+				}
             }
             if (retry)
             {
@@ -486,7 +488,9 @@ namespace TinyTinyRSS.Interface
                 if (!second)
                 {
                     retry = true;
-                }
+                } else {				
+					Logger.WriteLine(ex.Message);
+				}
             }
             if (retry)
             {
