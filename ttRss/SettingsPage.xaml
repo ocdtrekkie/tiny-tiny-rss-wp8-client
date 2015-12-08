@@ -82,13 +82,6 @@
                             <TextBlock Name="SortNewFirst" Text="" x:Uid="SettingsSortNew" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock  Name="SortOldFirst" Text="" x:Uid="SettingsSortOld" FontSize="{StaticResource TextStyleMediumFontSize}" />
                         </ComboBox>
-                        <TextBlock x:Name="SettingHeadlinesView" Text="" x:Uid="SettingHeadlinesView"  FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
-                        <ComboBox  x:Name="SettingHeadlinesViewBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
-                            <TextBlock Name="SettingHeadlinesViewNone" Text="" x:Uid="SettingHeadlinesViewNone" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock Name="SettingHeadlinesViewSpecial" Text="" x:Uid="SettingHeadlinesViewSpecial" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock Name="SettingHeadlinesViewList" Text="" x:Uid="SettingHeadlinesViewList" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock  Name="SettingHeadlinesViewAll" Text="" x:Uid="SettingHeadlinesViewAll" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                        </ComboBox>
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>

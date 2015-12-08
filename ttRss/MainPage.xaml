@@ -46,27 +46,32 @@
                    OpenPaneLength="256"
                    IsTabStop="False">
             <SplitView.Pane>
-                <ScrollViewer>
-                    <StackPanel Margin="0,50,0,0">
+                <Grid Margin="0,50,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0">
+                    <StackPanel>
                     <TextBlock Text="" x:Uid="SpecialFeeds" />
-                    <ListView>
+                    <ListView SelectionChanged="ListView_SelectionChanged">
                         <ListViewItem>
-                            <TextBlock  Name="All" Text="" x:Uid="AllFeedsTitle" Tapped="FeedTapped"/>
+                            <TextBlock  Name="All" Text="" x:Uid="AllFeedsTitle"/>
                         </ListViewItem>
                         <ListViewItem>
-                            <TextBlock  Name="Fresh" Text="" x:Uid="FreshFeeds" Tapped="FeedTapped"/>
+                            <TextBlock  Name="Fresh" Text="" x:Uid="FreshFeeds"/>
                         </ListViewItem>
                         <ListViewItem>
-                            <TextBlock  Name="Starred" Text="" x:Uid="StarredFeeds" Tapped="FeedTapped"/>
+                            <TextBlock  Name="Starred" Text="" x:Uid="StarredFeeds"/>
                         </ListViewItem>
                         <ListViewItem>
-                            <TextBlock  Name="Published" Text="" x:Uid="PublishedFeeds" Tapped="FeedTapped"/>
+                            <TextBlock  Name="Published" Text="" x:Uid="PublishedFeeds"/>
                         </ListViewItem>
                         <ListViewItem>
-                            <TextBlock  Name="Archived" Text="" x:Uid="ArchivedFeeds" Tapped="FeedTapped"/>
+                            <TextBlock  Name="Archived" Text="" x:Uid="ArchivedFeeds"/>
                         </ListViewItem>
                         <ListViewItem>
-                            <TextBlock  Name="Recent" Text="" x:Uid="RecentlyReadFeed" Tapped="FeedTapped"/>
+                            <TextBlock  Name="Recent" Text="" x:Uid="RecentlyReadFeed"/>
                         </ListViewItem>                        
                     </ListView>
                     <SemanticZoom>
@@ -146,13 +151,22 @@
                         </SemanticZoom>
                     </StackPanel>
                 </ScrollViewer>
+                    <CommandBar Grid.Row="1">
+                        <AppBarButton x:Name="settingsAppBarButton" Icon="Setting" Click="AppBarButton_Click"
+                          x:Uid="SettingsAppBarButton" Label="" />
+                        <AppBarButton x:Name="refreshAppBarButton" Icon="Refresh" Click="AppBarButton_Click" 
+                          Label="" x:Uid="RefreshAppBarButton" />
+                        <AppBarButton x:Name="infoAppBarButton" Icon="Help" Click="AppBarButton_Click" 
+                          Label="" x:Uid="InfoAppBarButton" />
+                    </CommandBar>
+                </Grid>
             </SplitView.Pane>
             
             <Grid x:Name="Splitview_Content">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*" /><!-- Headlines -->
 					<!-- <RowDefinition Height="Auto" /> Werbung -->
-					<RowDefinition Height="*" /><!-- Article -->
+					<RowDefinition Height="Auto" /><!-- Article -->
 				</Grid.RowDefinitions>
 				<Grid x:Name="Headlines_Grid" Grid.Row="0">
 					<Grid.RowDefinitions>

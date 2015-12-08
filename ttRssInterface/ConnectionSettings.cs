@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Windows.Security.Cryptography.DataProtection;
 using Windows.Storage;
 
 namespace TinyTinyRSS.Interface
@@ -289,25 +287,6 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_swipeMarginKey, value.ToString());
                 _swipeMargin = value.ToString();
-            }
-        }
-
-        public int headlinesView
-        {
-            get
-            {
-                if (_headlinesView == null)
-                {
-                    _headlinesView = ReadSetting(_headlinesViewKey);
-                    if (_headlinesView.Equals(""))
-                        _headlinesView = "3";
-                }
-                return int.Parse(_headlinesView);
-            }
-            set
-            {
-                SaveSetting(_headlinesViewKey, value.ToString());
-                _headlinesView = value.ToString();
             }
         }
 

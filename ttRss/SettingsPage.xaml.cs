@@ -50,7 +50,6 @@ namespace TinyTinyRSS
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             DarkArticleBackgroundCheckbox.IsChecked = ConnectionSettings.getInstance().useDarkBackground;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
-            SettingHeadlinesViewBox.SelectedIndex = ConnectionSettings.getInstance().headlinesView;
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
             SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
             UnsignedSslCb.IsChecked = ConnectionSettings.getInstance().allowSelfSignedCert;
@@ -296,8 +295,6 @@ namespace TinyTinyRSS
         {
             if (SortBox != null && sender== SortBox) { 
                 ConnectionSettings.getInstance().sortOrder = SortBox.SelectedIndex;
-            } else if (SettingHeadlinesViewBox != null && sender== SettingHeadlinesViewBox) { 
-                ConnectionSettings.getInstance().headlinesView = SettingHeadlinesViewBox.SelectedIndex;
             }  
         }
 

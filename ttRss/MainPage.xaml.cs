@@ -2,21 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -29,7 +24,6 @@ namespace TinyTinyRSS
     public sealed partial class MainPage : AbstractArticlePage
     {
         private bool validConnection = false;
-        private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         private bool feedListUpdate = false;
 		private int initialIndex = 0;
         public Rect TogglePaneButtonRect
@@ -157,43 +151,35 @@ namespace TinyTinyRSS
 
         private async void FeedTapped(object sender, TappedRoutedEventArgs e)
         {
-            Type target;
-            var setting = ConnectionSettings.getInstance().headlinesView;
-            if (setting == 0 || setting == 2)
-            {
-                target = typeof(ArticlePage);
-            }
-            else
-            {
-                target = typeof(HeadlinesPage);
-            }
-
             if (validConnection)
             {
+                int feedId = -3;
                 if (sender == Fresh)
                 {
-                    Frame.Navigate(target, (int)FeedId.Fresh);
+                    feedId = (int)FeedId.Fresh;
                 }
                 else if (sender == Archived)
                 {
-                    Frame.Navigate(target, (int)FeedId.Archived);
+                    feedId =  (int)FeedId.Archived;
                 }
                 else if (sender == Starred)
                 {
-                    Frame.Navigate(target, (int)FeedId.Starred);
+                    feedId =  (int)FeedId.Starred;
                 }
                 else if (sender == All)
                 {
-                    Frame.Navigate(target, (int)FeedId.All);
+                    feedId =  (int)FeedId.All;
                 }
                 else if (sender == Published)
                 {
-                    Frame.Navigate(target, (int)FeedId.Published);
+                    feedId =  (int)FeedId.Published;
                 }
                 else if (sender == Recent)
                 {
-                    Frame.Navigate(target, (int)FeedId.RecentlyRead);
+                    feedId =  (int)FeedId.RecentlyRead;
                 }
+                ConnectionSettings.getInstance().selectedFeed = feedId;
+                await LoadHeadlines();
             }
             else
             {
@@ -214,27 +200,18 @@ namespace TinyTinyRSS
             return null;
         }
 
-        private void AllFeedsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void AllFeedsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!feedListUpdate)
             {
-                Type target;
-                var setting = ConnectionSettings.getInstance().headlinesView;
-                if (setting == 0 || setting == 1)
-                {
-                    target = typeof(ArticlePage);
-                }
-                else
-                {
-                    target = typeof(HeadlinesPage);
-                }
                 ExtendedFeed selected = AllFeedsList.SelectedItem as ExtendedFeed;
                 if (selected == null)
                 {
                     return;
                 }
+                ConnectionSettings.getInstance().selectedFeed = selected.feed.id;
+                await LoadHeadlines();
                 AllFeedsList.SelectedItem = null;
-                Frame.Navigate(target, selected.feed.id);
             }
         }
         private async Task UpdateAllFeedsList(bool refresh)
@@ -319,13 +296,45 @@ namespace TinyTinyRSS
                 checkException(ex);
             }
         }
-
-        private async void checkException(TtRssException ex)
+        /// <summary>
+        /// Execute actions matching the touched app bar button.
+        /// </summary>
+        /// <param name="sender">Button that has been touched</param>
+        /// <param name="e">Events</param>
+        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
+            if (sender.Equals(this.settingsAppBarButton))
             {
-                MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                await msgbox.ShowAsync();
+                Frame.Navigate(typeof(SettingsPage));
+            }
+            else if (sender.Equals(this.infoAppBarButton))
+            {
+                var uri = new Uri("https://thescientist.eu/?p=1057");
+                await Windows.System.Launcher.LaunchUriAsync(uri);
+            }
+            else if (sender.Equals(this.refreshAppBarButton))
+            {
+                if (!validConnection)
+                {
+                    validConnection = await TtRssInterface.getInterface().CheckLogin();
+                }
+                if (!validConnection)
+                {
+                    MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
+                    await msgbox.ShowAsync();
+                    return;
+                }
+
+                try
+                {
+                    await TtRssInterface.getInterface().getCounters();
+                    await UpdateAllFeedsList(true);
+                    await UpdateSpecialFeeds();
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
             }
         }
 
@@ -446,6 +455,45 @@ namespace TinyTinyRSS
             if (img != null)
             {
                 img.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (validConnection)
+            {
+                int feedId = -3;
+                if (sender == Fresh.Parent)
+                {
+                    feedId = (int)FeedId.Fresh;
+                }
+                else if (sender == Archived.Parent)
+                {
+                    feedId = (int)FeedId.Archived;
+                }
+                else if (sender == Starred.Parent)
+                {
+                    feedId = (int)FeedId.Starred;
+                }
+                else if (sender == All.Parent)
+                {
+                    feedId = (int)FeedId.All;
+                }
+                else if (sender == Published.Parent)
+                {
+                    feedId = (int)FeedId.Published;
+                }
+                else if (sender == Recent.Parent)
+                {
+                    feedId = (int)FeedId.RecentlyRead;
+                }
+                ConnectionSettings.getInstance().selectedFeed = feedId;
+                await LoadHeadlines();
+            }
+            else
+            {
+                MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
+                await msgbox.ShowAsync();
             }
         }
     }

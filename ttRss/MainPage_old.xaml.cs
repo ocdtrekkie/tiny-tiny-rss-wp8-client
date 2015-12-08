@@ -75,7 +75,7 @@ namespace TinyTinyRSS
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             Type target;
-            var setting = ConnectionSettings.getInstance().headlinesView;
+            var setting = 0;
             if (setting == 0 || setting == 2)
             {
                 target = typeof(ArticlePage);
@@ -190,7 +190,7 @@ namespace TinyTinyRSS
             if (!feedListUpdate)
             {
                 Type target;
-                var setting = ConnectionSettings.getInstance().headlinesView;
+                var setting = 0;
                 if (setting == 0 || setting == 1)
                 {
                     target = typeof(ArticlePage);
