@@ -65,7 +65,7 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <Image MaxWidth="24" MaxHeight="24" Source="{Binding icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                        <SymbolIcon Symbol="{Binding icon}" Width="36" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                         <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding name}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="5" Grid.Column="1" />
                                         <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                     </Grid>
