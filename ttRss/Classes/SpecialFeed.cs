@@ -25,6 +25,12 @@ namespace TinyTinyRSS.Classes
             }
         }
         
+        public SpecialFeed(string newname, string newicon, int newid) {
+            id = newid;
+            name = newname;
+            icon = newicon;
+        }
+        
         // Create the OnPropertyChanged method to raise the event 
         protected void OnPropertyChanged(string name)
         {
