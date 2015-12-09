@@ -23,7 +23,7 @@ namespace TinyTinyRSS.Interface.Classes
             int byUnread = obj.unread.CompareTo(this.unread);
             if (byUnread == 0)
             {
-                return this.title.CompareTo(obj.title);
+                return this.order_id.CompareTo(obj.order_id);
             }
             else
             {
