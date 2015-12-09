@@ -215,12 +215,12 @@ namespace TinyTinyRSS
             if(SpecialFeedCollection==null) {
                 SpecialFeedCollection = new List<SpecialFeed>();
                 // set datacontext
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("AllFeedsText"), "", (int)FeedId.All));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("FreshFeedsText"), "", (int)FeedId.Fresh));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("StarredFeedsText"), "", (int)FeedId.Starred));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "", (int)FeedId.Published));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "", (int)FeedId.Archived));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyFeedText"), "", (int)FeedId.Recent));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("AllFeedsText"), "BulletedList", (int)FeedId.All));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("FreshFeedsText"), "NewFolder", (int)FeedId.Fresh));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("StarredFeedsText"), "FavoriteStar", (int)FeedId.Starred));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "Cloud", (int)FeedId.Published));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "Library", (int)FeedId.Archived));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyFeedText"), "SyncFolder", (int)FeedId.Recent));
                 SpecialFeedsList.DataContext = SpecialFeedCollection;
             }
             // Counters in Liste aktualisieren
