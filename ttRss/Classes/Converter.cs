@@ -43,6 +43,22 @@ namespace TinyTinyRSS.Classes
             throw new NotImplementedException();
         }
     }
+
+    public class ZeroToNoStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type t, object parameter, string str)
+        {
+            var strValue = value as int?;
+            return (strValue == null || strValue.Equals(0)) ? "" : strValue.ToString();
+        }
+
+        public object ConvertBack(object value, Type t, object parameter, string str)
+        {
+            //We can't support this
+            throw new NotImplementedException();
+        }
+    }
+    
     public class BooleanToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string str)
