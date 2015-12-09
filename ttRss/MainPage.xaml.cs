@@ -26,6 +26,7 @@ namespace TinyTinyRSS
         private bool validConnection = false;
         private bool feedListUpdate = false;
 		private int initialIndex = 0;
+        private Collection<SpecialFeed> SpecialFeedCollection;
         public Rect TogglePaneButtonRect
         {
             get;
@@ -149,45 +150,6 @@ namespace TinyTinyRSS
             }
         }
 
-        private async void FeedTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (validConnection)
-            {
-                int feedId = -3;
-                if (sender == Fresh)
-                {
-                    feedId = (int)FeedId.Fresh;
-                }
-                else if (sender == Archived)
-                {
-                    feedId =  (int)FeedId.Archived;
-                }
-                else if (sender == Starred)
-                {
-                    feedId =  (int)FeedId.Starred;
-                }
-                else if (sender == All)
-                {
-                    feedId =  (int)FeedId.All;
-                }
-                else if (sender == Published)
-                {
-                    feedId =  (int)FeedId.Published;
-                }
-                else if (sender == Recent)
-                {
-                    feedId =  (int)FeedId.RecentlyRead;
-                }
-                ConnectionSettings.getInstance().selectedFeed = feedId;
-                await LoadHeadlines();
-            }
-            else
-            {
-                MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                await msgbox.ShowAsync();
-            }
-        }
-
         private Category getCategoryById(List<Category> categories, int id)
         {
             foreach (Category cat in categories)
@@ -243,59 +205,54 @@ namespace TinyTinyRSS
                 checkException(ex);
             }
         }
+        
+        /// <summary>
+        /// Create SpecialFeedsList if null and update counters.
+        /// </summary>
         private async Task UpdateSpecialFeeds()
         {
-            // Counters
+            // init
+            if(SpecialFeedCollection==null) {
+                SpecialFeedCollection = new List<SpecialFeed>();
+                // set datacontext
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("AllFeedsText"), "", (int)FeedId.All));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("FreshFeedsText"), "", (int)FeedId.Fresh));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("StarredFeedsText"), "", (int)FeedId.Starred));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "", (int)FeedId.Published));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "", (int)FeedId.Archived));
+                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyFeedText"), "", (int)FeedId.Recent));
+                SpecialFeedsList.DataContext = SpecialFeedCollection;
+            }
+            // Counters in Liste aktualisieren
             try
             {
                 // Unread
                 int unread = await TtRssInterface.getInterface().getUnReadCount(true);
                 Task tsk = PushNotificationHelper.UpdateLiveTile(unread);
-                if (unread != 0)
-                {
-                    Fresh.Text = loader.GetString("FreshFeedsText") + " (" + unread + ")";
-                }
-                else
-                {
-                    Fresh.Text = loader.GetString("FreshFeedsText") + " (-)";
-                }
+                
+                var obj1 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Fresh));
+                if (obj1 != null) obj1.count = unread;                
                 await tsk;
+                
                 // Starred
                 int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
-                if (starredCount != 0)
-                {
-                    Starred.Text = loader.GetString("StarredFeedsText") + " (" + starredCount + ")";
-                }
-                else
-                {
-                    Starred.Text = loader.GetString("StarredFeedsText") + " (-)";
-                }
+                var obj2 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Starred));
+                if (obj2 != null) obj2.count = starredCount;
                 // Archived
                 int archCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Archived);
-                if (archCount != 0)
-                {
-                    Archived.Text = loader.GetString("ArchivedFeedsText") + " (" + archCount + ")";
-                }
-                else
-                {
-                    Archived.Text = loader.GetString("ArchivedFeedsText") + " (-)";
-                }
+                var obj3 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Archived));
+                if (obj3 != null) obj3.count = archCount;
                 // Published
                 int publishedCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Published);
-                if (publishedCount != 0)
-                {
-                    Published.Text = loader.GetString("PublishedFeedsText") + " (" + publishedCount + ")";
-                }
-                else
-                {
-                    Published.Text = loader.GetString("PublishedFeedsText") + " (-)";
-                }
+                var obj4 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Published));
+                if (obj4 != null) obj4.count = publishedCount;
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
             }
         }
+        
         /// <summary>
         /// Execute actions matching the touched app bar button.
         /// </summary>
