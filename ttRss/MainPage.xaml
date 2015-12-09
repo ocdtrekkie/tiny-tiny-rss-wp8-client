@@ -12,6 +12,7 @@
         <CollectionViewSource x:Name="groupedFeeds" IsSourceGrouped="True"/>
         <converter:IntToStringConverter x:Key="IntStringConverter" />
         <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <converter:ZeroToNoStringConverter x:Key="ZeroToNoStringConverter" />
         <converter:BoolToBoldConverter x:Key="BoldConverter" />
     </Page.Resources>
 
@@ -54,25 +55,27 @@
                 <ScrollViewer Grid.Row="0">
                     <StackPanel>
                     <TextBlock Text="" x:Uid="SpecialFeeds" />
-                    <ListView SelectionChanged="ListView_SelectionChanged">
-                        <ListViewItem>
-                            <TextBlock  Name="All" Text="" x:Uid="AllFeedsTitle"/>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <TextBlock  Name="Fresh" Text="" x:Uid="FreshFeeds"/>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <TextBlock  Name="Starred" Text="" x:Uid="StarredFeeds"/>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <TextBlock  Name="Published" Text="" x:Uid="PublishedFeeds"/>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <TextBlock  Name="Archived" Text="" x:Uid="ArchivedFeeds"/>
-                        </ListViewItem>
-                        <ListViewItem>
-                            <TextBlock  Name="Recent" Text="" x:Uid="RecentlyReadFeed"/>
-                        </ListViewItem>                        
+                    <ListView x:Name="SpecialFeedsList" SelectionChanged="ListView_SelectionChanged"
+                                        ItemsSource="{Binding}">
+                        <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image MaxWidth="24" MaxHeight="24" Source="{Binding icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding name}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="5" Grid.Column="1" />
+                                        <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </Grid>
+                                </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                     </ListView>
                     <SemanticZoom>
                         <SemanticZoom.ZoomedInView>
