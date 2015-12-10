@@ -65,9 +65,9 @@
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <SymbolIcon Symbol="{Binding icon}" Width="36" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding name}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="5" Grid.Column="1" />
-                                        <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        <SymbolIcon Symbol="{Binding icon}" Width="36" Grid.Column="0" HorizontalAlignment="Left" />
+                                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding name}" Margin="0,4" Grid.Column="1" />
+                                        <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" Margin="0,4" Grid.Column="2" />
                                     </Grid>
                                 </DataTemplate>
                         </ListView.ItemTemplate>
@@ -82,18 +82,18 @@
                             <ListView x:Name="AllFeedsList" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
                                         SelectionChanged="AllFeedsList_SelectionChanged"                                  
-                                        Background="Transparent" VerticalContentAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                        Background="Transparent" VerticalContentAlignment="Top">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                                        <Grid HorizontalAlignment="Stretch">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="5" Grid.Column="1" />
-                                            <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="0,5" Grid.Column="2" TextAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                            <Image MaxWidth="36" MaxHeight="36" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="0,5" Grid.Column="1" />
+                                            <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,5" Grid.Column="2" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -117,9 +117,13 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text='{Binding Key.title}' Grid.Column="0"
-                                           Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleMediumFontSize}" HorizontalAlignment="Stretch" />
+                                                       Foreground="{StaticResource PhoneAccentBrush}" 
+                                                       FontSize="{StaticResource TextStyleMediumFontSize}" 
+                                                       HorizontalAlignment="Stretch" />
                                                     <TextBlock Text='{Binding Key.combined}' Grid.Column="1" 
-                                           Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleMediumFontSize}" HorizontalAlignment="Right" Margin="0,0,0,0"/>
+                                                       Foreground="{StaticResource PhoneAccentBrush}" 
+                                                       FontSize="{StaticResource TextStyleMediumFontSize}" 
+                                                       HorizontalAlignment="Right" />
                                                 </Grid>
                                             </DataTemplate>
                                         </GroupStyle.HeaderTemplate>
@@ -128,7 +132,8 @@
                             </ListView>
                         </SemanticZoom.ZoomedInView>
                         <SemanticZoom.ZoomedOutView>
-                            <ListView Background="Black" ItemsSource="{Binding Source={StaticResource groupedFeeds}, Path=CollectionGroups}" Padding="25,25,0,0">
+                            <ListView Background="{StaticResource ApplicationPageBackgroundThemeBrush}" 
+                                        ItemsSource="{Binding Source={StaticResource groupedFeeds}, Path=CollectionGroups}" Padding="25,25,0,0">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -143,9 +148,11 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBlock Text='{Binding Group.Key.title}' Grid.Column="0"
-                                           Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleMediumFontSize}" />
+                                               Foreground="{StaticResource PhoneAccentBrush}" 
+                                               FontSize="{StaticResource TextStyleMediumFontSize}" />
                                             <TextBlock Text='{Binding Group.Key.combined}' Grid.Column="1" 
-                                           Foreground="{StaticResource PhoneAccentBrush}" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="0,0,0,0"/>
+                                               Foreground="{StaticResource PhoneAccentBrush}" 
+                                               FontSize="{StaticResource TextStyleMediumFontSize}" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -179,7 +186,7 @@
 						<!-- Weiteres Laden ProgressRing -->
 					</Grid.RowDefinitions>
 					<TextBlock Name="FeedTitle" Grid.Row="0" TextWrapping="Wrap" FontSize="{StaticResource TextStyleLargeFontSize}" />
-					<StackPanel Orientation="Horizontal">
+					<StackPanel Orientation="Horizontal" Grid.Row="1">
 						<TextBlock Text="Alle Auswählen" />
 						<TextBlock Text="Sortierung" />
 						<TextBlock Text="Nur ungelesene anzeigen" />
