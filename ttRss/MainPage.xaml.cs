@@ -50,7 +50,10 @@ namespace TinyTinyRSS
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
 		
-			// TODO if server empty goto settingspage
+			// goto settingspage cause server setting not set.
+            if("".Equals(ConnectionSettings.getInstance().server) {
+                Frame.Navigate(typeof(SettingsPage));
+            }
             try
             {
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
@@ -176,6 +179,10 @@ namespace TinyTinyRSS
                 AllFeedsList.SelectedItem = null;
             }
         }
+        
+        /// <summary>
+        /// Update list of feeds in pane.
+        /// </summary>
         private async Task UpdateAllFeedsList(bool refresh)
         {
             try
@@ -304,7 +311,7 @@ namespace TinyTinyRSS
             ScrollViewer sv = (ScrollViewer)sender;
             var verticalOffsetValue = sv.VerticalOffset;
             var maxVerticalOffsetValue = sv.ExtentHeight - sv.ViewportHeight;
-            if (verticalOffsetValue >= 0.95 * maxVerticalOffsetValue)
+            if (verticalOffsetValue >= 0.85 * maxVerticalOffsetValue)
             {
                 await LoadMoreHeadlines();
             }
@@ -374,6 +381,12 @@ namespace TinyTinyRSS
             return HeadlinesView.SelectedIndex;
         }
 
+        /// <summary>
+        /// Headline in List has been selected.
+        /// Depending on single or multiselect decide what to do.
+        /// Single select: display article.
+        /// Multi select: nothing yet.
+        /// </summary>
         private void HeadlinesView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (HeadlinesView.SelectionMode == ListViewSelectionMode.Single)
