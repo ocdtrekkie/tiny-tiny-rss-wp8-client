@@ -251,7 +251,7 @@
                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
                             </StackPanel>
                         </Grid>
-                        <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="{Binding}"/>
+                        <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Source="{Binding Article.content} />
                     </Grid>
 			</Grid>
         </SplitView>
