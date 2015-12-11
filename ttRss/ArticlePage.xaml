@@ -54,11 +54,8 @@
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
                           Label="" x:Uid="TooglePublishAppBarButton" />
-                <AppBarButton x:Name="showUnreadOnlyAppBarMenu" Click="AppBarButton_Click" />
                 <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
                           Label="" x:Uid="MarkAllArticlesRead" />
-                <AppBarButton x:Name="sort1AppBarMenu" Click="AppBarButton_Click" />
-                <AppBarButton x:Name="sort2AppBarMenu" Click="AppBarButton_Click" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
 
