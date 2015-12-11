@@ -97,7 +97,6 @@ namespace TinyTinyRSS
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
                 ArticlesCollection = nav.ArticlesCollection;
-                BuildLocalizedApplicationBar();
                 Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
             } else {
                 initialized = false;
@@ -148,15 +147,6 @@ namespace TinyTinyRSS
                 if (article != null && _selectedIndex == localSelected)
                 {
                     setHtml(article.content);
-                    /*var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
-                    if (icon != null)
-                    {
-                        Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
-                        if (articlesFeed != null)
-                        {
-                            icon.Source = articlesFeed.icon;
-                        }
-                    }*/
                     UpdateLocalizedApplicationBar(article);
                 }
                 e.Item.UpdateLayout();
@@ -264,33 +254,20 @@ namespace TinyTinyRSS
             if (article.unread)
             {
                 toogleReadAppBarButton.IsChecked = true;
-                toogleReadAppBarButton.Label = loader.GetString("MarkReadAppBarButtonText");
             }
             else
             {
                 toogleReadAppBarButton.IsChecked = false;
-                toogleReadAppBarButton.Label = loader.GetString("MarkUnreadAppBarButtonText");
             }
 
             if (!article.marked)
             {
                 toggleStarAppBarButton.IsChecked = false;
-                toggleStarAppBarButton.Label = loader.GetString("StarAppBarButtonText");
             }
             else
             {
                 toggleStarAppBarButton.IsChecked = true;
-                toggleStarAppBarButton.Label = loader.GetString("UnStarAppBarButtonText");
             }
-        }
-
-        private void BuildLocalizedApplicationBar()
-        {
-            showUnreadOnlyAppBarMenu.Label = _showUnreadOnly ? loader.GetString("ShowAllArticles") : loader.GetString("ShowOnlyUnreadArticles");
-
-            List<string> options = getSortOptions();
-            sort1AppBarMenu.Label = options[0];
-            sort2AppBarMenu.Label = options[1];
         }
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -342,59 +319,6 @@ namespace TinyTinyRSS
                 {
                     checkException(ex);
                 }
-                return;
-            }
-            else if (sender == showUnreadOnlyAppBarMenu)
-            {
-                _showUnreadOnly = !_showUnreadOnly;
-                Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
-                showUnreadOnlyAppBarMenu.Label = _showUnreadOnly ? loader.GetString("ShowAllArticles") : loader.GetString("ShowOnlyUnreadArticles");
-                await LoadHeadlines();
-                _lastPivotIndex = -1;
-                if (PivotControl.SelectedIndex == 0)
-                {
-                    _selectedIndex = 0;
-                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
-                }
-                else
-                {
-                    _selectedIndex = 0;
-                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
-                }
-                updateCount(_showUnreadOnly);
-                return;
-            }
-            else if (sender == sort1AppBarMenu || sender == sort2AppBarMenu)
-            {
-                if (_sortOrder == 0 && sender == sort1AppBarMenu || _sortOrder == 2 && sender == sort2AppBarMenu)
-                {
-                    _sortOrder = 1;
-                }
-                else if (_sortOrder != 0 && sender == sort1AppBarMenu)
-                {
-                    _sortOrder = 0;
-                }
-                else if (_sortOrder != 2 && sender == sort2AppBarMenu)
-                {
-                    _sortOrder = 2;
-                }
-                Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
-                List<string> options = getSortOptions();
-                sort1AppBarMenu.Label = options[0];
-                sort2AppBarMenu.Label = options[1];
-                await LoadHeadlines();
-                _lastPivotIndex = -1;
-                if (PivotControl.SelectedIndex == 0)
-                {
-                    _selectedIndex = 0;
-                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
-                }
-                else
-                {
-                    _selectedIndex = 0;
-                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
-                }
-                updateCount(_showUnreadOnly);
                 return;
             }
             else
