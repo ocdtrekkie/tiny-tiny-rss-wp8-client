@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
@@ -25,8 +23,8 @@ namespace TinyTinyRSS
     {
         private bool validConnection = false;
         private bool feedListUpdate = false;
-		private int initialIndex = 0;
-        private Collection<SpecialFeed> SpecialFeedCollection;
+        private int initialIndex = 0;
+        private List<SpecialFeed> SpecialFeedCollection;
         public Rect TogglePaneButtonRect
         {
             get;
@@ -38,6 +36,16 @@ namespace TinyTinyRSS
             this.InitializeComponent();
             this.Loaded += PageLoaded;
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
+            // init
+            SpecialFeedCollection = new List<SpecialFeed>();
+            // set datacontext
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("AllFeedsSpecialFeedText"), "Bullets", (int)FeedId.All));
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("FreshFeedsText"), "NewFolder", (int)FeedId.Fresh));
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("StarredFeedsText"), "OutlineStar", (int)FeedId.Starred));
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "World", (int)FeedId.Published));
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "Library", (int)FeedId.Archived));
+            SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyReadFeedText"), "SyncFolder", (int)FeedId.RecentlyRead));
+            SpecialFeedsList.DataContext = SpecialFeedCollection;
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = true;
@@ -49,9 +57,10 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-		
-			// goto settingspage cause server setting not set.
-            if("".Equals(ConnectionSettings.getInstance().server) {
+
+            // goto settingspage cause server setting not set.
+            if ("".Equals(ConnectionSettings.getInstance().server))
+            {
                 Frame.Navigate(typeof(SettingsPage));
             }
             try
@@ -62,49 +71,49 @@ namespace TinyTinyRSS
                     await TtRssInterface.getInterface().getCounters();
                     Task specialFeedsTask = UpdateSpecialFeeds();
                     Task allFeedsTask = UpdateAllFeedsList(true);
-					Task<bool> headlinesTask = null;
-					if (!initialized)
-					{
-						headlinesTask = LoadHeadlines();
-					}
-					if (ConnectionSettings.getInstance().selectedFeed <= 0)
-					{
-						switch (ConnectionSettings.getInstance().selectedFeed)
-						{
-							case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
-							case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
-							case -2: FeedTitle.Text = loader.GetString("PublishedFeedsText"); break;
-							case -6: FeedTitle.Text = loader.GetString("RecentlyReadFeedText"); break;
-							case -4: FeedTitle.Text = loader.GetString("AllFeedsTitleText"); break;
-							case 0: FeedTitle.Text = loader.GetString("ArchivedFeedsText"); break;
-						}
-					}
-					else
-					{
-						try
-						{
-							FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
-						}
-						catch (TtRssException ex)
-						{
-							checkException(ex);
-						}
-					}
-					await specialFeedsTask;
-					await allFeedsTask;
+                    Task<bool> headlinesTask = null;
+                    if (!initialized)
+                    {
+                        headlinesTask = LoadHeadlines();
+                    }
+                    if (ConnectionSettings.getInstance().selectedFeed <= 0)
+                    {
+                        switch (ConnectionSettings.getInstance().selectedFeed)
+                        {
+                            case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
+                            case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
+                            case -2: FeedTitle.Text = loader.GetString("PublishedFeedsText"); break;
+                            case -6: FeedTitle.Text = loader.GetString("RecentlyReadFeedText"); break;
+                            case -4: FeedTitle.Text = loader.GetString("AllFeedsTitleText"); break;
+                            case 0: FeedTitle.Text = loader.GetString("ArchivedFeedsText"); break;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
+                        }
+                        catch (TtRssException ex)
+                        {
+                            checkException(ex);
+                        }
+                    }
+                    await specialFeedsTask;
+                    await allFeedsTask;
                     await PushNotificationHelper.UpdateNotificationChannel();
                     if (!initialized)
-					{
-						bool result = await headlinesTask;
-						if (!result)
-						{
-							return;
-						}
-						HeadlinesView.DataContext = ArticlesCollection;
-					}
-					var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
-					sv.ViewChanged += ViewChanged;
-					HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
+                    {
+                        bool result = await headlinesTask;
+                        if (!result)
+                        {
+                            return;
+                        }
+                        HeadlinesView.DataContext = ArticlesCollection;
+                    }
+                    var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
+                    sv.ViewChanged += ViewChanged;
+                    HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
                 }
                 else
                 {
@@ -179,7 +188,7 @@ namespace TinyTinyRSS
                 AllFeedsList.SelectedItem = null;
             }
         }
-        
+
         /// <summary>
         /// Update list of feeds in pane.
         /// </summary>
@@ -212,46 +221,34 @@ namespace TinyTinyRSS
                 checkException(ex);
             }
         }
-        
+
         /// <summary>
         /// Create SpecialFeedsList if null and update counters.
         /// </summary>
         private async Task UpdateSpecialFeeds()
         {
-            // init
-            if(SpecialFeedCollection==null) {
-                SpecialFeedCollection = new List<SpecialFeed>();
-                // set datacontext
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("AllFeedsText"), "BulletedList", (int)FeedId.All));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("FreshFeedsText"), "NewFolder", (int)FeedId.Fresh));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("StarredFeedsText"), "FavoriteStar", (int)FeedId.Starred));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "Cloud", (int)FeedId.Published));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "Library", (int)FeedId.Archived));
-                SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyFeedText"), "SyncFolder", (int)FeedId.Recent));
-                SpecialFeedsList.DataContext = SpecialFeedCollection;
-            }
             // Counters in Liste aktualisieren
             try
             {
                 // Unread
                 int unread = await TtRssInterface.getInterface().getUnReadCount(true);
                 Task tsk = PushNotificationHelper.UpdateLiveTile(unread);
-                
-                var obj1 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Fresh));
-                if (obj1 != null) obj1.count = unread;                
+
+                var obj1 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Fresh);
+                if (obj1 != null) obj1.count = unread;
                 await tsk;
-                
+
                 // Starred
                 int starredCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Starred);
-                var obj2 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Starred));
+                var obj2 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Starred);
                 if (obj2 != null) obj2.count = starredCount;
                 // Archived
                 int archCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Archived);
-                var obj3 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Archived));
+                var obj3 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Archived);
                 if (obj3 != null) obj3.count = archCount;
                 // Published
                 int publishedCount = await TtRssInterface.getInterface().getCountForFeed(false, (int)FeedId.Published);
-                var obj4 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Published));
+                var obj4 = SpecialFeedCollection.FirstOrDefault(x => x.id == (int)FeedId.Published);
                 if (obj4 != null) obj4.count = publishedCount;
             }
             catch (TtRssException ex)
@@ -259,7 +256,7 @@ namespace TinyTinyRSS
                 checkException(ex);
             }
         }
-        
+
         /// <summary>
         /// Execute actions matching the touched app bar button.
         /// </summary>
@@ -387,28 +384,31 @@ namespace TinyTinyRSS
         /// Single select: display article.
         /// Multi select: nothing yet.
         /// </summary>
-        private void HeadlinesView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void HeadlinesView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (HeadlinesView.SelectionMode == ListViewSelectionMode.Single)
             {
-                if(DisplayInformation.GetForCurrentView().GetHeight<800) {
+                if (RootSplitView.ActualHeight < 800)
+                {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
                     parameter.feedId = ConnectionSettings.getInstance().selectedFeed;
                     parameter._showUnreadOnly = _showUnreadOnly;
-                    parameter._sortOrder = _sortOrder; 
+                    parameter._sortOrder = _sortOrder;
                     parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
                     foreach (WrappedArticle article in ArticlesCollection)
                     {
                         parameter.ArticlesCollection.Add(article);
                     }
                     Frame.Navigate(typeof(ArticlePage), parameter);
-                } else {
+                }
+                else
+                {
                     var _selectedIndex = HeadlinesView.SelectedIndex;
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-                }               
+                }
             }
             else
             {
@@ -438,32 +438,8 @@ namespace TinyTinyRSS
         {
             if (validConnection)
             {
-                int feedId = -3;
-                if (sender == Fresh.Parent)
-                {
-                    feedId = (int)FeedId.Fresh;
-                }
-                else if (sender == Archived.Parent)
-                {
-                    feedId = (int)FeedId.Archived;
-                }
-                else if (sender == Starred.Parent)
-                {
-                    feedId = (int)FeedId.Starred;
-                }
-                else if (sender == All.Parent)
-                {
-                    feedId = (int)FeedId.All;
-                }
-                else if (sender == Published.Parent)
-                {
-                    feedId = (int)FeedId.Published;
-                }
-                else if (sender == Recent.Parent)
-                {
-                    feedId = (int)FeedId.RecentlyRead;
-                }
-                ConnectionSettings.getInstance().selectedFeed = feedId;
+                SpecialFeed selFeed = (SpecialFeed)SpecialFeedsList.SelectedItem;
+                ConnectionSettings.getInstance().selectedFeed = selFeed.id;
                 await LoadHeadlines();
             }
             else

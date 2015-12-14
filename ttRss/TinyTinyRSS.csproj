@@ -33,7 +33,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
@@ -93,6 +93,7 @@
     <Compile Include="Classes\NavigationObject.cs" />
     <Compile Include="Classes\PushNotificationHelper.cs" />
     <Compile Include="Classes\ResolutionHelper.cs" />
+    <Compile Include="Classes\SpecialFeed.cs" />
     <Compile Include="Classes\WebBrowserHelper.cs" />
     <Compile Include="Classes\WrappedArticle.cs" />
     <Compile Include="Controls\BackButton.xaml.cs" />

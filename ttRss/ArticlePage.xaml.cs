@@ -44,7 +44,6 @@ namespace TinyTinyRSS
             {
                 Scrollbar.IsIndeterminate = false;
             }
-            BuildLocalizedApplicationBar();
         }
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
