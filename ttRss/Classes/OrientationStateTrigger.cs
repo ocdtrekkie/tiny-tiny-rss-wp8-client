@@ -10,7 +10,7 @@ using Windows.Foundation.Metadata;
 using Windows.Graphics.Display;
 using Windows.UI.Xaml;
 
-namespace TtRss.Classes
+namespace TinyTinyRSS.Classes
 {
     /// <summary>
     /// Trigger for switching when the screen orientation changes
