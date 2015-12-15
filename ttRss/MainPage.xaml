@@ -39,6 +39,24 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
+            <VisualState x:Name="landscape">
+                <VisualState.StateTriggers>
+                   <converter:OrientationStateTrigger Orientation="Landscape" />
+               </VisualState.StateTriggers>
+               <VisualState.Setters>
+                   <Setter Target="Article_Grid.(RelativePanel.RightOf)" Value="HeadlinesView"> </Setter>
+                   <Setter Target="Article_Grid.(RelativePanel.AlignTopWith)" Value="HeadlinesView"> </Setter>
+               </VisualState.Setters>
+           </VisualState>
+           <VisualState x:Name="portrait">
+               <VisualState.StateTriggers>
+                   <converter:OrientationStateTrigger Orientation="Portrait" />
+               </VisualState.StateTriggers>
+               <VisualState.Setters>
+                   <Setter Target="Article_Grid.(RelativePanel.Below)" Value="HeadlinesView"> </Setter>
+                   <Setter Target="Article_Grid.(RelativePanel.AlignLeftWith)" Value="HeadlinesView"> </Setter>
+               </VisualState.Setters>
+           </VisualState>
         </VisualStateManager.VisualStateGroups>
 
         <!-- Top-level navigation menu + app content -->
@@ -174,11 +192,10 @@
 
             <Grid x:Name="Splitview_Content">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <!-- Headlines -->
-                    <!-- <RowDefinition Height="Auto" /> Werbung -->
+                    <!-- Head -->
                     <RowDefinition Height="Auto" />
-                    <!-- Article -->
+                    <!-- Relative Panel -->
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid x:Name="Headlines_Grid" Grid.Row="0">
                     <Grid.RowDefinitions>
@@ -186,11 +203,9 @@
                         <!-- Headline -->
                         <RowDefinition Height="Auto"/>
                         <!-- Toolbar evtl. als CommandBar siehe NavigationMenu Sample -->
-                        <RowDefinition Height="*"/>
-                        <!-- Weiteres Laden ProgressRing -->
                     </Grid.RowDefinitions>
                     <TextBlock Name="FeedTitle" Grid.Row="0" TextWrapping="Wrap" FontSize="{StaticResource TextStyleLargeFontSize}" />
-                    <CommandBar Name="FilterCommandBar">
+                    <CommandBar Name="FilterCommandBar" Grid.Row="1">
                         <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
                                 x:Uid="MultiSelectAppBarButton" Icon="List" 
                                 Label="" Click="MultiSelectAppBarButton_Click" />
@@ -212,8 +227,10 @@
                             </AppBarButton.Flyout>
                         </AppBarButton>
                     </CommandBar>
-                    <ListView Name="HeadlinesView" ItemsSource="{Binding}" Grid.Row="2" SelectionMode="Single" 
-							  SelectionChanged="HeadlinesView_SelectionChanged" >
+                 </Grid>
+                 <RelativePanel Grid.Row="1">
+                    <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
+    				          SelectionChanged="HeadlinesView_SelectionChanged" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="5" >
@@ -221,58 +238,59 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0 1 0 0" 
-											BorderBrush="Gray">
-                                        <TextBlock x:Name="Headline" HorizontalAlignment="Left" TextWrapping="Wrap" 
-												   FontSize="{StaticResource TextStyleLargeFontSize}" Text="{Binding Headline.title}" 
-												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
-                                    </Border>
-                                    <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                    <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                    <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
-												Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
-											   VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </Grid>
-                <!-- Werbung -->
-                <Grid x:Name="Article_Grid" Grid.Row="1" DataContext="{Binding}" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0 1 0 0" 
+    											BorderBrush="Gray">
+                                            <TextBlock x:Name="Headline" HorizontalAlignment="Left" TextWrapping="Wrap" 
+    												   FontSize="{StaticResource TextStyleLargeFontSize}" Text="{Binding Headline.title}" 
+    												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
+                                        </Border>
+                                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                        <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
+    												Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
+    											   VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+                    <!-- Werbung -->
+                    <Grid x:Name="Article_Grid" DataContext="{Binding}" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}"
+                            RelativePanel.Below="HeadlinesView" AlignLeftWith="HeadlinesView">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
-                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                        <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                            <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
-                            <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
-                        </StackPanel>
-                    </Grid>
-                    <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Source="{Binding Article.content}" />
-                </Grid>   
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
+                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
+                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
+                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
+                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
+                            </StackPanel>
+                        </Grid>
+                        <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Source="{Binding Article.content}" />
+                    </Grid>                
+                </RelativePanel>
 			</Grid>
         </SplitView>
 
