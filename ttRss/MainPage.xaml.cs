@@ -388,7 +388,7 @@ namespace TinyTinyRSS
         {
             if (HeadlinesView.SelectionMode == ListViewSelectionMode.Single)
             {
-                if (RootSplitView.ActualHeight < 800)
+                /** if (RootSplitView.ActualHeight < 800)
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
@@ -403,12 +403,16 @@ namespace TinyTinyRSS
                     Frame.Navigate(typeof(ArticlePage), parameter);
                 }
                 else
-                {
+                {**/
                     var _selectedIndex = HeadlinesView.SelectedIndex;
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-                }
+                    if (HeadlinesView.ActualWidth < 600)
+                    {
+                        VisualStateManager.GoToState(this, "paneclosed", true);
+                    }
+                //}
             }
             else
             {
