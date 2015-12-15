@@ -190,12 +190,28 @@
                         <!-- Weiteres Laden ProgressRing -->
                     </Grid.RowDefinitions>
                     <TextBlock Name="FeedTitle" Grid.Row="0" TextWrapping="Wrap" FontSize="{StaticResource TextStyleLargeFontSize}" />
-                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <TextBlock Text="Alle Auswählen" />
-                        <TextBlock Text="Sortierung" />
-                        <TextBlock Text="Nur ungelesene anzeigen" />
-                        <TextBlock Text="Alle Gelesen markieren" />
-                    </StackPanel>
+                    <CommandBar Name="FilterCommandBar">
+                        <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
+                                x:Uid="MultiSelectAppBarButton" Icon="List" 
+                                Label="" Click="MultiSelectAppBarButton_Click" />
+                        <AppBarButton x:Name="showUnreadOnlyAppBarMenu" Icon="Filter">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
+                                    <MenuFlyoutItem x:Uid="ShowOnlyUnreadArticles" Text="" Click="FilterButton_Click" />
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                        <AppBarButton x:Name="sortAppBarMenu" Icon="Sort">
+                            <AppBarButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
+                                    <MenuFlyoutItem x:Uid="ArticlesSortNew" Text="" Click="SortButton_Click" />
+                                    <MenuFlyoutItem x:Uid="ArticlesSortOld" Text="" Click="SortButton_Click" />
+                                </MenuFlyout>
+                            </AppBarButton.Flyout>
+                        </AppBarButton>
+                    </CommandBar>
                     <ListView Name="HeadlinesView" ItemsSource="{Binding}" Grid.Row="2" SelectionMode="Single" 
 							  SelectionChanged="HeadlinesView_SelectionChanged" >
                         <ListView.ItemTemplate>
