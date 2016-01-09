@@ -14,7 +14,7 @@ namespace TinyTinyRSS.Interface.Classes
 
         public int CompareTo(Category obj)
         {
-            return this.title.CompareTo(obj.title);
+            return this.order_id.CompareTo(obj.order_id);
         }
 
         public string combined

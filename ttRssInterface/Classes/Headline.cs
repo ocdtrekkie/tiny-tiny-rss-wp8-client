@@ -16,6 +16,7 @@ namespace TinyTinyRSS.Interface.Classes
 
         public int id {get; set;}
         private bool _unread;
+        private bool _marked;
         private string _title;
         private string _author;
         private long _updated;
@@ -28,7 +29,15 @@ namespace TinyTinyRSS.Interface.Classes
                 OnPropertyChanged("unread");
             }
         }
-        public bool marked {get; set;}
+        public bool marked
+        {
+            get { return _marked; }
+            set
+            {
+                _marked = value;
+                OnPropertyChanged("marked");
+            }
+        }
         public bool published {get; set;}
         public long updated
         {

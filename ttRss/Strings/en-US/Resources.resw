@@ -153,7 +153,7 @@
     <value>Fresh Articles</value>
     <comment>Text for Special Feed "Fresh"</comment>
   </data>
-  <data name="LoadMoreArticles" xml:space="preserve">
+  <data name="LoadMoreHeadlines" xml:space="preserve">
     <value>...loading more Articles</value>
     <comment>Message shown in SystemTray when more articles are loaded.</comment>
   </data>
@@ -337,11 +337,11 @@
     <value>Share</value>
     <comment>Label for AppBarButton Share</comment>
   </data>
-  <data name="ShowAllArticles" xml:space="preserve">
+  <data name="ShowAllArticles.Text" xml:space="preserve">
     <value>Show all Articles</value>
     <comment>AppBarMenu Text to show all articles.</comment>
   </data>
-  <data name="ShowOnlyUnreadArticles" xml:space="preserve">
+  <data name="ShowOnlyUnreadArticles.Text" xml:space="preserve">
     <value>Show only unread Articles</value>
     <comment>AppBarMenu Text to show only unread articles.</comment>
   </data>
@@ -361,7 +361,7 @@
     <value>Save Server Login</value>
     <comment>Text for Button to save connection in settings.</comment>
   </data>
-  <data name="ToogleArchiveAppBarButtonText" xml:space="preserve">
+  <data name="ToogleArchiveAppBarButton.Label" xml:space="preserve">
     <value>Toggle Archived</value>
     <comment>Text for AppBarOption to toggle Archived state of Article</comment>
   </data>
@@ -431,15 +431,15 @@
   <data name="StarredFeeds.Text" xml:space="preserve">
     <value>Favorites</value>
   </data>
-  <data name="ArticlesSortDefault" xml:space="preserve">
+  <data name="ArticlesSortDefault.Text" xml:space="preserve">
     <value>Default</value>
     <comment>Text for Sort option Default in Settings</comment>
   </data>
-  <data name="ArticlesSortNew" xml:space="preserve">
+  <data name="ArticlesSortNew.Text" xml:space="preserve">
     <value>newest first</value>
     <comment>Text for Sort option Newest first in Settings</comment>
   </data>
-  <data name="ArticlesSortOld" xml:space="preserve">
+  <data name="ArticlesSortOld.Text" xml:space="preserve">
     <value>oldest first</value>
     <comment>Text for Sort option OldestFirst in Settings</comment>
   </data>
@@ -466,11 +466,11 @@
   <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
     <value>Special Feeds only</value>
   </data>
-  <data name="ToggleStarAppBarButtonText" xml:space="preserve">
+  <data name="ToggleStarAppBarButton.Label" xml:space="preserve">
     <value>Toggle Favorite State</value>
     <comment>Text for AppBarButton favorite on multiselection</comment>
   </data>
-  <data name="ToggleUnreadAppBarButtonText" xml:space="preserve">
+  <data name="ToggleUnreadAppBarButton.Label" xml:space="preserve">
     <value>Toggle Read State</value>
     <comment>Text for AppBarButton read on multiselection</comment>
   </data>
@@ -505,5 +505,17 @@
   <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
     <value>Allow unsigned or self signed SSL certificates</value>
     <comment>Login option to allow unsigned or selfsigned certificates</comment>
+  </data>
+  <data name="LoadHeadlines" xml:space="preserve">
+    <value>Loading Articles of Feed</value>
+    <comment>Text for initial loading of Headlines of a Feed</comment>
+  </data>
+  <data name="showUnreadOnlyAppBarMenu.Label" xml:space="preserve">
+    <value>Filter</value>
+    <comment>Label for AppBarButton to filter unread/all</comment>
+  </data>
+  <data name="sortAppBarMenu.Label" xml:space="preserve">
+    <value>Sort Order</value>
+    <comment>Label for AppBarButton to change sorting</comment>
   </data>
 </root>

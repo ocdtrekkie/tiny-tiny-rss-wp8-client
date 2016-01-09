@@ -14,6 +14,7 @@
         <converter:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <converter:ZeroToNoStringConverter x:Key="ZeroToNoStringConverter" />
         <converter:BoolToBoldConverter x:Key="BoldConverter" />
+        <converter:MultiSelectToVisibilityConverter x:Key="MultiSelectToVisibilityConverter" />
     </Page.Resources>
 
     <Grid>
@@ -25,8 +26,9 @@
                         <AdaptiveTrigger MinWindowWidth="720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootSplitView.DisplayMode" Value="CompactInline"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="Inline"/>
                         <Setter Target="RootSplitView.IsPaneOpen" Value="True"/>
+                        <Setter Target="FeedTitle.Padding" Value="8,0,0,0"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="paneclosed">
@@ -34,29 +36,32 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="RootSplitView.DisplayMode" Value="CompactOverlay"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="FeedTitle.Padding" Value="48,0,0,0"/>
                         <Setter Target="RootSplitView.IsPaneOpen" Value="False"/>
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-            <VisualState x:Name="landscape">
-                <VisualState.StateTriggers>
-                   <converter:OrientationStateTrigger Orientation="Landscape" />
-               </VisualState.StateTriggers>
-               <VisualState.Setters>
-                   <Setter Target="Article_Grid.(RelativePanel.RightOf)" Value="HeadlinesView"> </Setter>
-                   <Setter Target="Article_Grid.(RelativePanel.AlignTopWith)" Value="HeadlinesView"> </Setter>
-               </VisualState.Setters>
-           </VisualState>
-           <VisualState x:Name="portrait">
-               <VisualState.StateTriggers>
-                   <converter:OrientationStateTrigger Orientation="Portrait" />
-               </VisualState.StateTriggers>
-               <VisualState.Setters>
-                   <Setter Target="Article_Grid.(RelativePanel.Below)" Value="HeadlinesView"> </Setter>
-                   <Setter Target="Article_Grid.(RelativePanel.AlignLeftWith)" Value="HeadlinesView"> </Setter>
-               </VisualState.Setters>
-           </VisualState>
+            <VisualStateGroup>
+                <VisualState x:Name="landscape">
+                    <VisualState.StateTriggers>
+                        <converter:OrientationStateTrigger Orientation="Landscape" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Article_Grid.(Grid.Row)" Value="0"></Setter>
+                        <Setter Target="Article_Grid.(Grid.Column)" Value="1"></Setter>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="portrait">
+                    <VisualState.StateTriggers>
+                        <converter:OrientationStateTrigger Orientation="Portrait" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Article_Grid.(Grid.Row)" Value="1"></Setter>
+                        <Setter Target="Article_Grid.(Grid.Column)" Value="0"></Setter>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
         <!-- Top-level navigation menu + app content -->
@@ -72,20 +77,23 @@
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel>
-                            <TextBlock Text="" x:Uid="SpecialFeeds" />
+                            <TextBlock Text="" x:Uid="SpecialFeeds" Margin="12,0,0,0" />
                             <ListView x:Name="SpecialFeedsList" SelectionChanged="ListView_SelectionChanged"
                                         ItemsSource="{Binding}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid HorizontalAlignment="Stretch" Margin="0,0,0,0">
+                                        <Grid HorizontalAlignment="Stretch" Margin="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
                                             <SymbolIcon Symbol="{Binding icon}" Width="36" Grid.Column="0" HorizontalAlignment="Left" />
-                                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding name}" Margin="0,4" Grid.Column="1" />
-                                            <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" Margin="0,4" Grid.Column="2" />
+                                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" 
+                                                       Text="{Binding name}" Margin="4,0,0,0" 
+                                                       Grid.Column="1" />
+                                            <TextBlock Text="{Binding count, Converter={StaticResource ZeroToNoStringConverter}}" 
+                                                       Margin="0,0,8,0" Grid.Column="2" />
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -99,7 +107,7 @@
                                 <SemanticZoom.ZoomedInView>
                                     <ListView x:Name="AllFeedsList" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
-                                        SelectionChanged="AllFeedsList_SelectionChanged"                                  
+                                        SelectionChanged="AllFeedsList_SelectionChanged"                                
                                         Background="Transparent" VerticalContentAlignment="Top">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
@@ -109,9 +117,9 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Image MaxWidth="32" MaxHeight="32" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="0,5" Grid.Column="1" />
-                                                    <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,5" Grid.Column="2" />
+                                                    <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
+                                                    <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,0,8,0" Grid.Column="2" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -121,7 +129,7 @@
                                             </Style>
                                         </ListView.ItemContainerStyle>
                                         <ListView.GroupStyle>
-                                            <GroupStyle HidesIfEmpty="True">
+                                            <GroupStyle HidesIfEmpty="False">
                                                 <GroupStyle.HeaderContainerStyle>
                                                     <Style TargetType="ListViewHeaderItem">
                                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -135,13 +143,11 @@
                                                                 <ColumnDefinition Width="Auto"/>
                                                             </Grid.ColumnDefinitions>
                                                             <TextBlock Text='{Binding Key.title}' Grid.Column="0"
-                                                       Foreground="{StaticResource PhoneAccentBrush}" 
-                                                       FontSize="{StaticResource TextStyleMediumFontSize}" 
-                                                       HorizontalAlignment="Stretch" />
+                                                                Foreground="{StaticResource PhoneAccentBrush}"  
+                                                                HorizontalAlignment="Stretch" />
                                                             <TextBlock Text='{Binding Key.combined}' Grid.Column="1" 
-                                                       Foreground="{StaticResource PhoneAccentBrush}" 
-                                                       FontSize="{StaticResource TextStyleMediumFontSize}" 
-                                                       HorizontalAlignment="Right" />
+                                                                Foreground="{StaticResource PhoneAccentBrush}"  
+                                                                HorizontalAlignment="Right" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </GroupStyle.HeaderTemplate>
@@ -150,7 +156,7 @@
                                     </ListView>
                                 </SemanticZoom.ZoomedInView>
                                 <SemanticZoom.ZoomedOutView>
-                                    <ListView Background="{StaticResource ApplicationPageBackgroundThemeBrush}" 
+                                    <ListView Background="{StaticResource AppBarBackgroundThemeBrush}" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}, Path=CollectionGroups}" Padding="25,25,0,0">
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="ListViewItem">
@@ -160,17 +166,15 @@
                                         </ListView.ItemContainerStyle>
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+                                                <Grid Background="{StaticResource AppBarBackgroundThemeBrush}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text='{Binding Group.Key.title}' Grid.Column="0"
-                                               Foreground="{StaticResource PhoneAccentBrush}" 
-                                               FontSize="{StaticResource TextStyleMediumFontSize}" />
+                                               Foreground="{StaticResource PhoneAccentBrush}" />
                                                     <TextBlock Text='{Binding Group.Key.combined}' Grid.Column="1" 
-                                               Foreground="{StaticResource PhoneAccentBrush}" 
-                                               FontSize="{StaticResource TextStyleMediumFontSize}" />
+                                               Foreground="{StaticResource PhoneAccentBrush}" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -193,82 +197,120 @@
             <Grid x:Name="Splitview_Content">
                 <Grid.RowDefinitions>
                     <!-- Head -->
+                    <RowDefinition Height="48" />
                     <RowDefinition Height="Auto" />
-                    <!-- Relative Panel -->
+                    <!-- List + Article -->
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Grid x:Name="Headlines_Grid" Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <!-- Headline -->
-                        <RowDefinition Height="Auto"/>
-                        <!-- Toolbar evtl. als CommandBar siehe NavigationMenu Sample -->
-                    </Grid.RowDefinitions>
-                    <TextBlock Name="FeedTitle" Grid.Row="0" TextWrapping="Wrap" FontSize="{StaticResource TextStyleLargeFontSize}" />
-                    <CommandBar Name="FilterCommandBar" Grid.Row="1">
-                        <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
+                <Border Grid.Row="0" Background="{StaticResource AppBarBackgroundThemeBrush}">
+                    <TextBlock Name="FeedTitle" TextWrapping="Wrap" 
+                               VerticalAlignment="Center" 
+                                    FontSize="{StaticResource TextStyleLargeFontSize}" Padding="8,0,0,0" />
+                </Border>
+                <CommandBar Name="FilterCommandBar" Grid.Row="1" Background="{StaticResource AppBarBackgroundThemeBrush}">
+                    <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
                                 x:Uid="MultiSelectAppBarButton" Icon="List" 
                                 Label="" Click="MultiSelectAppBarButton_Click" />
-                        <AppBarButton x:Name="showUnreadOnlyAppBarMenu" Icon="Filter">
-                            <AppBarButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
-                                    <MenuFlyoutItem x:Uid="ShowOnlyUnreadArticles" Text="" Click="FilterButton_Click" />
-                                </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                        <AppBarButton x:Name="sortAppBarMenu" Icon="Sort">
-                            <AppBarButton.Flyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
-                                    <MenuFlyoutItem x:Uid="ArticlesSortNew" Text="" Click="SortButton_Click" />
-                                    <MenuFlyoutItem x:Uid="ArticlesSortOld" Text="" Click="SortButton_Click" />
-                                </MenuFlyout>
-                            </AppBarButton.Flyout>
-                        </AppBarButton>
-                    </CommandBar>
-                 </Grid>
-                 <RelativePanel Grid.Row="1">
-                    <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
-    				          SelectionChanged="HeadlinesView_SelectionChanged" >
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="5" >
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0 1 0 0" 
+                    <AppBarButton x:Uid="showUnreadOnlyAppBarMenu" x:Name="showUnreadOnlyAppBarMenu" Label="" Icon="Filter">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Name="FilterShowAll"  x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
+                                <MenuFlyoutItem Name="FilterShowUnread" x:Uid="ShowOnlyUnreadArticles" Text="" Click="FilterButton_Click" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <AppBarButton x:Uid="sortAppBarMenu" x:Name="sortAppBarMenu" Label="" Icon="Sort">
+                        <AppBarButton.Flyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Name="SortButtonDefault" x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
+                                <MenuFlyoutItem Name="SortButtonNew" x:Uid="ArticlesSortNew" Text="" Click="SortButton_Click" />
+                                <MenuFlyoutItem Name="SortButtonOld" x:Uid="ArticlesSortOld" Text="" Click="SortButton_Click" />
+                            </MenuFlyout>
+                        </AppBarButton.Flyout>
+                    </AppBarButton>
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton x:Name="markAllReadMenu" Click="ArticleAppBarButton_Click" 
+                                     Label="" x:Uid="MarkAllArticlesRead" />
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
+                <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <!-- Werbung -->
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Name="HeadlinesSv">
+                            <StackPanel Orientation="Vertical">
+                                <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
+    				          SelectionChanged="HeadlinesView_SelectionChanged">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="5" >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0 1 0 0" 
     											BorderBrush="Gray">
-                                            <TextBlock x:Name="Headline" HorizontalAlignment="Left" TextWrapping="Wrap" 
+                                                    <TextBlock x:Name="Headline" HorizontalAlignment="Left" TextWrapping="Wrap" 
     												   FontSize="{StaticResource TextStyleLargeFontSize}" Text="{Binding Headline.title}" 
     												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
-                                        </Border>
-                                        <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                        <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                        <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
+                                                </Border>
+                                                <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                                <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
     												Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
     											   VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                    </Grid>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    <!-- Werbung -->
-                    <Grid x:Name="Article_Grid" DataContext="{Binding}" Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}"
-                            RelativePanel.Below="HeadlinesView" AlignLeftWith="HeadlinesView">
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                </ListView>
+                                <ProgressRing Name="ProgressBar" 
+                                          Foreground="{StaticResource PhoneAccentBrush}" />
+                                <TextBlock Name="ProgressBarText" TextAlignment="Center" 
+                                       FontSize="{StaticResource TextStyleMediumFontSize}" />
+                            </StackPanel>
+                        </ScrollViewer>
+                        <!-- Werbung -->
+                        <CommandBar Name="HeadlinesAppBar" Grid.Row="1" 
+                                    Visibility="{Binding Path=SelectionMode, ElementName=HeadlinesView, Converter={StaticResource MultiSelectToVisibilityConverter}}">
+                            <AppBarButton x:Name="ReadAppBarButton" Icon="Mail"
+                                          x:Uid="ToggleUnreadAppBarButton" Label=""
+                                                Click="HeadlinesAppBarButton_Click" />
+                            <AppBarButton x:Name="StarAppBarButton" Icon="Favorite" 
+                                          x:Uid="ToggleStarAppBarButton" Label=""
+                                Click="HeadlinesAppBarButton_Click" />
+                            <AppBarButton x:Name="PublishAppBarButton" Click="HeadlinesAppBarButton_Click" 
+                                     Label="" x:Uid="TooglePublishAppBarButton" Icon="World" />
+
+                        </CommandBar>
+                    </Grid>
+                    <Grid x:Name="Article_Grid" DataContext="{Binding}" 
+                          Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}, FallbackValue=Collapsed}"
+                             Grid.Row="1" Grid.Column="0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
@@ -280,7 +322,14 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
+                            <Grid  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="Headline" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
+                                <SymbolIcon Symbol="Clear" Width="16" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Tapped="ArticleGridClose" Margin="0,4,4,0"  />
+                            </Grid>
                             <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
                             <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
@@ -288,10 +337,29 @@
                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
                             </StackPanel>
                         </Grid>
-                        <WebView Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Source="{Binding Article.content}" />
-                    </Grid>                
-                </RelativePanel>
-			</Grid>
+                        <WebView Name="WebContent" HorizontalAlignment="Stretch" 
+                                 VerticalAlignment="Stretch" 
+                                 Grid.Row="1" />
+                        <CommandBar Name="ArticleAppBar" Grid.Row="2">
+                            <AppBarToggleButton x:Name="toogleReadAppBarButton" Icon="Mail"
+                                          x:Uid="ToggleUnreadAppBarButton" Label=""
+                                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.unread}" />
+                            <AppBarToggleButton x:Name="toggleStarAppBarButton" Icon="Favorite"
+                                          x:Uid="ToggleStarAppBarButton" Label="" 
+                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.marked}" />
+                            <AppBarButton x:Name="shareLinkAppBarButton" Icon="ReShare" 
+                                  Click="ShareAppBarButton_Click" 
+                                  Label="" x:Uid="ShareAppBarButton" />
+                            <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
+                                    Label="" x:Uid="OpenExtAppBarButton" />
+                            <CommandBar.SecondaryCommands>
+                                <AppBarButton x:Name="publishAppBarMenu" Click="ArticleAppBarButton_Click" 
+                                     Label="" x:Uid="TooglePublishAppBarButton" />
+                            </CommandBar.SecondaryCommands>
+                        </CommandBar>
+                    </Grid>
+                </Grid>
+            </Grid>
         </SplitView>
 
         <!-- Declared last to have it rendered above everything else, but it needs to be the first item in the tab sequence. -->
@@ -302,5 +370,5 @@
                       Unchecked="TogglePaneButton_Checked"
                       AutomationProperties.Name="Menu"
                       ToolTipService.ToolTip="Menu" />
-                </Grid>
+    </Grid>
 </local:AbstractArticlePage>

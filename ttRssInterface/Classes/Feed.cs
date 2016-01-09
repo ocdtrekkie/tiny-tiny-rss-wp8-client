@@ -20,15 +20,7 @@ namespace TinyTinyRSS.Interface.Classes
 
         public int CompareTo(Feed obj)
         {
-            int byUnread = obj.unread.CompareTo(this.unread);
-            if (byUnread == 0)
-            {
-                return this.order_id.CompareTo(obj.order_id);
-            }
-            else
-            {
-                return byUnread;
-            }
+            return this.order_id.CompareTo(obj.order_id);
         }
 
         public string formattedUnread

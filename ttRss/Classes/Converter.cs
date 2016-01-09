@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using TinyTinyRSS.Interface.Classes;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 
 namespace TinyTinyRSS.Classes
@@ -69,6 +70,20 @@ namespace TinyTinyRSS.Classes
         public object ConvertBack(object value, Type targetType, object parameter, string str)
         {
             return value.Equals(Visibility.Visible);
+        }
+    }
+
+    public class MultiSelectToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            ListViewSelectionMode listMode = (ListViewSelectionMode) value ;
+            return listMode == ListViewSelectionMode.Multiple ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            throw new NotImplementedException();
         }
     }
     public class BoolToBoldConverter : IValueConverter

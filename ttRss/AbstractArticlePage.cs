@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using TinyTinyRSS;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
+using TinyTinyRSSInterface.Classes;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
@@ -24,14 +23,16 @@ namespace TinyTinyRSS
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         protected int _sortOrder;
         protected bool initialized;
+        protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle };
+        protected HashSet<ProgressMsg> activeInProgress { get; set; }
 
         protected abstract void updateCount(bool p);
         protected abstract int getSelectedIdx();
-        protected abstract void SetProgressBar(bool on, bool showText);
+        protected abstract void SetProgressBar(bool on, ProgressMsg msg);
 
-        protected void SetProgressBar(bool on)
+        public AbstractArticlePage()
         {
-            SetProgressBar(on, false);
+            activeInProgress = new HashSet<ProgressMsg>();
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -84,7 +85,7 @@ namespace TinyTinyRSS
         {
             try
             {
-                SetProgressBar(true);
+                SetProgressBar(true, ProgressMsg.LoadHeadlines);
                 bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                 ArticlesCollection.Clear();
                 List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
@@ -123,7 +124,7 @@ namespace TinyTinyRSS
             }
             finally
             {
-                SetProgressBar(false);
+                SetProgressBar(false, ProgressMsg.LoadHeadlines);
             }
             return true;
         }
@@ -191,7 +192,7 @@ namespace TinyTinyRSS
                 try
                 {
                     _moreArticlesLoading = true;
-                    SetProgressBar(true, true);
+                    SetProgressBar(true, ProgressMsg.LoadMoreHeadlines);
                     bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                     // First get new items if existing
                     List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
@@ -259,7 +260,7 @@ namespace TinyTinyRSS
                 finally
                 {
                     _moreArticlesLoading = false;
-                    SetProgressBar(false);
+                    SetProgressBar(false, ProgressMsg.LoadMoreHeadlines);
                 }
             }
         }
@@ -275,6 +276,32 @@ namespace TinyTinyRSS
                 }
             }
             return contains;
+        }
+
+        protected async Task<bool> markArticleReadAutomatically(Article article)
+        {
+            if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
+            {
+                List<int> idList = new List<int>();
+                idList.Add(article.id);
+                try
+                {
+                    bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
+
+                    if (success)
+                    {
+                        Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                        article.unread = false;
+                        await tsk;
+                        return true;
+                    }
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
+            }
+            return false;
         }
     }
 }

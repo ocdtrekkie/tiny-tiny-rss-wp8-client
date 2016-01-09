@@ -152,7 +152,7 @@ namespace TinyTinyRSS
             return HeadlinesView.SelectedIndex;
         }
 
-        protected override void SetProgressBar(bool on, bool showText)
+        protected override void SetProgressBar(bool on, ProgressMsg msg)
         {
             if (_moreArticlesLoading && !on)
             {
@@ -166,9 +166,9 @@ namespace TinyTinyRSS
             {
                 ProgressBar.IsActive = false;
             }
-            if (showText)
+            if (loader.GetString(msg.ToString()) != null)
             {
-                ProgressBarText.Text = loader.GetString("LoadMoreArticles");
+                ProgressBarText.Text = loader.GetString(msg.ToString());
             }
             else
             {
@@ -231,7 +231,7 @@ namespace TinyTinyRSS
             }
             try
             {
-                SetProgressBar(true);
+                SetProgressBar(true, ProgressMsg.MarkArticle);
                 List<int> idList = new List<int>();
                 foreach (WrappedArticle sel in selectedArticles)
                 {
@@ -263,7 +263,7 @@ namespace TinyTinyRSS
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
-                SetProgressBar(false);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
             catch (TtRssException ex)
             {
@@ -277,7 +277,7 @@ namespace TinyTinyRSS
         {
             if (sender == markAllReadMenu)
             {
-                SetProgressBar(true);
+                SetProgressBar(true, ProgressMsg.MarkArticle);
                 try
                 {
                     bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
@@ -296,7 +296,7 @@ namespace TinyTinyRSS
                         }
                     }
                     Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                    SetProgressBar(false);
+                    SetProgressBar(false, ProgressMsg.MarkArticle);
                     await tsk;
                 }
                 catch (TtRssException ex)

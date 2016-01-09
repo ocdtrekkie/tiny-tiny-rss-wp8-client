@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
+using TinyTinyRSSInterface.Classes;
 using Windows.Foundation;
+using Windows.Graphics.Display;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -50,9 +52,7 @@ namespace TinyTinyRSS
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = true;
             _moreArticlesLoading = false;
-            //RegisterForShare();
-            //BuildLocalizedApplicationBar();
-            //UpdateLocalizedApplicationBar(true);
+            RegisterForShare();
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
@@ -76,32 +76,10 @@ namespace TinyTinyRSS
                     {
                         headlinesTask = LoadHeadlines();
                     }
-                    if (ConnectionSettings.getInstance().selectedFeed <= 0)
-                    {
-                        switch (ConnectionSettings.getInstance().selectedFeed)
-                        {
-                            case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
-                            case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
-                            case -2: FeedTitle.Text = loader.GetString("PublishedFeedsText"); break;
-                            case -6: FeedTitle.Text = loader.GetString("RecentlyReadFeedText"); break;
-                            case -4: FeedTitle.Text = loader.GetString("AllFeedsTitleText"); break;
-                            case 0: FeedTitle.Text = loader.GetString("ArchivedFeedsText"); break;
-                        }
-                    }
-                    else
-                    {
-                        try
-                        {
-                            FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
-                        }
-                        catch (TtRssException ex)
-                        {
-                            checkException(ex);
-                        }
-                    }
                     await specialFeedsTask;
                     await allFeedsTask;
                     await PushNotificationHelper.UpdateNotificationChannel();
+                    setFeedTitle();
                     if (!initialized)
                     {
                         bool result = await headlinesTask;
@@ -111,8 +89,7 @@ namespace TinyTinyRSS
                         }
                         HeadlinesView.DataContext = ArticlesCollection;
                     }
-                    var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
-                    sv.ViewChanged += ViewChanged;
+                    HeadlinesSv.ViewChanged += ViewChanged;
                     HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
                 }
                 else
@@ -129,6 +106,37 @@ namespace TinyTinyRSS
         }
 
         /// <summary>
+        /// Set Title of feed when selected feed is changed.
+        /// </summary>
+        private void setFeedTitle()
+        {
+            if (ConnectionSettings.getInstance().selectedFeed <= 0)
+            {
+                switch (ConnectionSettings.getInstance().selectedFeed)
+                {
+                    case -3: FeedTitle.Text = loader.GetString("FreshFeedsText"); break;
+                    case -1: FeedTitle.Text = loader.GetString("StarredFeedsText"); break;
+                    case -2: FeedTitle.Text = loader.GetString("PublishedFeedsText"); break;
+                    case -6: FeedTitle.Text = loader.GetString("RecentlyReadFeedText"); break;
+                    case -4: FeedTitle.Text = loader.GetString("AllFeedsTitleText"); break;
+                    case 0: FeedTitle.Text = loader.GetString("ArchivedFeedsText"); break;
+                    default: FeedTitle.Text = ""; break;
+                }
+            }
+            else
+            {
+                try
+                {
+                    FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
+            }
+        }
+
+        /// <summary>
         /// Callback when the SplitView's Pane is toggled open or close.  When the Pane is not visible
         /// then the floating hamburger may be occluding other content in the app unless it is aware.
         /// </summary>
@@ -137,10 +145,68 @@ namespace TinyTinyRSS
         private void TogglePaneButton_Checked(object sender, RoutedEventArgs e)
         {
             this.CheckTogglePaneButtonSizeChanged();
+            if (RootSplitView.IsPaneOpen)
+            {
+                FeedTitle.Padding = new Thickness(8, 0, 0, 0);
+            }
+            else
+            {
+                FeedTitle.Padding = new Thickness(48, 0, 0, 0);
+            }
         }
 
-        protected override void SetProgressBar(bool on, bool showText)
+        protected override void SetProgressBar(bool on, ProgressMsg message)
         {
+            if (on)
+            {
+                ProgressBar.IsActive = true;
+                activeInProgress.Add(message);
+                string msg = loader.GetString(message.ToString());
+                if (msg != null)
+                {
+                    ProgressBarText.Text = msg;
+                }
+            }
+            else {
+                activeInProgress.Remove(message);
+                if (activeInProgress.Count > 0)
+                {
+                    ProgressMsg old = activeInProgress.First();
+                    string msgOld = loader.GetString(old.ToString());
+                    if (msgOld != null)
+                    {
+                        ProgressBarText.Text = msgOld;
+                    }
+                }
+                else
+                {
+                    ProgressBar.IsActive = false;
+                    ProgressBarText.Text = "";
+                }
+            }
+        }
+
+        private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MultiSelectAppBarButton.IsChecked == true)
+            {
+                if (HeadlinesView.SelectedItem != null)
+                {
+                    // UpdateLocalizedApplicationBar(false);
+                }
+                else
+                {
+                    // UpdateLocalizedApplicationBar(true);
+                }
+                closeArticleGrid();
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Multiple;
+            }
+            else
+            {
+                HeadlinesView.SelectedItems.Clear();
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+                // UpdateLocalizedApplicationBar(true);
+            }
         }
 
         /// <summary>
@@ -184,8 +250,21 @@ namespace TinyTinyRSS
                     return;
                 }
                 ConnectionSettings.getInstance().selectedFeed = selected.feed.id;
-                await LoadHeadlines();
+                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+                _sortOrder = ConnectionSettings.getInstance().sortOrder;
+                _moreArticles = true;
+                setFeedTitle();
+                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+                {
+                    RootSplitView.IsPaneOpen = false;
+                }
+                if (await LoadHeadlines())
+                {
+                    HeadlinesView.DataContext = ArticlesCollection;
+                }
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
                 AllFeedsList.SelectedItem = null;
+                closeArticleGrid();
             }
         }
 
@@ -214,6 +293,7 @@ namespace TinyTinyRSS
                     select feedByTitle;
 
                 groupedFeeds.Source = ordered;
+                AllFeedsList.SelectedItem = null;
                 feedListUpdate = false;
             }
             catch (TtRssException ex)
@@ -347,28 +427,6 @@ namespace TinyTinyRSS
             base.OnNavigatedFrom(e);
         }
 
-        /*private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (MultiSelectAppBarButton.IsChecked == true)
-            {
-                if (HeadlinesView.SelectedItem != null)
-                {
-                    UpdateLocalizedApplicationBar(false);
-                }
-                else
-                {
-                    UpdateLocalizedApplicationBar(true);
-                }
-                HeadlinesView.SelectionMode = ListViewSelectionMode.Multiple;
-            }
-            else
-            {
-                HeadlinesView.SelectedItems.Clear();
-                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
-                UpdateLocalizedApplicationBar(true);
-            }
-        }*/
-
         protected override void updateCount(bool p)
         {
             //nothing.
@@ -388,7 +446,14 @@ namespace TinyTinyRSS
         {
             if (HeadlinesView.SelectionMode == ListViewSelectionMode.Single)
             {
-                /** if (RootSplitView.ActualHeight < 800)
+                if (HeadlinesView.SelectedItem == null)
+                {
+                    return;
+                }
+                var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
+                bool landscape = orientation == DisplayOrientations.Landscape || orientation == DisplayOrientations.LandscapeFlipped;
+                if (landscape && RootSplitView.ActualWidth < 720 ||
+                    !landscape && RootSplitView.ActualHeight < 800)
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
@@ -403,16 +468,33 @@ namespace TinyTinyRSS
                     Frame.Navigate(typeof(ArticlePage), parameter);
                 }
                 else
-                {**/
+                {
                     var _selectedIndex = HeadlinesView.SelectedIndex;
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-                    if (HeadlinesView.ActualWidth < 600)
+
+                    if (landscape)
                     {
-                        VisualStateManager.GoToState(this, "paneclosed", true);
+                        Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
+                        Article_Grid.MaxWidth = RootSplitView.ActualWidth / 2;
+                        if (RootSplitView.ActualWidth / 2 < 600 && RootSplitView.IsPaneOpen)
+                        {
+                            VisualStateManager.GoToState(this, "paneclosed", true);
+                        }
                     }
-                //}
+                    else
+                    {
+                        Article_Grid.MinHeight = RootSplitView.ActualHeight / 2;
+                        Article_Grid.MaxHeight = RootSplitView.ActualHeight / 2;
+                    }
+                    WebContent.NavigateToString(item.Article.content);
+                    if (await markArticleReadAutomatically(item.Article))
+                    {
+                        item.Headline.unread = false;
+                        item.Article.unread = false;
+                    }
+                }
             }
             else
             {
@@ -444,12 +526,273 @@ namespace TinyTinyRSS
             {
                 SpecialFeed selFeed = (SpecialFeed)SpecialFeedsList.SelectedItem;
                 ConnectionSettings.getInstance().selectedFeed = selFeed.id;
-                await LoadHeadlines();
+                setFeedTitle();
+                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+                _sortOrder = ConnectionSettings.getInstance().sortOrder;
+                _moreArticles = true;
+                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+                {
+                    RootSplitView.IsPaneOpen = false;
+                }
+                if (await LoadHeadlines())
+                {
+                    HeadlinesView.DataContext = ArticlesCollection;
+                }
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+                closeArticleGrid();
             }
             else
             {
                 MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
                 await msgbox.ShowAsync();
+            }
+        }
+
+        private async void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender == FilterShowUnread)
+            {
+                _showUnreadOnly = true;
+            }
+            else if (sender == FilterShowAll)
+            {
+                _showUnreadOnly = false;
+            }
+            else
+            {
+                return;
+            }
+            Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
+            closeArticleGrid();
+            await LoadHeadlines();
+            if (HeadlinesView.Items.Count > 0)
+            {
+                HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
+            }
+        }
+
+        private async void SortButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender == SortButtonDefault)
+            {
+                _sortOrder = 0;
+            }
+            else if (sender == SortButtonNew)
+            {
+                _sortOrder = 1;
+            }
+            else if (sender == SortButtonOld)
+            {
+                _sortOrder = 2;
+            }
+            else
+            {
+                return;
+            }
+            Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
+            closeArticleGrid();
+            await LoadHeadlines();
+            if (HeadlinesView.Items.Count > 0)
+            {
+                HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
+            }
+        }
+
+        private void ArticleGridClose(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            closeArticleGrid();
+        }
+
+        private void closeArticleGrid()
+        {
+            Article_Grid.DataContext = null;
+            HeadlinesView.SelectedItem = null;
+            var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
+            bool landscape = orientation == DisplayOrientations.Landscape || orientation == DisplayOrientations.LandscapeFlipped;
+            if (landscape)
+            {
+                if (RootSplitView.ActualWidth >= 720 && !RootSplitView.IsPaneOpen)
+                {
+                    VisualStateManager.GoToState(this, "paneopen", true);
+                }
+                Article_Grid.MinWidth = 0;
+                Article_Grid.MaxWidth = 0;
+            }
+            else
+            {
+                Article_Grid.MinWidth = 0;
+                Article_Grid.MaxWidth = 0;
+            }
+        }
+
+        private async void ArticleAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateField field;
+            int selectedIndex = HeadlinesView.SelectedIndex;
+            WrappedArticle current = ArticlesCollection[selectedIndex];
+            if (sender == publishAppBarMenu)
+            {
+                field = UpdateField.Published;
+            }
+            else if (sender == toggleStarAppBarButton)
+            {
+                field = UpdateField.Starred;
+            }
+            else if (sender == toogleReadAppBarButton)
+            {
+                field = UpdateField.Unread;
+            }
+            else if (sender == markAllReadMenu)
+            {
+                SetProgressBar(true, ProgressMsg.MarkArticle);
+                try
+                {
+                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
+                    if (success)
+                    {
+                        foreach (WrappedArticle wa in ArticlesCollection)
+                        {
+                            if (wa.Headline.unread)
+                            {
+                                wa.Headline.unread = false;
+                            }
+                            if (wa.Article != null && wa.Article.unread)
+                            {
+                                wa.Article.unread = false;
+                            }
+                        }
+                    }
+                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
+                    SetProgressBar(false, ProgressMsg.MarkArticle);
+                    await tsk;
+                }
+                catch (TtRssException ex)
+                {
+                    checkException(ex);
+                }
+                return;
+            }
+            else
+            {
+                return;
+            }
+            try
+            {
+                SetProgressBar(true, ProgressMsg.MarkArticle);
+                List<int> idList = new List<int>();
+                idList.Add(current.Headline.id);
+                bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
+                if (success)
+                {
+                    switch (field)
+                    {
+                        case UpdateField.Published:
+                            current.Headline.published = !current.Headline.published;
+                            if (current.Article != null)
+                            {
+                                current.Article.published = !current.Article.published;
+                            }
+                            break;
+                        case UpdateField.Unread:
+                            current.Headline.unread = !current.Headline.unread;
+                            if (current.Article != null)
+                            {
+                                current.Article.unread = !current.Article.unread;
+                            }
+                            break;
+                        case UpdateField.Starred:
+                            current.Headline.marked = !current.Headline.marked;
+                            if (current.Article != null)
+                            {
+                                current.Article.marked = !current.Article.marked;
+                            }
+                            break;
+                    }
+                    if (sender == toogleReadAppBarButton)
+                    {
+                        await PushNotificationHelper.UpdateLiveTile(-1);
+                    }
+                }
+                SetProgressBar(false, ProgressMsg.MarkArticle);
+            }
+            catch (TtRssException ex)
+            {
+                checkException(ex);
+            }
+        }
+
+        private async void HeadlinesAppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateField field;
+            LinkedList<WrappedArticle> selectedArticles = new LinkedList<WrappedArticle>();
+            foreach (WrappedArticle sel in HeadlinesView.SelectedItems)
+            {
+                selectedArticles.AddLast(sel);
+            }
+            if (sender == PublishAppBarButton)
+            {
+                field = UpdateField.Published;
+            }
+            else if (sender == StarAppBarButton)
+            {
+                field = UpdateField.Starred;
+            }
+            else if (sender == ReadAppBarButton)
+            {
+                field = UpdateField.Unread;
+            }
+            else
+            {
+                return;
+            }
+            try
+            {
+                SetProgressBar(true, ProgressMsg.MarkArticle);
+                List<int> idList = new List<int>();
+                foreach (WrappedArticle sel in selectedArticles)
+                {
+                    idList.Add(sel.Headline.id);
+                }
+                bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
+                if (success)
+                {
+                    foreach (WrappedArticle sel in selectedArticles)
+                    {
+                        switch (field)
+                        {
+                            case UpdateField.Published:
+                                sel.Headline.published = !sel.Headline.published;
+                                if (sel.Article != null)
+                                {
+                                    sel.Article.published = !sel.Article.published;
+                                }
+                                break;
+                            case UpdateField.Unread:
+                                sel.Headline.unread = !sel.Headline.unread;
+                                if (sel.Article != null)
+                                {
+                                    sel.Article.unread = !sel.Article.unread;
+                                }
+                                break;
+                            case UpdateField.Starred:
+                                sel.Headline.marked = !sel.Headline.marked;
+                                if (sel.Article != null)
+                                {
+                                    sel.Article.marked = !sel.Article.marked;
+                                }
+                                break;
+                        }
+                    }
+                    if (sender == toogleReadAppBarButton)
+                    {
+                        await PushNotificationHelper.UpdateLiveTile(-1);
+                    }
+                }
+                SetProgressBar(false, ProgressMsg.MarkArticle);
+            }
+            catch (TtRssException ex)
+            {
+                checkException(ex);
             }
         }
     }
