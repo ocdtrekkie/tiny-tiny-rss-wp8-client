@@ -347,9 +347,13 @@
                             <AppBarToggleButton x:Name="toggleStarAppBarButton" Icon="Favorite"
                                           x:Uid="ToggleStarAppBarButton" Label="" 
                                 Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.marked}" />
-                            <AppBarButton x:Name="shareLinkAppBarButton" Icon="ReShare" 
+                            <AppBarButton x:Name="shareLinkAppBarButton"  
                                   Click="ShareAppBarButton_Click" 
-                                  Label="" x:Uid="ShareAppBarButton" />
+                                  Label="" x:Uid="ShareAppBarButton">
+                                <AppBarButton.Icon>
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
                             <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
                                     Label="" x:Uid="OpenExtAppBarButton" />
                             <CommandBar.SecondaryCommands>
