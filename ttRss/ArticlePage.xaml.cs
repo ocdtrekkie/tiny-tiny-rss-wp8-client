@@ -45,6 +45,19 @@ namespace TinyTinyRSS
                 Scrollbar.IsIndeterminate = false;
             }
         }
+        
+        protected ProgressRing getProgressRing() {
+            return ProgressBar;
+        }        
+        protected ProgressRing getArticleProgressRing() {
+            return ProgressBar;
+        }        
+        protected TextBlock getProgressBarText() {
+            return ProgressBarText;
+        }      
+        protected TextBlock getArticleProgressBarText() {
+            return ProgressBarText;
+        }
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
@@ -331,30 +344,6 @@ namespace TinyTinyRSS
             {
                 checkException(ex);
             }
-        }
-
-        protected override void SetProgressBar(bool on, ProgressMsg message)
-        {
-            if (_moreArticlesLoading && !on)
-            {
-                return;
-            }
-            if (on)
-                {
-                    ProgressBar.IsActive = true;
-                }
-                else
-                {
-                    ProgressBar.IsActive = false;
-                }
-                if (loader.GetString(message.ToString())!=null)
-                {
-                ProgressBarText.Text = loader.GetString(message.ToString());
-                }
-                else
-                {
-                ProgressBarText.Text = "";
-                }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
