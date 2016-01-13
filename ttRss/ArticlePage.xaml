@@ -67,7 +67,6 @@
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -76,8 +75,10 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ProgressRing Grid.Row="0" Grid.Column="0" Name="ProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="ProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
+        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="3" Margin="0">
+            <ProgressRing Name="ArticleProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
+            <TextBlock Name="ArticleProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
+        </StackPanel>
         <Controls:BackButton Grid.Row="1" Grid.Column="0" />
         <ProgressBar Name="Scrollbar" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Maximum="5" Minimum="0" SmallChange="1" Value="0"
                                  Opacity="0.6" Margin="5,0,25,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
