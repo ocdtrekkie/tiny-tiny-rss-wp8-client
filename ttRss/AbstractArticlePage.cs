@@ -80,6 +80,7 @@ namespace TinyTinyRSS
             
             if (on)
             {
+                ring.Parent.Visibility = Visibility.Visible;
                 ring.IsActive = true;
                 activeInProgress.Get(ring).Add(message);
                 string msg = loader.GetString(message.ToString());
@@ -101,6 +102,7 @@ namespace TinyTinyRSS
                 }
                 else
                 {
+                    ring.Parent.Visibility = Visibility.Collapsed;
                     ring.IsActive = false;
                     textBlock.Text = "";
                 }
