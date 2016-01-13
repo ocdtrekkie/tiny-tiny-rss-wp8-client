@@ -154,36 +154,18 @@ namespace TinyTinyRSS
                 FeedTitle.Padding = new Thickness(48, 0, 0, 0);
             }
         }
-
-        protected override void SetProgressBar(bool on, ProgressMsg message)
-        {
-            if (on)
-            {
-                ProgressBar.IsActive = true;
-                activeInProgress.Add(message);
-                string msg = loader.GetString(message.ToString());
-                if (msg != null)
-                {
-                    ProgressBarText.Text = msg;
-                }
-            }
-            else {
-                activeInProgress.Remove(message);
-                if (activeInProgress.Count > 0)
-                {
-                    ProgressMsg old = activeInProgress.First();
-                    string msgOld = loader.GetString(old.ToString());
-                    if (msgOld != null)
-                    {
-                        ProgressBarText.Text = msgOld;
-                    }
-                }
-                else
-                {
-                    ProgressBar.IsActive = false;
-                    ProgressBarText.Text = "";
-                }
-            }
+        
+        protected ProgressRing getProgressRing() {
+            return ProgressBar;
+        }        
+        protected ProgressRing getArticleProgressRing() {
+            return ArticleProgressBar;
+        }        
+        protected TextBlock getProgressBarText() {
+            return ProgressBarText;
+        }      
+        protected TextBlock getArticleProgressBarText() {
+            return ArticleProgressBarText;
         }
 
         private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
