@@ -284,11 +284,11 @@
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                         </Style>
                                     </ListView.ItemContainerStyle>
-                                </ListView>
-                                <ProgressRing Name="ProgressBar" 
-                                          Foreground="{StaticResource PhoneAccentBrush}" />
-                                <TextBlock Name="ProgressBarText" TextAlignment="Center" 
-                                       FontSize="{StaticResource TextStyleMediumFontSize}" />
+                                </ListView>                                
+                                <StackPanel Orientation="Vertical" Margin="0">
+                                    <ProgressRing Name="ProgressBar" Foreground="{StaticResource PhoneAccentBrush}" />
+                                    <TextBlock Name="ProgressBarText" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="8,0,0,0" />
+                                </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
                         <!-- Werbung -->
@@ -302,7 +302,6 @@
                                 Click="HeadlinesAppBarButton_Click" />
                             <AppBarButton x:Name="PublishAppBarButton" Click="HeadlinesAppBarButton_Click" 
                                      Label="" x:Uid="TooglePublishAppBarButton" Icon="World" />
-
                         </CommandBar>
                     </Grid>
                     <Grid x:Name="Article_Grid" DataContext="{Binding}" 
