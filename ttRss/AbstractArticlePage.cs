@@ -24,15 +24,22 @@ namespace TinyTinyRSS
         protected int _sortOrder;
         protected bool initialized;
         protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle };
-        protected HashSet<ProgressMsg> activeInProgress { get; set; }
+        protected Dictionary<ProgressRing, HashSet<ProgressMsg>> activeInProgress { get; set; }
 
         protected abstract void updateCount(bool p);
         protected abstract int getSelectedIdx();
-        protected abstract void SetProgressBar(bool on, ProgressMsg msg);
+        protected abstract ProgressRing getProgressRing();
+        protected abstract ProgressRing getArticleProgressRing();
+        protected abstract TextBlock getProgressBarText();
+        protected abstract TextBlock getArticleProgressBarText();
 
         public AbstractArticlePage()
         {
-            activeInProgress = new HashSet<ProgressMsg>();
+            var hashset1 = new HashSet<ProgressMsg>();
+            var hashset2 = new HashSet<ProgressMsg>();
+            activeInProgress = new Dictionary<ProgressRing, HashSet<ProgressMsg>>();
+            activeInProgress.Add(getProgressRing(), hashset1);
+            activeInProgress.Add(getArticleProgressRing(), hashset2);
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -54,6 +61,50 @@ namespace TinyTinyRSS
             request.Data.Properties.Description = "Shared by tt-RSS Reader for Windows Phone.";
             request.Data.Properties.Title = head.title;
             request.Data.SetWebLink(new Uri(head.link));
+        }
+        
+        /// <summary>
+        /// Handle different actions shown in ProgressRings + Text
+        /// </summary>
+        protected override void SetProgressBar(bool on, ProgressMsg message)
+        {
+            ProgressRing ring;
+            TextBlock textBlock;
+            if(message.Equals(ProgressMsg.MarkArticle)) {
+                ring = getArticleProgressRing();
+                textBlock = getArticleProgressBarText();
+            } else {
+                ring = getProgressRing();
+                textBlock = getProgressBarText();
+            }
+            
+            if (on)
+            {
+                ring.IsActive = true;
+                activeInProgress.Get(ring).Add(message);
+                string msg = loader.GetString(message.ToString());
+                if (msg != null)
+                {
+                    textBlock.Text = msg;
+                }
+            }
+            else {
+                activeInProgress.Get(ring).Remove(message);
+                if (activeInProgress.Get(ring).Count > 0)
+                {
+                    ProgressMsg old = activeInProgress.Get(ring).First();
+                    string msgOld = loader.GetString(old.ToString());
+                    if (msgOld != null)
+                    {
+                        textBlock.Text = msgOld;
+                    }
+                }
+                else
+                {
+                    ring.IsActive = false;
+                    textBlock.Text = "";
+                }
+            }
         }
 
         protected async void openExt_Click(object sender, RoutedEventArgs e)
