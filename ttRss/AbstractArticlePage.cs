@@ -23,7 +23,7 @@ namespace TinyTinyRSS
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         protected int _sortOrder;
         protected bool initialized;
-        protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle };
+        protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle, LoginProgress };
         protected HashSet<ProgressMsg> activeInProgress { get; set; }
 
         protected abstract void updateCount(bool p);

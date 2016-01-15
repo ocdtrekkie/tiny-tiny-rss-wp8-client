@@ -275,6 +275,7 @@ namespace TinyTinyRSS
         {
             try
             {
+                SetProgressBar(true, ProgressMsg.LoginProgress);
                 feedListUpdate = true;
                 List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
                 theFeeds.Sort();
@@ -295,10 +296,12 @@ namespace TinyTinyRSS
                 groupedFeeds.Source = ordered;
                 AllFeedsList.SelectedItem = null;
                 feedListUpdate = false;
+                SetProgressBar(false, ProgressMsg.LoginProgress);
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
+                SetProgressBar(false, ProgressMsg.LoginProgress);
             }
         }
 
