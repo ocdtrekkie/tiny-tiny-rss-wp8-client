@@ -23,16 +23,20 @@ namespace TinyTinyRSS
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         protected int _sortOrder;
         protected bool initialized;
+
         protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle, LoginProgress };
-        protected HashSet<ProgressMsg> activeInProgress { get; set; }
+        protected Dictionary<ProgressRing, HashSet<ProgressMsg>> activeInProgress { get; set; }
 
         protected abstract void updateCount(bool p);
         protected abstract int getSelectedIdx();
-        protected abstract void SetProgressBar(bool on, ProgressMsg msg);
+        protected abstract ProgressRing getProgressRing();
+        protected abstract ProgressRing getArticleProgressRing();
+        protected abstract TextBlock getProgressBarText();
+        protected abstract TextBlock getArticleProgressBarText();
 
         public AbstractArticlePage()
         {
-            activeInProgress = new HashSet<ProgressMsg>();
+            activeInProgress = new Dictionary<ProgressRing, HashSet<ProgressMsg>>();
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -54,6 +58,75 @@ namespace TinyTinyRSS
             request.Data.Properties.Description = "Shared by tt-RSS Reader for Windows Phone.";
             request.Data.Properties.Title = head.title;
             request.Data.SetWebLink(new Uri(head.link));
+        }
+
+        /// <summary>
+        /// Handle different actions shown in ProgressRings + Text
+        /// </summary>
+        protected void SetProgressBar(bool on, ProgressMsg message)
+        {
+            ProgressRing ring;
+            TextBlock textBlock;
+            if (message.Equals(ProgressMsg.MarkArticle))
+            {
+                ring = getArticleProgressRing();
+                textBlock = getArticleProgressBarText();
+            }
+            else {
+                ring = getProgressRing();
+                textBlock = getProgressBarText();
+            }
+            if (!activeInProgress.ContainsKey(ring))
+            {
+                var hashset1 = new HashSet<ProgressMsg>();
+                activeInProgress.Add(ring, hashset1);
+            }
+
+            HashSet<ProgressMsg> set;
+            if (on)
+            {
+                StackPanel parent = (StackPanel)ring.Parent;
+                parent.Visibility = Visibility.Visible;
+                ring.IsActive = true;
+                if (activeInProgress.TryGetValue(ring, out set))
+                {
+                    set.Add(message);
+                }
+                string msg = loader.GetString(message.ToString());
+                if (msg != null)
+                {
+                    textBlock.Text = msg;
+                }
+            }
+            else {
+                if (activeInProgress.TryGetValue(ring, out set))
+                {
+                    set.Remove(message);
+                    if (set.Count > 0)
+                    {
+                        ProgressMsg old = set.First();
+                        string msgOld = loader.GetString(old.ToString());
+                        if (msgOld != null)
+                        {
+                            textBlock.Text = msgOld;
+                        }
+                    }
+                    else
+                    {
+                        StackPanel parent = (StackPanel)ring.Parent;
+                        parent.Visibility = Visibility.Collapsed;
+                        ring.IsActive = false;
+                        textBlock.Text = "";
+                    }
+                }
+                else
+                {
+                    StackPanel parent = (StackPanel)ring.Parent;
+                    parent.Visibility = Visibility.Collapsed;
+                    ring.IsActive = false;
+                    textBlock.Text = "";
+                }
+            }
         }
 
         protected async void openExt_Click(object sender, RoutedEventArgs e)
@@ -206,7 +279,7 @@ namespace TinyTinyRSS
                         bool newItems = false;
                         foreach (Headline h in headlines)
                         {
-                            
+
                             if (!isHeadlineInArticleCollection(h))
                             {
                                 ArticlesCollection.Add(new WrappedArticle(h));
@@ -222,11 +295,14 @@ namespace TinyTinyRSS
                     {
                         switch (ConnectionSettings.getInstance().selectedFeed)
                         {
-                            case -3: ArticlesCollection.Count(e => e.Headline.unread);
+                            case -3:
+                                ArticlesCollection.Count(e => e.Headline.unread);
                                 break;
-                            case -1: ArticlesCollection.Count(e => e.Headline.marked);
+                            case -1:
+                                ArticlesCollection.Count(e => e.Headline.marked);
                                 break;
-                            case -2: ArticlesCollection.Count(e => e.Headline.published);
+                            case -2:
+                                ArticlesCollection.Count(e => e.Headline.published);
                                 break;
                             default: break;
                         }
@@ -265,7 +341,8 @@ namespace TinyTinyRSS
             }
         }
 
-        private bool isHeadlineInArticleCollection(Headline headline) {
+        private bool isHeadlineInArticleCollection(Headline headline)
+        {
             bool contains = false;
             foreach (WrappedArticle a in ArticlesCollection)
             {

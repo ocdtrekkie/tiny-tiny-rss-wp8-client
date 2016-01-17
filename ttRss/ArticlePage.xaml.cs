@@ -46,6 +46,19 @@ namespace TinyTinyRSS
             }
         }
 
+        protected override ProgressRing getProgressRing() {
+            return this.ArticleProgressBar;
+        }
+        protected override ProgressRing getArticleProgressRing() {
+            return ArticleProgressBar;
+        }
+        protected override TextBlock getProgressBarText() {
+            return ArticleProgressBarText;
+        }      
+        protected override TextBlock getArticleProgressBarText() {
+            return ArticleProgressBarText;
+        }
+
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
@@ -331,30 +344,6 @@ namespace TinyTinyRSS
             {
                 checkException(ex);
             }
-        }
-
-        protected override void SetProgressBar(bool on, ProgressMsg message)
-        {
-            if (_moreArticlesLoading && !on)
-            {
-                return;
-            }
-            if (on)
-                {
-                    ProgressBar.IsActive = true;
-                }
-                else
-                {
-                    ProgressBar.IsActive = false;
-                }
-                if (loader.GetString(message.ToString())!=null)
-                {
-                ProgressBarText.Text = loader.GetString(message.ToString());
-                }
-                else
-                {
-                ProgressBarText.Text = "";
-                }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -207,8 +207,11 @@
                                VerticalAlignment="Center" 
                                     FontSize="{StaticResource TextStyleLargeFontSize}" Padding="8,0,0,0" />
                 </Border>
-                <CommandBar Name="FilterCommandBar" Grid.Row="1" Background="{StaticResource AppBarBackgroundThemeBrush}">
-                    <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
+                <CommandBar Name="FilterCommandBar" Grid.Row="1" 
+                            Background="{StaticResource AppBarBackgroundThemeBrush}">
+
+                    <CommandBar.SecondaryCommands>
+                        <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
                                 x:Uid="MultiSelectAppBarButton" Icon="List" 
                                 Label="" Click="MultiSelectAppBarButton_Click" />
                     <AppBarButton x:Uid="showUnreadOnlyAppBarMenu" x:Name="showUnreadOnlyAppBarMenu" Label="" Icon="Filter">
@@ -228,7 +231,6 @@
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
-                    <CommandBar.SecondaryCommands>
                         <AppBarButton x:Name="markAllReadMenu" Click="ArticleAppBarButton_Click" 
                                      Label="" x:Uid="MarkAllArticlesRead" />
                     </CommandBar.SecondaryCommands>
@@ -272,9 +274,10 @@
                                                 </Border>
                                                 <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                                 <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" 
-    												Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
-    											   VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="0">
+                                                    <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
+                                                    <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                                </StackPanel>
                                             </Grid>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
@@ -283,11 +286,11 @@
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                         </Style>
                                     </ListView.ItemContainerStyle>
-                                </ListView>
-                                <ProgressRing Name="ProgressBar" 
-                                          Foreground="{StaticResource PhoneAccentBrush}" />
-                                <TextBlock Name="ProgressBarText" TextAlignment="Center" 
-                                       FontSize="{StaticResource TextStyleMediumFontSize}" />
+                                </ListView>                                
+                                <StackPanel Orientation="Vertical" Margin="0">
+                                    <ProgressRing Name="ProgressBar" Foreground="{StaticResource PhoneAccentBrush}" />
+                                    <TextBlock Name="ProgressBarText" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="8,0,0,0" />
+                                </StackPanel>
                             </StackPanel>
                         </ScrollViewer>
                         <!-- Werbung -->
@@ -301,7 +304,6 @@
                                 Click="HeadlinesAppBarButton_Click" />
                             <AppBarButton x:Name="PublishAppBarButton" Click="HeadlinesAppBarButton_Click" 
                                      Label="" x:Uid="TooglePublishAppBarButton" Icon="World" />
-
                         </CommandBar>
                     </Grid>
                     <Grid x:Name="Article_Grid" DataContext="{Binding}" 
@@ -313,16 +315,11 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Grid  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                            <Grid  Grid.Row="0" Grid.Column="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
@@ -330,11 +327,9 @@
                                 <TextBlock x:Name="Headline" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
                                 <SymbolIcon Symbol="Clear" Width="16" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Tapped="ArticleGridClose" Margin="0,4,4,0"  />
                             </Grid>
-                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
-                                <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top" Grid.Column="0" Margin="0" Visibility="Collapsed">
+                                <ProgressRing Name="ArticleProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" IsActive="False" />
+                                <TextBlock Name="ArticleProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
                             </StackPanel>
                         </Grid>
                         <WebView Name="WebContent" HorizontalAlignment="Stretch" 

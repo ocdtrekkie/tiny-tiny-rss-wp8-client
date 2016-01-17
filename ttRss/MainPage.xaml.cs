@@ -27,6 +27,7 @@ namespace TinyTinyRSS
         private bool feedListUpdate = false;
         private int initialIndex = 0;
         private List<SpecialFeed> SpecialFeedCollection;
+        private List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
         public Rect TogglePaneButtonRect
         {
             get;
@@ -154,36 +155,18 @@ namespace TinyTinyRSS
                 FeedTitle.Padding = new Thickness(48, 0, 0, 0);
             }
         }
-
-        protected override void SetProgressBar(bool on, ProgressMsg message)
-        {
-            if (on)
-            {
-                ProgressBar.IsActive = true;
-                activeInProgress.Add(message);
-                string msg = loader.GetString(message.ToString());
-                if (msg != null)
-                {
-                    ProgressBarText.Text = msg;
-                }
-            }
-            else {
-                activeInProgress.Remove(message);
-                if (activeInProgress.Count > 0)
-                {
-                    ProgressMsg old = activeInProgress.First();
-                    string msgOld = loader.GetString(old.ToString());
-                    if (msgOld != null)
-                    {
-                        ProgressBarText.Text = msgOld;
-                    }
-                }
-                else
-                {
-                    ProgressBar.IsActive = false;
-                    ProgressBarText.Text = "";
-                }
-            }
+        
+        protected override ProgressRing getProgressRing() {
+            return ProgressBar;
+        }        
+        protected override ProgressRing getArticleProgressRing() {
+            return ArticleProgressBar;
+        }        
+        protected override TextBlock getProgressBarText() {
+            return ProgressBarText;
+        }      
+        protected override TextBlock getArticleProgressBarText() {
+            return ArticleProgressBarText;
         }
 
         private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -253,6 +236,7 @@ namespace TinyTinyRSS
                 _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
                 _sortOrder = ConnectionSettings.getInstance().sortOrder;
                 _moreArticles = true;
+                Task updateFeedCounters = UpdateFeedCounters();
                 setFeedTitle();
                 if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
                 {
@@ -262,9 +246,11 @@ namespace TinyTinyRSS
                 {
                     HeadlinesView.DataContext = ArticlesCollection;
                 }
+                MultiSelectAppBarButton.IsChecked = false;
                 HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
-                AllFeedsList.SelectedItem = null;
                 closeArticleGrid();
+                SpecialFeedsList.SelectedItem = null;
+                await updateFeedCounters;
             }
         }
 
@@ -277,11 +263,11 @@ namespace TinyTinyRSS
             {
                 SetProgressBar(true, ProgressMsg.LoginProgress);
                 feedListUpdate = true;
-                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
+                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(true);
                 theFeeds.Sort();
                 List<Category> categories = await TtRssInterface.getInterface().getCategories();
 
-                List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
+                extendedFeeds.Clear();
                 foreach (Feed feed in theFeeds)
                 {
                     extendedFeeds.Add(new ExtendedFeed(feed, getCategoryById(categories, feed.cat_id)));
@@ -292,7 +278,6 @@ namespace TinyTinyRSS
                     orderby feed.cat
                     group feed by feed.cat into feedByTitle
                     select feedByTitle;
-
                 groupedFeeds.Source = ordered;
                 AllFeedsList.SelectedItem = null;
                 feedListUpdate = false;
@@ -382,6 +367,10 @@ namespace TinyTinyRSS
             }
         }
 
+        /// <summary>
+        /// Triggered when users nears bottom of Headlines list.
+        /// Loads more headlines.
+        /// </summary>
         private async void ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             if (e.IsIntermediate)
@@ -430,6 +419,21 @@ namespace TinyTinyRSS
             base.OnNavigatedFrom(e);
         }
 
+        /// <summary>
+        /// Get counters for all feeds in SplitViewPane.
+        /// </summary>
+        private async Task UpdateFeedCounters()
+        {
+            await TtRssInterface.getInterface().getCounters();
+            Task sfUpdate = UpdateSpecialFeeds();
+            foreach(ExtendedFeed ex in extendedFeeds)
+            {
+                ex.feed.unread = await TtRssInterface.getInterface().getCountForFeed(false, ex.feed.id);
+                ex.cat.unread = await TtRssInterface.getInterface().getCountForCategory(false, ex.cat.id);
+            }
+            await sfUpdate;
+        }
+
         protected override void updateCount(bool p)
         {
             //nothing.
@@ -455,8 +459,10 @@ namespace TinyTinyRSS
                 }
                 var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
                 bool landscape = orientation == DisplayOrientations.Landscape || orientation == DisplayOrientations.LandscapeFlipped;
-                if (landscape && RootSplitView.ActualWidth < 720 ||
-                    !landscape && RootSplitView.ActualHeight < 800)
+                double width = RootSplitView.ActualWidth;
+                double height = RootSplitView.ActualHeight;
+                if (landscape && width < 720 ||
+                    !landscape && height < 800)
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
@@ -496,20 +502,10 @@ namespace TinyTinyRSS
                     {
                         item.Headline.unread = false;
                         item.Article.unread = false;
+                        UpdateCountManually((int) FeedId.Fresh, item.Headline.unread);
+                        UpdateCountManually((int) item.Headline.feed_id, item.Headline.unread);
+                        await UpdateFeedCounters();
                     }
-                }
-            }
-            else
-            {
-                if (HeadlinesView.SelectedItems == null || HeadlinesView.SelectedItems.Count == 0)
-                {
-                    //UpdateLocalizedApplicationBar(true);
-                    return;
-                }
-                else
-                {
-                    //UpdateLocalizedApplicationBar(false);
-                    return;
                 }
             }
         }
@@ -528,11 +524,16 @@ namespace TinyTinyRSS
             if (validConnection)
             {
                 SpecialFeed selFeed = (SpecialFeed)SpecialFeedsList.SelectedItem;
+                if(selFeed==null)
+                {
+                    return;
+                }
                 ConnectionSettings.getInstance().selectedFeed = selFeed.id;
                 setFeedTitle();
                 _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
                 _sortOrder = ConnectionSettings.getInstance().sortOrder;
                 _moreArticles = true;
+                Task updateCounts = UpdateFeedCounters();
                 if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
                 {
                     RootSplitView.IsPaneOpen = false;
@@ -541,8 +542,11 @@ namespace TinyTinyRSS
                 {
                     HeadlinesView.DataContext = ArticlesCollection;
                 }
+                MultiSelectAppBarButton.IsChecked = false;
                 HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+                AllFeedsList.SelectedItem = null;
                 closeArticleGrid();
+                await updateCounts;
             }
             else
             {
@@ -653,6 +657,7 @@ namespace TinyTinyRSS
                     bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
                     if (success)
                     {
+                        Task updateFeedCounters = UpdateFeedCounters();
                         foreach (WrappedArticle wa in ArticlesCollection)
                         {
                             if (wa.Headline.unread)
@@ -664,6 +669,7 @@ namespace TinyTinyRSS
                                 wa.Article.unread = false;
                             }
                         }
+                        await updateFeedCounters;
                     }
                     Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
                     SetProgressBar(false, ProgressMsg.MarkArticle);
@@ -672,6 +678,7 @@ namespace TinyTinyRSS
                 catch (TtRssException ex)
                 {
                     checkException(ex);
+                    SetProgressBar(false, ProgressMsg.MarkArticle);
                 }
                 return;
             }
@@ -695,6 +702,7 @@ namespace TinyTinyRSS
                             {
                                 current.Article.published = !current.Article.published;
                             }
+                            UpdateCountManually((int) FeedId.Published, current.Headline.published);
                             break;
                         case UpdateField.Unread:
                             current.Headline.unread = !current.Headline.unread;
@@ -702,6 +710,7 @@ namespace TinyTinyRSS
                             {
                                 current.Article.unread = !current.Article.unread;
                             }
+                            UpdateCountManually((int) FeedId.Fresh, current.Headline.unread);
                             break;
                         case UpdateField.Starred:
                             current.Headline.marked = !current.Headline.marked;
@@ -709,10 +718,12 @@ namespace TinyTinyRSS
                             {
                                 current.Article.marked = !current.Article.marked;
                             }
+                            UpdateCountManually((int) FeedId.Starred, current.Headline.marked);
                             break;
                     }
                     if (sender == toogleReadAppBarButton)
                     {
+                        UpdateCountManually((int) current.Headline.feed_id, current.Headline.unread);
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
@@ -721,9 +732,31 @@ namespace TinyTinyRSS
             catch (TtRssException ex)
             {
                 checkException(ex);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
         }
 
+        private void UpdateCountManually(int feedid, bool add)
+        {
+            int change = 1;
+            if(!add)
+            {
+                change = -1;
+            }
+            if (feedid > 0)
+            {
+                var listItem = extendedFeeds.FirstOrDefault(x => x.feed.id == feedid);
+                if (listItem != null) listItem.feed.unread = listItem.feed.unread + change;
+            }
+            else {
+                var listItem = SpecialFeedCollection.FirstOrDefault(x => x.id == feedid);
+                if (listItem != null) listItem.count = listItem.count + change;
+            }
+        }
+
+        /// <summary>
+        /// AppBar Action for multiple items in HeadlinesView
+        /// </summary>
         private async void HeadlinesAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateField field;
@@ -731,6 +764,10 @@ namespace TinyTinyRSS
             foreach (WrappedArticle sel in HeadlinesView.SelectedItems)
             {
                 selectedArticles.AddLast(sel);
+            }
+            if(selectedArticles.Count == 0)
+            {
+                return;
             }
             if (sender == PublishAppBarButton)
             {
@@ -759,6 +796,7 @@ namespace TinyTinyRSS
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
                 if (success)
                 {
+                    Task updateFeedCounters = UpdateFeedCounters();
                     foreach (WrappedArticle sel in selectedArticles)
                     {
                         switch (field)
@@ -790,12 +828,14 @@ namespace TinyTinyRSS
                     {
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
+                    await updateFeedCounters;
                 }
                 SetProgressBar(false, ProgressMsg.MarkArticle);
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
         }
     }
