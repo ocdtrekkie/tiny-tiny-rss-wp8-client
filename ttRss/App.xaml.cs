@@ -22,6 +22,7 @@ using TinyTinyRSS;
 using TinyTinyRSS.Common;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
+using System.Threading.Tasks;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -63,7 +64,7 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-
+            Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
             try
             {
                 // init logger
@@ -113,7 +114,7 @@ namespace TinyTinyRSS
 
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
-
+                
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
@@ -122,6 +123,7 @@ namespace TinyTinyRSS
                     throw new Exception("Failed to create initial page");
                 }
             }
+            await loginTask;
             SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             // Ensure the current window is active
             Window.Current.Activate();

@@ -26,7 +26,6 @@ namespace TinyTinyRSS
         {
             this.Loaded += PageLoaded;
             InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
@@ -35,6 +34,7 @@ namespace TinyTinyRSS
             _selectedIndex = 0;
             _lastPivotIndex = -1;
             RegisterForShare();
+            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             if (!ConnectionSettings.getInstance().progressAsCntr)
             {
                 Scrollbar.Visibility = Visibility.Collapsed;
@@ -59,7 +59,7 @@ namespace TinyTinyRSS
             return ArticleProgressBarText;
         }
 
-        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        public void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -102,7 +102,8 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is NavigationObject) {
+            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
+            if (e.Parameter is NavigationObject) {
                 initialized = true;
                 NavigationObject nav = e.Parameter as NavigationObject;
                 _selectedIndex = nav.selectedIndex;

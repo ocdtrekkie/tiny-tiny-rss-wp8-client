@@ -25,7 +25,7 @@ namespace TinyTinyRSS
     {
         private bool validConnection = false;
         private bool feedListUpdate = false;
-        private int initialIndex = 0;
+        private int initialIndex;
         private List<SpecialFeed> SpecialFeedCollection;
         private List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
         public Rect TogglePaneButtonRect
@@ -71,11 +71,12 @@ namespace TinyTinyRSS
                 {
                     await TtRssInterface.getInterface().getCounters();
                     Task specialFeedsTask = UpdateSpecialFeeds();
-                    Task allFeedsTask = UpdateAllFeedsList(true);
+                    Task allFeedsTask = UpdateAllFeedsList(false);
                     Task<bool> headlinesTask = null;
                     if (!initialized)
                     {
                         headlinesTask = LoadHeadlines();
+                        initialIndex = 0;
                     }
                     await specialFeedsTask;
                     await allFeedsTask;
@@ -263,7 +264,7 @@ namespace TinyTinyRSS
             {
                 SetProgressBar(true, ProgressMsg.LoginProgress);
                 feedListUpdate = true;
-                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(true);
+                List<Feed> theFeeds = await TtRssInterface.getInterface().getFeeds(refresh);
                 theFeeds.Sort();
                 List<Category> categories = await TtRssInterface.getInterface().getCategories();
 
@@ -404,13 +405,12 @@ namespace TinyTinyRSS
                 ArticlesCollection = nav.ArticlesCollection;
                 HeadlinesView.DataContext = ArticlesCollection;
                 initialIndex = nav.selectedIndex;
-                //UpdateLocalizedApplicationBar(true);
-                Logger.WriteLine("NavigatedTo HeadlinesPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+                HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
+                Logger.WriteLine("NavigatedTo MainPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             else
             {
                 initialized = false;
-                Logger.WriteLine("NavigatedTo HeadlinesPage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
         }
 
@@ -635,8 +635,6 @@ namespace TinyTinyRSS
         private async void ArticleAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateField field;
-            int selectedIndex = HeadlinesView.SelectedIndex;
-            WrappedArticle current = ArticlesCollection[selectedIndex];
             if (sender == publishAppBarMenu)
             {
                 field = UpdateField.Published;
@@ -688,6 +686,8 @@ namespace TinyTinyRSS
             }
             try
             {
+                int selectedIndex = HeadlinesView.SelectedIndex;
+                WrappedArticle current = ArticlesCollection[selectedIndex];
                 SetProgressBar(true, ProgressMsg.MarkArticle);
                 List<int> idList = new List<int>();
                 idList.Add(current.Headline.id);

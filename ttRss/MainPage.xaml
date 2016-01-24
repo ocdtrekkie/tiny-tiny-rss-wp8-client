@@ -78,7 +78,7 @@
                     <ScrollViewer Grid.Row="0">
                         <StackPanel>
                             <TextBlock Text="" x:Uid="SpecialFeeds" Margin="12,0,0,0" 
-                                        FontSize={StaticResource TextStyleLargeFontSize}
+                                        FontSize="{StaticResource TextStyleLargeFontSize}"
                                         Foreground="{StaticResource PhoneAccentBrush}" />
                             <ListView x:Name="SpecialFeedsList" SelectionChanged="ListView_SelectionChanged"
                                         ItemsSource="{Binding}">
@@ -90,7 +90,8 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <SymbolIcon Symbol="{Binding icon}" Width="36" Grid.Column="0" HorizontalAlignment="Left" />
+                                            <SymbolIcon Symbol="{Binding icon}" Width="24" 
+                                                        Grid.Column="0" HorizontalAlignment="Left" />
                                             <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" 
                                                        Text="{Binding name}" Margin="4,0,0,0" 
                                                        Grid.Column="1" />
@@ -102,7 +103,7 @@
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                        <Setter Property="Padding" Value="8,0,8,0" />
+                                        <Setter Property="Padding" Value="4,0,4,0" />
                                     </Style>
                                 </ListView.ItemContainerStyle>
                             </ListView>
@@ -120,7 +121,9 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <Image MaxWidth="24" MaxHeight="24" Source="{Binding feed.icon}" Grid.Column="0" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                                    <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.icon}" 
+                                                           Grid.Column="0" HorizontalAlignment="Left" 
+                                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
                                                     <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
                                                     <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,0,8,0" Grid.Column="2" />
                                                 </Grid>
@@ -129,7 +132,7 @@
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="ListViewItem">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                <Setter Property="Padding" Value="8,0,8,0" />
+                                                <Setter Property="Padding" Value="4,0,4,0" />
                                             </Style>
                                         </ListView.ItemContainerStyle>
                                         <ListView.GroupStyle>
@@ -212,11 +215,12 @@
                                     FontSize="{StaticResource TextStyleLargeFontSize}" Padding="8,0,0,0" />
                 </Border>
                 <CommandBar Name="FilterCommandBar" Grid.Row="1" 
-                            Background="{StaticResource AppBarBackgroundThemeBrush}">
+                            Background="{StaticResource AppBarBackgroundThemeBrush}" Margin="0,-12,0,0">
                     <AppBarToggleButton IsChecked="False" Name="MultiSelectAppBarButton" 
-                                x:Uid="MultiSelectAppBarButton" Icon="List" Height="16"
-                                Label="" Click="MultiSelectAppBarButton_Click" />
-                    <AppBarButton x:Uid="showUnreadOnlyAppBarMenu" Height="16" x:Name="showUnreadOnlyAppBarMenu" Label="" Icon="Filter">
+                                x:Uid="MultiSelectAppBarButton" Icon="List"
+                                Label="" Click="MultiSelectAppBarButton_Click">
+                    </AppBarToggleButton>
+                    <AppBarButton x:Uid="showUnreadOnlyAppBarMenu" x:Name="showUnreadOnlyAppBarMenu" Label="" Icon="Filter">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Name="FilterShowAll"  x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
@@ -224,7 +228,7 @@
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
-                    <AppBarButton x:Uid="sortAppBarMenu" Height="16" x:Name="sortAppBarMenu" Label="" Icon="Sort">
+                    <AppBarButton x:Uid="sortAppBarMenu" x:Name="sortAppBarMenu" Label="" Icon="Sort">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem Name="SortButtonDefault" x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
@@ -260,7 +264,7 @@
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="0 0 0 1" 
-    											BorderBrush="Gray">
+    											BorderBrush="Gray" Padding="0,0,0,4" >
                                                 <Grid Margin="0" >
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
@@ -281,8 +285,8 @@
                                                         <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,4,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
                                                         <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                                     </StackPanel>
-                                                </Border>
-                                            </Grid>
+                                                </Grid>
+                                            </Border>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                     <ListView.ItemContainerStyle>
