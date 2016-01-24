@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -37,9 +38,19 @@ namespace TinyTinyRSS
                     Package.Current.Id.Version.Revision);
             this.AppVersion.Text = loader.GetString("SettingsAboutVersion") + appVersion;
             this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse";
+            this.Loaded += PageLoaded;
         }
 
-		// init settings from saved values.
+        private void PageLoaded(object sender, RoutedEventArgs e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                        AppViewBackButtonVisibility.Visible :
+                        AppViewBackButtonVisibility.Collapsed;
+        }
+
+        // init settings from saved values.
         private void SetFields()
         {
             UsernameField.Text = ConnectionSettings.getInstance().username;

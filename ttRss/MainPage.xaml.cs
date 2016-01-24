@@ -10,6 +10,7 @@ using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
 using Windows.Foundation;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -58,7 +59,11 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
-
+            Frame rootFrame = Window.Current.Content as Frame;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                        AppViewBackButtonVisibility.Visible :
+                        AppViewBackButtonVisibility.Collapsed;
             // goto settingspage cause server setting not set.
             if ("".Equals(ConnectionSettings.getInstance().server))
             {
@@ -91,7 +96,8 @@ namespace TinyTinyRSS
                         }
                         HeadlinesView.DataContext = ArticlesCollection;
                     }
-                    HeadlinesSv.ViewChanged += ViewChanged;
+                    var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
+                    sv.ViewChanged += ViewChanged;
                     HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
                 }
                 else
@@ -405,7 +411,6 @@ namespace TinyTinyRSS
                 ArticlesCollection = nav.ArticlesCollection;
                 HeadlinesView.DataContext = ArticlesCollection;
                 initialIndex = nav.selectedIndex;
-                HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
                 Logger.WriteLine("NavigatedTo MainPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             else

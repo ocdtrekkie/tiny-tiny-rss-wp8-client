@@ -46,16 +46,20 @@ namespace TinyTinyRSS
             }
         }
 
-        protected override ProgressRing getProgressRing() {
+        protected override ProgressRing getProgressRing()
+        {
             return this.ArticleProgressBar;
         }
-        protected override ProgressRing getArticleProgressRing() {
+        protected override ProgressRing getArticleProgressRing()
+        {
             return ArticleProgressBar;
         }
-        protected override TextBlock getProgressBarText() {
+        protected override TextBlock getProgressBarText()
+        {
             return ArticleProgressBarText;
-        }      
-        protected override TextBlock getArticleProgressBarText() {
+        }
+        protected override TextBlock getArticleProgressBarText()
+        {
             return ArticleProgressBarText;
         }
 
@@ -88,6 +92,11 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+            Frame rootFrame = Window.Current.Content as Frame;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                        AppViewBackButtonVisibility.Visible :
+                        AppViewBackButtonVisibility.Collapsed;
             if (!initialized)
             {
                 bool result = await LoadHeadlines();
@@ -103,7 +112,8 @@ namespace TinyTinyRSS
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
-            if (e.Parameter is NavigationObject) {
+            if (e.Parameter is NavigationObject)
+            {
                 initialized = true;
                 NavigationObject nav = e.Parameter as NavigationObject;
                 _selectedIndex = nav.selectedIndex;
@@ -111,7 +121,8 @@ namespace TinyTinyRSS
                 _showUnreadOnly = nav._showUnreadOnly;
                 ArticlesCollection = nav.ArticlesCollection;
                 Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
-            } else {
+            }
+            else {
                 initialized = false;
                 Logger.WriteLine("NavigatedTo ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
@@ -164,11 +175,11 @@ namespace TinyTinyRSS
                 }
                 e.Item.UpdateLayout();
                 SetProgressBar(false, ProgressMsg.LoadArticle);
-                if(await markArticleReadAutomatically(article))
+                if (await markArticleReadAutomatically(article))
                 {
                     item.Headline.unread = false;
                     UpdateLocalizedApplicationBar(article);
-                }                
+                }
                 if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
                 {
                     await LoadMoreHeadlines();
@@ -406,7 +417,7 @@ namespace TinyTinyRSS
         private void Icon_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             Image img = sender as Image;
-            if(img!=null)
+            if (img != null)
             {
                 img.Visibility = Visibility.Collapsed;
             }

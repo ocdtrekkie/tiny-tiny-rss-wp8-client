@@ -16,11 +16,9 @@
                 <PivotItem.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                    <Controls:BackButton Grid.Column="0" />
-                    <TextBlock Grid.Column="1" Text="" x:Uid="SettingsConnectionHead"/>
+                        <TextBlock Grid.Column="0" Text="" x:Uid="SettingsConnectionHead"/>
                     </Grid>
 
                 </PivotItem.Header>

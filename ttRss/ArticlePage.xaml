@@ -80,7 +80,6 @@
             <ProgressRing Name="ArticleProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
             <TextBlock Name="ArticleProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
         </StackPanel>
-        <Controls:BackButton Grid.Row="1" Grid.Column="0" />
         <ProgressBar Name="Scrollbar" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Maximum="1" Minimum="0" SmallChange="1" Value="0"
                                  Opacity="0.6" Margin="5,0,25,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
         <TextBlock Name="Counter" Grid.Row="1" Grid.Column="2" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed" Margin="0,0,5,0"/>
