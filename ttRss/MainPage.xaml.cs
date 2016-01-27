@@ -29,6 +29,7 @@ namespace TinyTinyRSS
         private int initialIndex;
         private List<SpecialFeed> SpecialFeedCollection;
         private List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
+        private Point swipeStart;
         public Rect TogglePaneButtonRect
         {
             get;
@@ -49,7 +50,9 @@ namespace TinyTinyRSS
             SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("PublishedFeedsText"), "World", (int)FeedId.Published));
             SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "Library", (int)FeedId.Archived));
             SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyReadFeedText"), "SyncFolder", (int)FeedId.RecentlyRead));
-            SpecialFeedsList.DataContext = SpecialFeedCollection;
+            SpecialFeedsList.DataContext = SpecialFeedCollection;            
+            Splitview_Content.ManipulationDelta += Splitview_Content_ManipulationDelta;
+            Splitview_Content.ManipulationStarted += Splitview_Content_ManipulationStarted;
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = true;
@@ -841,6 +844,27 @@ namespace TinyTinyRSS
             {
                 checkException(ex);
                 SetProgressBar(false, ProgressMsg.MarkArticle);
+            }
+        }
+        
+        private void Splitview_Content_ManipulationStarted_1(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            swipeStart = e.Position;
+        }
+
+        private void Splitview_Content_ManipulationDelta_1(object sender, ManipulationDeltaRoutedEventArgs e)
+        {        
+            if (e.IsInertial)
+            {
+                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+                {
+                    Point currentpoint = e.Position;
+                    if (currentpoint.X - initialpoint.X >= 200)
+                    {
+                        RootSplitView.IsPaneOpen = true;
+                        e.Complete();
+                    }
+                }                
             }
         }
     }
