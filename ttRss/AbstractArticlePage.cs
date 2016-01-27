@@ -183,6 +183,7 @@ namespace TinyTinyRSS
                 }
                 else
                 {
+                    ArticlesCollection = new ObservableCollection<WrappedArticle>();
                     foreach (Headline h in headlines)
                     {
                         ArticlesCollection.Add(new WrappedArticle(h));
@@ -223,28 +224,6 @@ namespace TinyTinyRSS
                 throw ex;
             }
         }
-
-        protected List<string> getSortOptions()
-        {
-            List<string> result = new List<string>();
-            switch (_sortOrder)
-            {
-                case 1:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortDefault"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortOld"));
-                    break;
-                case 2:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortDefault"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortNew"));
-                    break;
-                default:
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortNew"));
-                    result.Add(loader.GetString("AppBarSortLabel") + loader.GetString("ArticlesSortOld"));
-                    break;
-            }
-            return result;
-        }
-
 
         /// <summary>
         /// Check if the shown feed is a special on (archived, unread, etc.)
