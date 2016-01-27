@@ -201,7 +201,7 @@
                 </Grid>
             </SplitView.Pane>
 
-            <Grid x:Name="Splitview_Content">
+            <Grid x:Name="Splitview_Content" ManipulationMode="TranslateX">
                 <Grid.RowDefinitions>
                     <!-- Head -->
                     <RowDefinition Height="48" />
