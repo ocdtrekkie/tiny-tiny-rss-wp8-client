@@ -84,7 +84,9 @@ namespace TinyTinyRSS
             }
 
             Frame rootFrame = Window.Current.Content as Frame;
-
+            // Suspension time auslesen und bei Alter >15 Min rootFrame null setzen.
+            
+            
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -168,6 +170,7 @@ namespace TinyTinyRSS
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             Logger.WriteLine("App suspended");
+            // Suspension time speichern
             FinalizeLogging();
             Logger.ClearLog();
             var deferral = e.SuspendingOperation.GetDeferral();
