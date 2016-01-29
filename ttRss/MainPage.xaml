@@ -223,17 +223,17 @@
                     <AppBarButton x:Uid="showUnreadOnlyAppBarMenu" x:Name="showUnreadOnlyAppBarMenu" Label="" Icon="Filter">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Name="FilterShowAll"  x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
-                                <MenuFlyoutItem Name="FilterShowUnread" x:Uid="ShowOnlyUnreadArticles" Text="" Click="FilterButton_Click" />
+                                <ToggleMenuFlyoutItem Name="FilterShowAll"  x:Uid="ShowAllArticles" Text="" Click="FilterButton_Click" />
+                                <ToggleMenuFlyoutItem Name="FilterShowUnread" x:Uid="ShowOnlyUnreadArticles" Text="" Click="FilterButton_Click" />
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
                     <AppBarButton x:Uid="sortAppBarMenu" x:Name="sortAppBarMenu" Label="" Icon="Sort">
                         <AppBarButton.Flyout>
                             <MenuFlyout>
-                                <MenuFlyoutItem Name="SortButtonDefault" x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
-                                <MenuFlyoutItem Name="SortButtonNew" x:Uid="ArticlesSortNew" Text="" Click="SortButton_Click" />
-                                <MenuFlyoutItem Name="SortButtonOld" x:Uid="ArticlesSortOld" Text="" Click="SortButton_Click" />
+                                <ToggleMenuFlyoutItem Name="SortButtonDefault" x:Uid="ArticlesSortDefault" Text="" Click="SortButton_Click" />
+                                <ToggleMenuFlyoutItem Name="SortButtonNew" x:Uid="ArticlesSortNew" Text="" Click="SortButton_Click" />
+                                <ToggleMenuFlyoutItem Name="SortButtonOld" x:Uid="ArticlesSortOld" Text="" Click="SortButton_Click" />
                             </MenuFlyout>
                         </AppBarButton.Flyout>
                     </AppBarButton>
