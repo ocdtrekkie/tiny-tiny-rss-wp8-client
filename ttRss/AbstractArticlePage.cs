@@ -158,10 +158,10 @@ namespace TinyTinyRSS
         {
             try
             {
+                int feedId = ConnectionSettings.getInstance().selectedFeed;
                 SetProgressBar(true, ProgressMsg.LoadHeadlines);
-                bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
                 ArticlesCollection.Clear();
-                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
+                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, _showUnreadOnly, 0, _sortOrder);
                 if (headlines.Count == 0)
                 {
                     _moreArticles = false;
@@ -245,9 +245,9 @@ namespace TinyTinyRSS
                 {
                     _moreArticlesLoading = true;
                     SetProgressBar(true, ProgressMsg.LoadMoreHeadlines);
-                    bool unReadOnly = !_IsSpecial() && _showUnreadOnly;
+                    
                     // First get new items if existing
-                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, 0, _sortOrder);
+                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, _showUnreadOnly, 0, _sortOrder);
 
                     if (headlines.Count <= 0)
                     {
@@ -291,7 +291,7 @@ namespace TinyTinyRSS
                         skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }
 
-                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, unReadOnly, skip, _sortOrder);
+                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, _showUnreadOnly, skip, _sortOrder);
                     if (headlinesAfter.Count > 0)
                     {
                         bool newItems = false;
