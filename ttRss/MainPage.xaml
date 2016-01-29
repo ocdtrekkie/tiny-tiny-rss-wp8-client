@@ -107,9 +107,7 @@
                                     </Style>
                                 </ListView.ItemContainerStyle>
                             </ListView>
-                            <SemanticZoom>
-                                <SemanticZoom.ZoomedInView>
-                                    <ListView x:Name="AllFeedsList" 
+                            <ListView x:Name="AllFeedsList" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
                                         SelectionChanged="AllFeedsList_SelectionChanged"                                
                                         Background="Transparent" VerticalContentAlignment="Top">
@@ -161,33 +159,6 @@
                                             </GroupStyle>
                                         </ListView.GroupStyle>
                                     </ListView>
-                                </SemanticZoom.ZoomedInView>
-                                <SemanticZoom.ZoomedOutView>
-                                    <ListView Background="{StaticResource AppBarBackgroundThemeBrush}" 
-                                        ItemsSource="{Binding Source={StaticResource groupedFeeds}, Path=CollectionGroups}" Padding="25,25,0,0">
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
-                                                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                                <Setter Property="VerticalContentAlignment" Value="Center" />
-                                            </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Background="{StaticResource AppBarBackgroundThemeBrush}">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Text='{Binding Group.Key.title}' Grid.Column="0"
-                                               Foreground="{StaticResource PhoneAccentBrush}" />
-                                                    <TextBlock Text='{Binding Group.Key.combined}' Grid.Column="1" 
-                                               Foreground="{StaticResource PhoneAccentBrush}" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </SemanticZoom.ZoomedOutView>
-                            </SemanticZoom>
                         </StackPanel>
                     </ScrollViewer>
                     <CommandBar Grid.Row="1">
