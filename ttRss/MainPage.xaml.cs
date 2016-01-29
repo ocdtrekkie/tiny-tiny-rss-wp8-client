@@ -568,10 +568,14 @@ namespace TinyTinyRSS
             if (sender == FilterShowUnread)
             {
                 _showUnreadOnly = true;
+                FilterShowUnread.IsChecked = true;
+                FilterShowAll.IsChecked = false;
             }
             else if (sender == FilterShowAll)
             {
                 _showUnreadOnly = false;
+                FilterShowUnread.IsChecked = false;
+                FilterShowAll.IsChecked = true;
             }
             else
             {
@@ -591,14 +595,23 @@ namespace TinyTinyRSS
             if (sender == SortButtonDefault)
             {
                 _sortOrder = 0;
+                SortButtonDefault.IsChecked = true;
+                SortButtonNew.IsChecked = false;
+                SortButtonOld.IsChecked = false;
             }
             else if (sender == SortButtonNew)
             {
                 _sortOrder = 1;
+                SortButtonDefault.IsChecked = false;
+                SortButtonNew.IsChecked = true;
+                SortButtonOld.IsChecked = false;
             }
             else if (sender == SortButtonOld)
             {
                 _sortOrder = 2;
+                SortButtonDefault.IsChecked = false;
+                SortButtonNew.IsChecked = false;
+                SortButtonOld.IsChecked = true;
             }
             else
             {
