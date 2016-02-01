@@ -335,6 +335,9 @@ namespace TinyTinyRSS.Interface
                 {
                     _suspensionDate = ReadSetting(_suspensionDateKey);
                 }
+                if("".Equals(_suspensionDate)) {
+                    return null;
+                }
                 return DateTime.ParseExact(_suspensionDate, "F");
             }
             set
