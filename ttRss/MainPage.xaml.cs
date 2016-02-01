@@ -54,7 +54,22 @@ namespace TinyTinyRSS
             Splitview_Content.ManipulationDelta += Splitview_Content_ManipulationDelta;
             Splitview_Content.ManipulationStarted += Splitview_Content_ManipulationStarted;
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+            if(_showUnreadOnly) {
+                FilterShowUnread.IsChecked = true;
+            } else {
+                FilterShowAll.IsChecked = true;
+            }
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
+            if (_sortOrder == 0)
+            {
+                SortButtonDefault.IsChecked = true;
+            } else if(_sortOrder == 1)
+            {
+                SortButtonNew.IsChecked = true;
+            } else if(_sortOrder == 2)
+            {
+                SortButtonOld.IsChecked = true;
+            } 
             _moreArticles = true;
             _moreArticlesLoading = false;
             RegisterForShare();
@@ -583,7 +598,10 @@ namespace TinyTinyRSS
             }
             Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
             closeArticleGrid();
-            await LoadHeadlines();
+            if (await LoadHeadlines())
+            {
+                HeadlinesView.DataContext = ArticlesCollection;
+            }
             if (HeadlinesView.Items.Count > 0)
             {
                 HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
@@ -619,7 +637,10 @@ namespace TinyTinyRSS
             }
             Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
             closeArticleGrid();
-            await LoadHeadlines();
+            if (await LoadHeadlines())
+            {
+                HeadlinesView.DataContext = ArticlesCollection;
+            }
             if (HeadlinesView.Items.Count > 0)
             {
                 HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
