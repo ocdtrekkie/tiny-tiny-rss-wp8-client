@@ -72,6 +72,15 @@ namespace TinyTinyRSS
             }
 
             Frame rootFrame = Window.Current.Content as Frame;
+            // Restart from root if app is supsended for more than 10 minutes
+            var now = DateTime.Now;            
+            var last = ConnectionSettings.getInstance().supsensionDate;
+            if(last != null) {            
+                TimeSpan span = now.Subtract ( last );
+                if(span.Minutes > 10) {
+                    rootFrame = null;
+                }
+            }
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -157,6 +166,7 @@ namespace TinyTinyRSS
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             Logger.WriteLine("App suspended");
+            ConnectionSettings.getInstance().supsensionDate = DateTime.Now;
             FinalizeLogging();
             Logger.ClearLog();
             var deferral = e.SuspendingOperation.GetDeferral();
