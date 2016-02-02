@@ -417,12 +417,7 @@ namespace TinyTinyRSS
             if (e.Parameter is NavigationObject)
             {
                 initialized = true;
-                // Fix Backstack
-                if (Frame.BackStack.Count > 1)
-                {
-                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
-                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
-                }
+                this.Frame.BackStack.Clear();
                 NavigationObject nav = e.Parameter as NavigationObject;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
