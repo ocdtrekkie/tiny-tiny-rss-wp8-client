@@ -16,6 +16,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Input;
 
 namespace TinyTinyRSS
 {
@@ -51,8 +52,8 @@ namespace TinyTinyRSS
             SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("ArchivedFeedsText"), "Library", (int)FeedId.Archived));
             SpecialFeedCollection.Add(new SpecialFeed(loader.GetString("RecentlyReadFeedText"), "SyncFolder", (int)FeedId.RecentlyRead));
             SpecialFeedsList.DataContext = SpecialFeedCollection;            
-            Splitview_Content.ManipulationDelta += Splitview_Content_ManipulationDelta;
             Splitview_Content.ManipulationStarted += Splitview_Content_ManipulationStarted;
+            Splitview_Content.ManipulationCompleted += Splitview_Content_ManipulationCompleted;
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
             _moreArticles = true;
@@ -859,25 +860,21 @@ namespace TinyTinyRSS
                 SetProgressBar(false, ProgressMsg.MarkArticle);
             }
         }
-        
-        private void Splitview_Content_ManipulationStarted_1(object sender, ManipulationStartedRoutedEventArgs e)
+
+        private void Splitview_Content_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             swipeStart = e.Position;
         }
 
-        private void Splitview_Content_ManipulationDelta_1(object sender, ManipulationDeltaRoutedEventArgs e)
-        {        
-            if (e.IsInertial)
+        private void Splitview_Content_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay && !RootSplitView.IsPaneOpen)
             {
-                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+                Point currentpoint = e.Position;
+                if (currentpoint.X - swipeStart.X >= 100)
                 {
-                    Point currentpoint = e.Position;
-                    if (currentpoint.X - initialpoint.X >= 200)
-                    {
-                        RootSplitView.IsPaneOpen = true;
-                        e.Complete();
-                    }
-                }                
+                    RootSplitView.IsPaneOpen = true;
+                }
             }
         }
     }
