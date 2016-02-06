@@ -24,6 +24,7 @@ namespace TinyTinyRSS.Interface
         public static string _swipeMarginKey = "SwipeMargin";
         public static string _allowSelfSignedKey = "AllowSelfSigned";
         public static string _selectedFeedKey = "SelectedFeed";
+        public static string _suspensionDateKey = "SuspensionDate";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -43,6 +44,7 @@ namespace TinyTinyRSS.Interface
         private string _swipeMargin;
         private string _allowSelfSigned;
         private string _selectedFeed;
+        private string _suspensionDate;
 
         private ConnectionSettings()
         {
@@ -323,6 +325,25 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_channelUriKey, value);
                 _liveTileChannelUri = value;
+            }
+        }
+        
+        public DateTime supsensionDate {
+            get
+            {
+                if (_suspensionDate == null)
+                {
+                    _suspensionDate = ReadSetting(_suspensionDateKey);
+                }
+                if("".Equals(_suspensionDate)) {
+                    return null;
+                }
+                return DateTime.ParseExact(_suspensionDate, "F");
+            }
+            set
+            {
+                SaveSetting(_suspensionDateKey, value.ToString("F"));
+                _suspensionDate = value;
             }
         }
 

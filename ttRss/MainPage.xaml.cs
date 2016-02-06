@@ -55,7 +55,22 @@ namespace TinyTinyRSS
             Splitview_Content.ManipulationStarted += Splitview_Content_ManipulationStarted;
             Splitview_Content.ManipulationCompleted += Splitview_Content_ManipulationCompleted;
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+            if(_showUnreadOnly) {
+                FilterShowUnread.IsChecked = true;
+            } else {
+                FilterShowAll.IsChecked = true;
+            }
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
+            if (_sortOrder == 0)
+            {
+                SortButtonDefault.IsChecked = true;
+            } else if(_sortOrder == 1)
+            {
+                SortButtonNew.IsChecked = true;
+            } else if(_sortOrder == 2)
+            {
+                SortButtonOld.IsChecked = true;
+            } 
             _moreArticles = true;
             _moreArticlesLoading = false;
             RegisterForShare();
@@ -403,12 +418,7 @@ namespace TinyTinyRSS
             if (e.Parameter is NavigationObject)
             {
                 initialized = true;
-                // Fix Backstack
-                if (Frame.BackStack.Count > 1)
-                {
-                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
-                    Frame.BackStack.RemoveAt(Frame.BackStack.Count - 1);
-                }
+                this.Frame.BackStack.Clear();
                 NavigationObject nav = e.Parameter as NavigationObject;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
@@ -584,7 +594,10 @@ namespace TinyTinyRSS
             }
             Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
             closeArticleGrid();
-            await LoadHeadlines();
+            if (await LoadHeadlines())
+            {
+                HeadlinesView.DataContext = ArticlesCollection;
+            }
             if (HeadlinesView.Items.Count > 0)
             {
                 HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
@@ -620,7 +633,10 @@ namespace TinyTinyRSS
             }
             Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
             closeArticleGrid();
-            await LoadHeadlines();
+            if (await LoadHeadlines())
+            {
+                HeadlinesView.DataContext = ArticlesCollection;
+            }
             if (HeadlinesView.Items.Count > 0)
             {
                 HeadlinesView.ScrollIntoView(ArticlesCollection[0]);
