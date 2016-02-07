@@ -205,7 +205,7 @@ namespace TinyTinyRSS.Interface
             return CategoryCounter[feedId];
         }
 
-        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder)
+        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder, bool isCat)
         {
             string view_mode = "all_articles";
             int limit = INITIALHEADLINECOUNT;
@@ -230,7 +230,7 @@ namespace TinyTinyRSS.Interface
             }
             try
             {
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\"}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\", \"is_cat\":\"" + isCat + "\"}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 return headlines;

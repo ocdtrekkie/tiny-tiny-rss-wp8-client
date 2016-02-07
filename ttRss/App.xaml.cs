@@ -35,6 +35,23 @@ namespace TinyTinyRSS
         {
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            this.Resuming += App_Resuming;
+        }
+
+        private async void App_Resuming(object sender, object e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            var now = DateTime.Now;
+            var last = ConnectionSettings.getInstance().supsensionDate;
+            if (last != null && rootFrame != null)
+            {
+                TimeSpan span = now.Subtract(last);
+                if (span.Minutes > 10)
+                {
+                    rootFrame.BackStack.Clear();
+                    rootFrame.Navigate(typeof(MainPage));
+                }
+            }
         }
 
         /// <summary>
@@ -70,17 +87,7 @@ namespace TinyTinyRSS
             {
                 // yeah we can't log the error.
             }
-
             Frame rootFrame = Window.Current.Content as Frame;
-            // Restart from root if app is supsended for more than 10 minutes
-            var now = DateTime.Now;            
-            var last = ConnectionSettings.getInstance().supsensionDate;
-            if(last != null) {            
-                TimeSpan span = now.Subtract ( last );
-                if(span.Minutes > 10) {
-                    rootFrame = null;
-                }
-            }
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -90,7 +97,7 @@ namespace TinyTinyRSS
                 rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 2;
+                rootFrame.CacheSize = 1;
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;

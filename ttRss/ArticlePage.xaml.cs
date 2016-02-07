@@ -111,7 +111,6 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             if (e.Parameter is NavigationObject)
             {
                 initialized = true;
@@ -119,7 +118,11 @@ namespace TinyTinyRSS
                 _selectedIndex = nav.selectedIndex;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
-                ArticlesCollection = nav.ArticlesCollection;
+                ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                foreach (WrappedArticle article in nav.ArticlesCollection)
+                {
+                    ArticlesCollection.Add(article);
+                }
                 Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             else {

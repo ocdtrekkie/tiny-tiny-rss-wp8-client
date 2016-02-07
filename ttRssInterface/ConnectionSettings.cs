@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Windows.Storage;
 
@@ -24,7 +25,8 @@ namespace TinyTinyRSS.Interface
         public static string _swipeMarginKey = "SwipeMargin";
         public static string _allowSelfSignedKey = "AllowSelfSigned";
         public static string _selectedFeedKey = "SelectedFeed";
-        public static string _suspensionDateKey = "SuspensionDate";
+        public static string _suspensionDateKey = "SuspensionDateTime";
+        public static string _isCatKey = "IsSelectedFeedCategory";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -45,6 +47,7 @@ namespace TinyTinyRSS.Interface
         private string _allowSelfSigned;
         private string _selectedFeed;
         private string _suspensionDate;
+        private string _isCategory;
 
         private ConnectionSettings()
         {
@@ -128,6 +131,23 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool isCategory
+        {
+            get
+            {
+                if (_isCategory == null)
+                {
+                    _isCategory = ReadSetting(_isCatKey);
+                }
+                return _isCategory.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_isCatKey, value.ToString());
+                _isCategory = value.ToString();
             }
         }
 
@@ -336,14 +356,14 @@ namespace TinyTinyRSS.Interface
                     _suspensionDate = ReadSetting(_suspensionDateKey);
                 }
                 if("".Equals(_suspensionDate)) {
-                    return null;
+                    return DateTime.Now.AddMinutes(-15);
                 }
-                return DateTime.ParseExact(_suspensionDate, "F");
+                return DateTime.ParseExact(_suspensionDate, "F", CultureInfo.InvariantCulture);
             }
             set
             {
-                SaveSetting(_suspensionDateKey, value.ToString("F"));
-                _suspensionDate = value;
+                SaveSetting(_suspensionDateKey, value.ToString("F", CultureInfo.InvariantCulture));
+                _suspensionDate = value.ToString("F", CultureInfo.InvariantCulture);
             }
         }
 

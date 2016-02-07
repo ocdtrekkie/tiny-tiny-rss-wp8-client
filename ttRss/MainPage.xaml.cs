@@ -154,7 +154,18 @@ namespace TinyTinyRSS
             {
                 try
                 {
-                    FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
+                    try {
+                        FeedTitle.Text = TtRssInterface.getInterface().getFeedById(ConnectionSettings.getInstance().selectedFeed).title;
+                    } catch (NullReferenceException nre)
+                    {
+                        foreach(ExtendedFeed ef in extendedFeeds)
+                        {
+                            if (ef.cat.id == ConnectionSettings.getInstance().selectedFeed) {
+                                FeedTitle.Text = ef.cat.title;
+                                break;
+                            }
+                        }
+                    }
                 }
                 catch (TtRssException ex)
                 {
@@ -259,25 +270,31 @@ namespace TinyTinyRSS
                     return;
                 }
                 ConnectionSettings.getInstance().selectedFeed = selected.feed.id;
-                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
-                _sortOrder = ConnectionSettings.getInstance().sortOrder;
-                _moreArticles = true;
-                Task updateFeedCounters = UpdateFeedCounters();
-                setFeedTitle();
-                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
-                {
-                    RootSplitView.IsPaneOpen = false;
-                }
-                if (await LoadHeadlines())
-                {
-                    HeadlinesView.DataContext = ArticlesCollection;
-                }
-                MultiSelectAppBarButton.IsChecked = false;
-                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
-                closeArticleGrid();
                 SpecialFeedsList.SelectedItem = null;
-                await updateFeedCounters;
+                ConnectionSettings.getInstance().isCategory = false;
+                await feedSelectionChanged();
             }
+        }
+
+        private async Task feedSelectionChanged()
+        {
+            _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+            _sortOrder = ConnectionSettings.getInstance().sortOrder;
+            _moreArticles = true;
+            Task updateFeedCounters = UpdateFeedCounters();
+            setFeedTitle();
+            if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+            {
+                RootSplitView.IsPaneOpen = false;
+            }
+            if (await LoadHeadlines())
+            {
+                HeadlinesView.DataContext = ArticlesCollection;
+            }
+            MultiSelectAppBarButton.IsChecked = false;
+            HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+            closeArticleGrid();
+            await updateFeedCounters;
         }
 
         /// <summary>
@@ -412,20 +429,26 @@ namespace TinyTinyRSS
             }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is NavigationObject)
             {
                 initialized = true;
+                Task updateCounters = UpdateFeedCounters();
                 this.Frame.BackStack.Clear();
                 NavigationObject nav = e.Parameter as NavigationObject;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
-                ArticlesCollection = nav.ArticlesCollection;
+                ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                foreach (WrappedArticle article in nav.ArticlesCollection)
+                {
+                    ArticlesCollection.Add(article);
+                }
                 HeadlinesView.DataContext = ArticlesCollection;
                 initialIndex = nav.selectedIndex;
                 Logger.WriteLine("NavigatedTo MainPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+                await updateCounters;
             }
             else
             {
@@ -441,7 +464,7 @@ namespace TinyTinyRSS
         /// <summary>
         /// Get counters for all feeds in SplitViewPane.
         /// </summary>
-        private async Task UpdateFeedCounters()
+        protected async Task UpdateFeedCounters()
         {
             await TtRssInterface.getInterface().getCounters();
             Task sfUpdate = UpdateSpecialFeeds();
@@ -485,7 +508,6 @@ namespace TinyTinyRSS
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
-                    parameter.feedId = ConnectionSettings.getInstance().selectedFeed;
                     parameter._showUnreadOnly = _showUnreadOnly;
                     parameter._sortOrder = _sortOrder;
                     parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -548,24 +570,9 @@ namespace TinyTinyRSS
                     return;
                 }
                 ConnectionSettings.getInstance().selectedFeed = selFeed.id;
-                setFeedTitle();
-                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
-                _sortOrder = ConnectionSettings.getInstance().sortOrder;
-                _moreArticles = true;
-                Task updateCounts = UpdateFeedCounters();
-                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
-                {
-                    RootSplitView.IsPaneOpen = false;
-                }
-                if (await LoadHeadlines())
-                {
-                    HeadlinesView.DataContext = ArticlesCollection;
-                }
-                MultiSelectAppBarButton.IsChecked = false;
-                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
                 AllFeedsList.SelectedItem = null;
-                closeArticleGrid();
-                await updateCounts;
+                ConnectionSettings.getInstance().isCategory = false;
+                await feedSelectionChanged();                
             }
             else
             {
@@ -892,6 +899,18 @@ namespace TinyTinyRSS
                     RootSplitView.IsPaneOpen = true;
                 }
             }
+        }
+
+        private async void GroupHeaderTapped(object sender, TappedRoutedEventArgs e)
+        {
+            Grid x = (Grid) sender;
+            var tb = (TextBlock)VisualTreeHelper.GetChild(x, 2);
+            var catId = tb.Text;
+            ConnectionSettings.getInstance().selectedFeed = Int32.Parse(catId);
+            AllFeedsList.SelectedItem = null;
+            SpecialFeedsList.SelectedItem = null;
+            ConnectionSettings.getInstance().isCategory = true;
+            await feedSelectionChanged();
         }
     }
 }

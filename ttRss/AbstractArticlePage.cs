@@ -159,9 +159,10 @@ namespace TinyTinyRSS
             try
             {
                 int feedId = ConnectionSettings.getInstance().selectedFeed;
+                bool _isCat = ConnectionSettings.getInstance().isCategory;
                 SetProgressBar(true, ProgressMsg.LoadHeadlines);
                 ArticlesCollection.Clear();
-                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, _showUnreadOnly, 0, _sortOrder);
+                List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, _showUnreadOnly, 0, _sortOrder, _isCat);
                 if (headlines.Count == 0)
                 {
                     _moreArticles = false;
@@ -183,12 +184,15 @@ namespace TinyTinyRSS
                 }
                 else
                 {
-                    ArticlesCollection = new ObservableCollection<WrappedArticle>();
-                    foreach (Headline h in headlines)
+                    if (ConnectionSettings.getInstance().selectedFeed == feedId)
                     {
-                        ArticlesCollection.Add(new WrappedArticle(h));
+                        ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                        foreach (Headline h in headlines)
+                        {
+                            ArticlesCollection.Add(new WrappedArticle(h));
+                        }
+                        updateCount(false);
                     }
-                    updateCount(false);
                 }
             }
             catch (TtRssException ex)
@@ -244,10 +248,12 @@ namespace TinyTinyRSS
                 try
                 {
                     _moreArticlesLoading = true;
+                    int feedId = ConnectionSettings.getInstance().selectedFeed;
+                    bool _isCat = ConnectionSettings.getInstance().isCategory;
                     SetProgressBar(true, ProgressMsg.LoadMoreHeadlines);
                     
                     // First get new items if existing
-                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, _showUnreadOnly, 0, _sortOrder);
+                    List<Headline> headlines = await TtRssInterface.getInterface().getHeadlines(feedId, _showUnreadOnly, 0, _sortOrder, _isCat);
 
                     if (headlines.Count <= 0)
                     {
@@ -259,7 +265,7 @@ namespace TinyTinyRSS
                         foreach (Headline h in headlines)
                         {
 
-                            if (!isHeadlineInArticleCollection(h))
+                            if (!isHeadlineInArticleCollection(h) && ConnectionSettings.getInstance().selectedFeed == feedId)
                             {
                                 ArticlesCollection.Add(new WrappedArticle(h));
                                 newItems = true;
@@ -291,14 +297,14 @@ namespace TinyTinyRSS
                         skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }
 
-                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(ConnectionSettings.getInstance().selectedFeed, _showUnreadOnly, skip, _sortOrder);
+                    List<Headline> headlinesAfter = await TtRssInterface.getInterface().getHeadlines(feedId, _showUnreadOnly, skip, _sortOrder, _isCat);
                     if (headlinesAfter.Count > 0)
                     {
                         bool newItems = false;
                         foreach (Headline h in headlinesAfter)
                         {
 
-                            if (!isHeadlineInArticleCollection(h))
+                            if (!isHeadlineInArticleCollection(h) && ConnectionSettings.getInstance().selectedFeed == feedId)
                             {
                                 ArticlesCollection.Add(new WrappedArticle(h));
                                 newItems = true;

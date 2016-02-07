@@ -111,54 +111,57 @@
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
                                         SelectionChanged="AllFeedsList_SelectionChanged"                                
                                         Background="Transparent" VerticalContentAlignment="Top">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid HorizontalAlignment="Stretch">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="auto"/>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.icon}" 
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.icon}" 
                                                            Grid.Column="0" HorizontalAlignment="Left" 
                                                            ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
-                                                    <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
-                                                    <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,0,8,0" Grid.Column="2" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                        <ListView.ItemContainerStyle>
-                                            <Style TargetType="ListViewItem">
+                                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
+                                            <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,0,8,0" Grid.Column="2" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                        <Setter Property="Padding" Value="4,0,4,0" />
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.GroupStyle>
+                                    <GroupStyle HidesIfEmpty="False">
+                                        <GroupStyle.HeaderContainerStyle>
+                                            <Style TargetType="ListViewHeaderItem">
                                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                <Setter Property="Padding" Value="4,0,4,0" />
                                             </Style>
-                                        </ListView.ItemContainerStyle>
-                                        <ListView.GroupStyle>
-                                            <GroupStyle HidesIfEmpty="False">
-                                                <GroupStyle.HeaderContainerStyle>
-                                                    <Style TargetType="ListViewHeaderItem">
-                                                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                                    </Style>
-                                                </GroupStyle.HeaderContainerStyle>
-                                                <GroupStyle.HeaderTemplate>
-                                                    <DataTemplate>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="Auto"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Text='{Binding Key.title}' Grid.Column="0"
+                                        </GroupStyle.HeaderContainerStyle>
+                                        <GroupStyle.HeaderTemplate>
+                                            <DataTemplate>
+                                                <Grid Tapped="GroupHeaderTapped">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text='{Binding Key.title}' Grid.Column="0"
                                                                 Foreground="{StaticResource PhoneAccentBrush}"  
                                                                 HorizontalAlignment="Stretch" />
-                                                            <TextBlock Text='{Binding Key.combined}' Grid.Column="1" 
+                                                    <TextBlock Text='{Binding Key.combined}' Grid.Column="1" 
                                                                 Foreground="{StaticResource PhoneAccentBrush}"  
                                                                 HorizontalAlignment="Right" />
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </GroupStyle.HeaderTemplate>
-                                            </GroupStyle>
-                                        </ListView.GroupStyle>
-                                    </ListView>
+                                                    <TextBlock Name="hiddenId" Text='{Binding Key.id}' Grid.Column="2" 
+                                                                Visibility="Collapsed" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </GroupStyle.HeaderTemplate>
+                                    </GroupStyle>
+                                </ListView.GroupStyle>
+                            </ListView>
                         </StackPanel>
                     </ScrollViewer>
                     <CommandBar Grid.Row="1">
