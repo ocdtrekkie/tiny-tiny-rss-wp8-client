@@ -212,18 +212,18 @@ namespace TinyTinyRSS
         protected override ProgressRing getProgressRing()
         {
             return ProgressBar;
-        }
-        protected override ProgressRing getArticleProgressRing()
+        }        
+        protected override ProgressBar getMarkProgressBar()
         {
-            return ArticleProgressBar;
+            return MarkArticleProgressBar;
         }
+        protected override ProgressBar getMultipleMarkProgressBar()
+        {
+            return MultipleMarkArticleProgressBar;
+        }  
         protected override TextBlock getProgressBarText()
         {
             return ProgressBarText;
-        }
-        protected override TextBlock getArticleProgressBarText()
-        {
-            return ArticleProgressBarText;
         }
 
         private void MultiSelectAppBarButton_Click(object sender, RoutedEventArgs e)
