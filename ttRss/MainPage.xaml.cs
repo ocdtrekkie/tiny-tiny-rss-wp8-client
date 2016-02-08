@@ -852,7 +852,7 @@ namespace TinyTinyRSS
             }
             try
             {
-                SetProgressBar(true, ProgressMsg.MarkArticle);
+                SetProgressBar(true, ProgressMsg.MarkMultipleArticle);
                 List<int> idList = new List<int>();
                 foreach (WrappedArticle sel in selectedArticles)
                 {
@@ -895,12 +895,12 @@ namespace TinyTinyRSS
                     }
                     await updateFeedCounters;
                 }
-                SetProgressBar(false, ProgressMsg.MarkArticle);
+                SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
-                SetProgressBar(false, ProgressMsg.MarkArticle);
+                SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
             }
         }
 
