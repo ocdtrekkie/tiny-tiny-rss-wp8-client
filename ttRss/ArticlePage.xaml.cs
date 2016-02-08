@@ -50,15 +50,15 @@ namespace TinyTinyRSS
         {
             return this.ArticleProgressBar;
         }
-        protected override ProgressRing getArticleProgressRing()
+        protected override ProgressBar getMarkProgressBar()
         {
-            return ArticleProgressBar;
+            return MarkArticleProgressBar;
         }
+        protected override ProgressBar getMultipleMarkProgressBar()
+        {
+            return MarkArticleProgressBar;
+        }        
         protected override TextBlock getProgressBarText()
-        {
-            return ArticleProgressBarText;
-        }
-        protected override TextBlock getArticleProgressBarText()
         {
             return ArticleProgressBarText;
         }
