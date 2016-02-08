@@ -24,15 +24,15 @@ namespace TinyTinyRSS
         protected int _sortOrder;
         protected bool initialized;
 
-        protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, LoadArticle, LoginProgress };
-        protected Dictionary<ProgressRing, HashSet<ProgressMsg>> activeInProgress { get; set; }
+        protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, MarkMultipleArticle, LoadArticle, LoginProgress };
+        protected Dictionary<FrameworkElement, List<ProgressMsg>> activeInProgress { get; set; }
 
         protected abstract void updateCount(bool p);
         protected abstract int getSelectedIdx();
         protected abstract ProgressRing getProgressRing();
-        protected abstract ProgressRing getArticleProgressRing();
-        protected abstract TextBlock getProgressBarText();
-        protected abstract TextBlock getArticleProgressBarText();
+        protected abstract ProgressBar getMarkProgressBar();
+        protected abstract ProgressBar getMultipleMarkProgressBar();
+        protected abstract TextBlock getProgressRingText();
 
         public AbstractArticlePage()
         {
@@ -65,66 +65,84 @@ namespace TinyTinyRSS
         /// </summary>
         protected void SetProgressBar(bool on, ProgressMsg message)
         {
-            ProgressRing ring;
-            TextBlock textBlock;
+            FrameworkElement key;
+            TextBlock textBlock = null;
             if (message.Equals(ProgressMsg.MarkArticle))
             {
-                ring = getArticleProgressRing();
-                textBlock = getArticleProgressBarText();
+                key = getMarkProgressBar();
+            } 
+            else if(message.Equals(ProgressMsg.MarkMultipleArticle))
+            {
+                key = getMultipleMarkProgressBar();
             }
             else {
-                ring = getProgressRing();
+                key = getProgressRing();
                 textBlock = getProgressBarText();
             }
-            if (!activeInProgress.ContainsKey(ring))
+            if (!activeInProgress.ContainsKey(key))
             {
-                var hashset1 = new HashSet<ProgressMsg>();
-                activeInProgress.Add(ring, hashset1);
+                var list = new List<FrameworkElement>();
+                activeInProgress.Add(key, list);
             }
 
-            HashSet<ProgressMsg> set;
+            List<ProgressMsg> set;
             if (on)
             {
-                StackPanel parent = (StackPanel)ring.Parent;
-                parent.Visibility = Visibility.Visible;
-                ring.IsActive = true;
-                if (activeInProgress.TryGetValue(ring, out set))
-                {
-                    set.Add(message);
-                }
-                string msg = loader.GetString(message.ToString());
-                if (msg != null)
-                {
-                    textBlock.Text = msg;
+                if(key is ProgressBar) {
+                    key.Visibility = Visibility.Visible;
+                } 
+                else {
+                    StackPanel parent = (StackPanel)key.Parent;
+                    parent.Visibility = Visibility.Visible;
+                    key.IsActive = true;
+                    if (activeInProgress.TryGetValue(key, out set))
+                    {
+                        set.Add(message);
+                    }
+                    string msg = loader.GetString(message.ToString());
+                    if (msg != null)
+                    {
+                        textBlock.Text = msg;
+                    }
                 }
             }
             else {
-                if (activeInProgress.TryGetValue(ring, out set))
+                if (activeInProgress.TryGetValue(key, out set))
                 {
                     set.Remove(message);
                     if (set.Count > 0)
                     {
                         ProgressMsg old = set.First();
                         string msgOld = loader.GetString(old.ToString());
-                        if (msgOld != null)
+                        if (msgOld != null && textBlock != null)
                         {
                             textBlock.Text = msgOld;
                         }
                     }
                     else
                     {
+                        if(key is ProgressBar) {
+                            key.Visibility = Visibility.Collapsed;
+                        } 
+                        else {
+                            StackPanel parent = (StackPanel)ring.Parent;
+                            parent.Visibility = Visibility.Collapsed;
+                            ring.IsActive = false;
+                            textBlock.Text = "";
+                        }
+                    }
+                }
+                else
+                {
+                    if(key is ProgressBar) {
+                        key.Visibility = Visibility.Collapsed;
+                    } 
+                    else {
                         StackPanel parent = (StackPanel)ring.Parent;
                         parent.Visibility = Visibility.Collapsed;
                         ring.IsActive = false;
                         textBlock.Text = "";
                     }
-                }
-                else
-                {
-                    StackPanel parent = (StackPanel)ring.Parent;
-                    parent.Visibility = Visibility.Collapsed;
-                    ring.IsActive = false;
-                    textBlock.Text = "";
                 }
             }
         }
@@ -227,15 +245,6 @@ namespace TinyTinyRSS
             {
                 throw ex;
             }
-        }
-
-        /// <summary>
-        /// Check if the shown feed is a special on (archived, unread, etc.)
-        /// </summary>
-        /// <returns>True if feedId is in between -4 and 1</returns>
-        protected bool _IsSpecial()
-        {
-            return ConnectionSettings.getInstance().selectedFeed > -4 && ConnectionSettings.getInstance().selectedFeed < 1;
         }
 
         /// <summary>
