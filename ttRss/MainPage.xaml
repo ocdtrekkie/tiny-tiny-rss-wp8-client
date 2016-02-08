@@ -231,6 +231,7 @@
                             <RowDefinition Height="Auto"/>
                             <!-- Werbung -->
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
     				          SelectionChanged="HeadlinesView_SelectionChanged" Grid.Row="0">
@@ -273,7 +274,8 @@
                             <TextBlock Name="ProgressBarText" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="8,0,0,0" />
                         </StackPanel>
                         <!-- Werbung -->
-                        <CommandBar Name="HeadlinesAppBar" Grid.Row="2" 
+                        <ProgressBar Name="MultipleMarkArticleProgressBar" Grid.Row="2" IsIndeterminate="True" Visibility="Collapsed" />
+                        <CommandBar Name="HeadlinesAppBar" Grid.Row="3" 
                                     Visibility="{Binding Path=SelectionMode, ElementName=HeadlinesView, Converter={StaticResource MultiSelectToVisibilityConverter}}">
                             <AppBarButton x:Name="ReadAppBarButton" Icon="Mail"
                                           x:Uid="ToggleUnreadAppBarButton" Label=""
@@ -291,6 +293,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
@@ -314,7 +317,8 @@
                         <WebView Name="WebContent" HorizontalAlignment="Stretch" 
                                  VerticalAlignment="Stretch" 
                                  Grid.Row="1" />
-                        <CommandBar Name="ArticleAppBar" Grid.Row="2">
+                        <ProgressBar Name="MarkArticleProgressBar" Grid.Row="2" IsIndeterminate="True" Visibility="Collapsed" />
+                        <CommandBar Name="ArticleAppBar" Grid.Row="3">
                             <AppBarToggleButton x:Name="toogleReadAppBarButton" Icon="Mail"
                                           x:Uid="ToggleUnreadAppBarButton" Label=""
                                                 Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.unread}" />
