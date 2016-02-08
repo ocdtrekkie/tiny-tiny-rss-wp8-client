@@ -70,6 +70,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -91,5 +92,6 @@
             <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
         </Pivot>
+        <ProgressBar Name="MarkArticleProgressBar" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsIndeterminate="True" Visibility="Collapsed" />
     </Grid>
 </local:AbstractArticlePage>
