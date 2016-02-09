@@ -153,7 +153,7 @@ namespace TinyTinyRSS
         private async void AboutSendButton_Click(object sender, RoutedEventArgs e)
         {
             Logger.WriteLine("Begin Send via email");
-            string Subject = "TT-RSS WP8 App Feedback";
+            string Subject = "TT-RSS Universal App Feedback";
             bool sent = true;
             try
             {
