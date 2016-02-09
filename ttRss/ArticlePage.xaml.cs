@@ -58,7 +58,7 @@ namespace TinyTinyRSS
         {
             return MarkArticleProgressBar;
         }        
-        protected override TextBlock getProgressBarText()
+        protected override TextBlock getProgressRingText()
         {
             return ArticleProgressBarText;
         }
@@ -217,7 +217,7 @@ namespace TinyTinyRSS
         protected override async void updateCount(bool force)
         {
             int actual = _selectedIndex + 1;
-            if (_IsSpecial() || _showUnreadOnly)
+            if (ConnectionSettings.getInstance().selectedFeed<0 || _showUnreadOnly)
             {
                 int max;
                 if (ConnectionSettings.getInstance().selectedFeed == (int)FeedId.Fresh)

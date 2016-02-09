@@ -221,7 +221,7 @@ namespace TinyTinyRSS
         {
             return MultipleMarkArticleProgressBar;
         }  
-        protected override TextBlock getProgressBarText()
+        protected override TextBlock getProgressRingText()
         {
             return ProgressBarText;
         }

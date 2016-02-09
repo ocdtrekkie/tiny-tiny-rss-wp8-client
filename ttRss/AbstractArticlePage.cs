@@ -36,7 +36,7 @@ namespace TinyTinyRSS
 
         public AbstractArticlePage()
         {
-            activeInProgress = new Dictionary<ProgressRing, HashSet<ProgressMsg>>();
+            activeInProgress = new Dictionary<FrameworkElement, List<ProgressMsg>>();
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -77,11 +77,11 @@ namespace TinyTinyRSS
             }
             else {
                 key = getProgressRing();
-                textBlock = getProgressBarText();
+                textBlock = getProgressRingText();
             }
             if (!activeInProgress.ContainsKey(key))
             {
-                var list = new List<FrameworkElement>();
+                var list = new List<ProgressMsg>();
                 activeInProgress.Add(key, list);
             }
 
@@ -94,7 +94,7 @@ namespace TinyTinyRSS
                 else {
                     StackPanel parent = (StackPanel)key.Parent;
                     parent.Visibility = Visibility.Visible;
-                    key.IsActive = true;
+                    ((ProgressRing )key).IsActive = true;
                     if (activeInProgress.TryGetValue(key, out set))
                     {
                         set.Add(message);
@@ -125,9 +125,9 @@ namespace TinyTinyRSS
                             key.Visibility = Visibility.Collapsed;
                         } 
                         else {
-                            StackPanel parent = (StackPanel)ring.Parent;
+                            StackPanel parent = (StackPanel)key.Parent;
                             parent.Visibility = Visibility.Collapsed;
-                            ring.IsActive = false;
+                            ((ProgressRing)key).IsActive = false;
                             textBlock.Text = "";
                         }
                     }
@@ -138,9 +138,9 @@ namespace TinyTinyRSS
                         key.Visibility = Visibility.Collapsed;
                     } 
                     else {
-                        StackPanel parent = (StackPanel)ring.Parent;
+                        StackPanel parent = (StackPanel)key.Parent;
                         parent.Visibility = Visibility.Collapsed;
-                        ring.IsActive = false;
+                        ((ProgressRing)key).IsActive = false;
                         textBlock.Text = "";
                     }
                 }
@@ -285,9 +285,9 @@ namespace TinyTinyRSS
                     }
                     // Then check if there are more items at the end.
                     int skip = ArticlesCollection.Count;
-                    if (_IsSpecial())
+                    if (feedId<0)
                     {
-                        switch (ConnectionSettings.getInstance().selectedFeed)
+                        switch (feedId)
                         {
                             case -3:
                                 ArticlesCollection.Count(e => e.Headline.unread);
