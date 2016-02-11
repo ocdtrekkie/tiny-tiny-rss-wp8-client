@@ -348,6 +348,23 @@ namespace TinyTinyRSS
             }
             return contains;
         }
+        
+        protected async Task<bool> markAllRead() 
+        {
+            SetProgressBar(true, ProgressMsg.MarkArticle);
+            try {
+                bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed, ConnectionSettings.getInstance().isCategory);
+                PushNotificationHelper.UpdateLiveTile(-1);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
+                return success;
+            }
+            catch (TtRssException ex)
+            {
+                checkException(ex);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
+            }
+            return;        
+        }
 
         protected async Task<bool> markArticleReadAutomatically(Article article)
         {
