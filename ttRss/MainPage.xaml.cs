@@ -713,35 +713,23 @@ namespace TinyTinyRSS
                 field = UpdateField.Unread;
             }
             else if (sender == markAllReadMenu)
-            {
-                SetProgressBar(true, ProgressMsg.MarkArticle);
-                try
+            {               
+                bool success = await markAllRead();
+                if (success)
                 {
-                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
-                    if (success)
+                    Task updateFeedCounters = UpdateFeedCounters();
+                    foreach (WrappedArticle wa in ArticlesCollection)
                     {
-                        Task updateFeedCounters = UpdateFeedCounters();
-                        foreach (WrappedArticle wa in ArticlesCollection)
+                        if (wa.Headline.unread)
                         {
-                            if (wa.Headline.unread)
-                            {
-                                wa.Headline.unread = false;
-                            }
-                            if (wa.Article != null && wa.Article.unread)
-                            {
-                                wa.Article.unread = false;
-                            }
+                            wa.Headline.unread = false;
                         }
-                        await updateFeedCounters;
+                        if (wa.Article != null && wa.Article.unread)
+                        {
+                            wa.Article.unread = false;                            
+                        }
                     }
-                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                    SetProgressBar(false, ProgressMsg.MarkArticle);
-                    await tsk;
-                }
-                catch (TtRssException ex)
-                {
-                    checkException(ex);
-                    SetProgressBar(false, ProgressMsg.MarkArticle);
+                    await updateFeedCounters;
                 }
                 return;
             }
