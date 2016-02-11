@@ -299,10 +299,9 @@ namespace TinyTinyRSS
             }
             else if (sender == markAllReadMenu)
             {
-                SetProgressBar(true, ProgressMsg.MarkArticle);
                 try
                 {
-                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed);
+                    bool success = await markAllRead();
                     if (success)
                     {
                         foreach (WrappedArticle wa in ArticlesCollection)
@@ -321,9 +320,6 @@ namespace TinyTinyRSS
                             UpdateLocalizedApplicationBar(current);
                         }
                     }
-                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                    SetProgressBar(false, ProgressMsg.MarkArticle);
-                    await tsk;
                 }
                 catch (TtRssException ex)
                 {
