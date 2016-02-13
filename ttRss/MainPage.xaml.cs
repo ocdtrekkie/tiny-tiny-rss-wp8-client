@@ -17,6 +17,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Input;
+using Windows.UI.ViewManagement;
+using Windows.Foundation.Metadata;
 
 namespace TinyTinyRSS
 {

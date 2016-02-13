@@ -36,9 +36,10 @@ namespace TinyTinyRSS
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             this.Resuming += App_Resuming;
+            this.UnhandledException += App_UnhandledException;
         }
 
-        private async void App_Resuming(object sender, object e)
+        private void App_Resuming(object sender, object e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
             var now = DateTime.Now;
@@ -131,6 +132,14 @@ namespace TinyTinyRSS
             // Ensure the current window is active
             Window.Current.Activate();
         }
+
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Logger.WriteLine("Unhandled Exception: " + e.Message);
+            Logger.WriteLine(e.Exception.ToString());
+            FinalizeLogging();
+        }
+        
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
         {

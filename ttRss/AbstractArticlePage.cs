@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CaledosLab.Portable.Logging;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -65,65 +66,79 @@ namespace TinyTinyRSS
         /// </summary>
         protected void SetProgressBar(bool on, ProgressMsg message)
         {
-            FrameworkElement key;
-            TextBlock textBlock = null;
-            if (message.Equals(ProgressMsg.MarkArticle))
-            {
-                key = getMarkProgressBar();
-            } 
-            else if(message.Equals(ProgressMsg.MarkMultipleArticle))
-            {
-                key = getMultipleMarkProgressBar();
-            }
-            else {
-                key = getProgressRing();
-                textBlock = getProgressRingText();
-            }
-            if (!activeInProgress.ContainsKey(key))
-            {
-                var list = new List<ProgressMsg>();
-                activeInProgress.Add(key, list);
-            }
-
-            List<ProgressMsg> set;
-            if (on)
-            {
-                if(key is ProgressBar) {
-                    key.Visibility = Visibility.Visible;
-                } 
+            try {
+                FrameworkElement key;
+                TextBlock textBlock = null;
+                if (message.Equals(ProgressMsg.MarkArticle))
+                {
+                    key = getMarkProgressBar();
+                }
+                else if (message.Equals(ProgressMsg.MarkMultipleArticle))
+                {
+                    key = getMultipleMarkProgressBar();
+                }
                 else {
-                    StackPanel parent = (StackPanel)key.Parent;
-                    parent.Visibility = Visibility.Visible;
-                    ((ProgressRing )key).IsActive = true;
-                    if (activeInProgress.TryGetValue(key, out set))
-                    {
-                        set.Add(message);
+                    key = getProgressRing();
+                    textBlock = getProgressRingText();
+                }
+                if (!activeInProgress.ContainsKey(key))
+                {
+                    var list = new List<ProgressMsg>();
+                    activeInProgress.Add(key, list);
+                }
+
+                List<ProgressMsg> set;
+                if (on)
+                {
+                    if (key is ProgressBar) {
+                        key.Visibility = Visibility.Visible;
                     }
-                    string msg = loader.GetString(message.ToString());
-                    if (msg != null)
-                    {
-                        textBlock.Text = msg;
+                    else {
+                        StackPanel parent = (StackPanel)key.Parent;
+                        parent.Visibility = Visibility.Visible;
+                        ((ProgressRing)key).IsActive = true;
+                        if (activeInProgress.TryGetValue(key, out set))
+                        {
+                            set.Add(message);
+                        }
+                        string msg = loader.GetString(message.ToString());
+                        if (msg != null)
+                        {
+                            textBlock.Text = msg;
+                        }
                     }
                 }
-            }
-            else {
-                if (activeInProgress.TryGetValue(key, out set))
-                {
-                    set.Remove(message);
-                    if (set.Count > 0)
+                else {
+                    if (activeInProgress.TryGetValue(key, out set))
                     {
-                        ProgressMsg old = set.First();
-                        string msgOld = loader.GetString(old.ToString());
-                        if (msgOld != null && textBlock != null)
+                        set.Remove(message);
+                        if (set.Count > 0)
                         {
-                            textBlock.Text = msgOld;
+                            ProgressMsg old = set.First();
+                            string msgOld = loader.GetString(old.ToString());
+                            if (msgOld != null && textBlock != null)
+                            {
+                                textBlock.Text = msgOld;
+                            }
+                        }
+                        else
+                        {
+                            if (key is ProgressBar) {
+                                key.Visibility = Visibility.Collapsed;
+                            }
+                            else {
+                                StackPanel parent = (StackPanel)key.Parent;
+                                parent.Visibility = Visibility.Collapsed;
+                                ((ProgressRing)key).IsActive = false;
+                                textBlock.Text = "";
+                            }
                         }
                     }
                     else
                     {
-                        if(key is ProgressBar) {
+                        if (key is ProgressBar) {
                             key.Visibility = Visibility.Collapsed;
-                        } 
+                        }
                         else {
                             StackPanel parent = (StackPanel)key.Parent;
                             parent.Visibility = Visibility.Collapsed;
@@ -132,18 +147,9 @@ namespace TinyTinyRSS
                         }
                     }
                 }
-                else
-                {
-                    if(key is ProgressBar) {
-                        key.Visibility = Visibility.Collapsed;
-                    } 
-                    else {
-                        StackPanel parent = (StackPanel)key.Parent;
-                        parent.Visibility = Visibility.Collapsed;
-                        ((ProgressRing)key).IsActive = false;
-                        textBlock.Text = "";
-                    }
-                }
+            } catch (NullReferenceException e)
+            {
+                Logger.WriteLine("Nre in SetProgressBar - " + e.Message);
             }
         }
 
@@ -363,7 +369,7 @@ namespace TinyTinyRSS
                 checkException(ex);
                 SetProgressBar(false, ProgressMsg.MarkArticle);
             }
-            return;        
+            return false;        
         }
 
         protected async Task<bool> markArticleReadAutomatically(Article article)
