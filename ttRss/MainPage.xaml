@@ -321,10 +321,10 @@
                         <CommandBar Name="ArticleAppBar" Grid.Row="3">
                             <AppBarToggleButton x:Name="toogleReadAppBarButton" Icon="Mail"
                                           x:Uid="ToggleUnreadAppBarButton" Label=""
-                                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.unread}" />
+                                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Headline.unread}" />
                             <AppBarToggleButton x:Name="toggleStarAppBarButton" Icon="Favorite"
                                           x:Uid="ToggleStarAppBarButton" Label="" 
-                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Article.marked}" />
+                                Click="ArticleAppBarButton_Click" IsChecked="{Binding Headline.marked}" />
                             <AppBarButton x:Name="shareLinkAppBarButton"  
                                   Click="ShareAppBarButton_Click" 
                                   Label="" x:Uid="ShareAppBarButton">

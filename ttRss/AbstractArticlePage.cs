@@ -69,7 +69,7 @@ namespace TinyTinyRSS
             try {
                 FrameworkElement key;
                 TextBlock textBlock = null;
-                if (message.Equals(ProgressMsg.MarkArticle))
+                if (message.Equals(ProgressMsg.MarkArticle) || message.Equals(ProgressMsg.LoadArticle))
                 {
                     key = getMarkProgressBar();
                 }
