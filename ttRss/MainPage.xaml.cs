@@ -133,7 +133,10 @@ namespace TinyTinyRSS
                     }
                     var sv = (ScrollViewer)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(this.HeadlinesView, 0), 0);
                     sv.ViewChanged += ViewChanged;
-                    HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
+                    if (ArticlesCollection.Count > initialIndex)
+                    {
+                        HeadlinesView.ScrollIntoView(ArticlesCollection[initialIndex], ScrollIntoViewAlignment.Leading);
+                    }
                 }
                 else
                 {
@@ -551,7 +554,7 @@ namespace TinyTinyRSS
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-
+                    UpdateLocalizedApplicationBar(item.Article);
                     if (landscape)
                     {
                         Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
@@ -571,6 +574,7 @@ namespace TinyTinyRSS
                     {
                         item.Headline.unread = false;
                         item.Article.unread = false;
+                        UpdateLocalizedApplicationBar(item.Article);
                         UpdateCountManually((int)FeedId.Fresh, item.Headline.unread);
                         UpdateCountManually((int)item.Headline.feed_id, item.Headline.unread);
                         await UpdateFeedCounters();
@@ -678,6 +682,32 @@ namespace TinyTinyRSS
             }
         }
 
+        private void UpdateLocalizedApplicationBar(Article article)
+        {
+            WrappedArticle current= (WrappedArticle) HeadlinesView.SelectedItem;
+            if(current==null || !article.Equals(current.Article))
+            {
+                return;
+            }
+            if (article.unread)
+            {
+                articleToogleReadAppBarButton.IsChecked = true;
+            }
+            else
+            {
+                articleToogleReadAppBarButton.IsChecked = false;
+            }
+
+            if (!article.marked)
+            {
+                articleToggleStarAppBarButton.IsChecked = false;
+            }
+            else
+            {
+                articleToggleStarAppBarButton.IsChecked = true;
+            }
+        }
+
         private void ArticleGridClose(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             closeArticleGrid();
@@ -708,15 +738,15 @@ namespace TinyTinyRSS
         private async void ArticleAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateField field;
-            if (sender == publishAppBarMenu)
+            if (sender == articlePublishAppBarMenu)
             {
                 field = UpdateField.Published;
             }
-            else if (sender == toggleStarAppBarButton)
+            else if (sender == articleToggleStarAppBarButton)
             {
                 field = UpdateField.Starred;
             }
-            else if (sender == toogleReadAppBarButton)
+            else if (sender == articleToogleReadAppBarButton)
             {
                 field = UpdateField.Unread;
             }
@@ -782,7 +812,8 @@ namespace TinyTinyRSS
                             UpdateCountManually((int)FeedId.Starred, current.Headline.marked);
                             break;
                     }
-                    if (sender == toogleReadAppBarButton)
+                    UpdateLocalizedApplicationBar(current.Article);
+                    if (sender == articleToogleReadAppBarButton)
                     {
                         UpdateCountManually((int)current.Headline.feed_id, current.Headline.unread);
                         await PushNotificationHelper.UpdateLiveTile(-1);
@@ -885,7 +916,7 @@ namespace TinyTinyRSS
                                 break;
                         }
                     }
-                    if (sender == toogleReadAppBarButton)
+                    if (sender == ReadAppBarButton)
                     {
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
