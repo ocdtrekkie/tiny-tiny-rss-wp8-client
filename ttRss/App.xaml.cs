@@ -37,6 +37,7 @@ namespace TinyTinyRSS
             this.Suspending += this.OnSuspending;
             this.Resuming += App_Resuming;
             this.UnhandledException += App_UnhandledException;
+            Microsoft.HockeyApp.HockeyClient.Current.Configure("920bbd7c3ad746fa91e80e46588ae87a");
         }
 
         private void App_Resuming(object sender, object e)

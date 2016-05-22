@@ -360,7 +360,7 @@ namespace TinyTinyRSS
             SetProgressBar(true, ProgressMsg.MarkArticle);
             try {
                 bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed, ConnectionSettings.getInstance().isCategory);
-                PushNotificationHelper.UpdateLiveTile(-1);
+                Task task = PushNotificationHelper.UpdateLiveTile(-1);
                 SetProgressBar(false, ProgressMsg.MarkArticle);
                 return success;
             }

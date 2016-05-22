@@ -234,12 +234,12 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
-    				          SelectionChanged="HeadlinesView_SelectionChanged" Grid.Row="0">
+    				          SelectionChanged="HeadlinesView_SelectionChanged" Grid.Row="0" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="0 0 0 1" 
     											BorderBrush="Gray" Padding="0,0,0,4" >
-                                        <Grid Margin="0" >
+                                        <Grid Margin="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>

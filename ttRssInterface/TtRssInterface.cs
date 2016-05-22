@@ -294,8 +294,16 @@ namespace TinyTinyRSS.Interface
 
         public async Task<bool> markAllArticlesRead(int feedId, bool is_cat)
         {
-             string catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + ",\"is_cat \":\"" + is_cat + "\"}";
-             Response status = await SendRequestAsync(null, catchUp);
+            string catchUp = "";
+            if(feedId<=0)
+            {
+                catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + "}";
+            } else
+            {
+                catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + ",\"is_cat \":\"" + is_cat + "\"}";
+            }
+
+            Response status = await SendRequestAsync(null, catchUp);
              if (status.content.ToString().Contains("OK"))
              {
                  return true;
