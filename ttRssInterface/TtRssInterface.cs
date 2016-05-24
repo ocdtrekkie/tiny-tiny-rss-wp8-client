@@ -198,11 +198,24 @@ namespace TinyTinyRSS.Interface
 
         public async Task<int> getCountForCategory(bool forceUpdate, int feedId)
         {
-            if (forceUpdate || !CategoryCounter.ContainsKey(feedId))
+            try
             {
-                await getCounters();
+                if (forceUpdate || !CategoryCounter.ContainsKey(feedId))
+                {
+                    await getCounters();
+                }
+                return CategoryCounter[feedId];
             }
-            return CategoryCounter[feedId];
+            catch (KeyNotFoundException e)
+            {
+                Logger.WriteLine(e.StackTrace);
+                return 0;
+            }
+            catch (TtRssException e)
+            {
+                Logger.WriteLine(e.StackTrace);
+                return 0;
+            }
         }
 
         public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder, bool isCat)
