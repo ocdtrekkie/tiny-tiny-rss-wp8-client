@@ -309,23 +309,29 @@ namespace TinyTinyRSS
 
         private async Task feedSelectionChanged()
         {
-            _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
-            _sortOrder = ConnectionSettings.getInstance().sortOrder;
-            _moreArticles = true;
-            Task updateFeedCounters = UpdateFeedCounters();
-            setFeedTitle();
-            if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+            try {
+                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
+                _sortOrder = ConnectionSettings.getInstance().sortOrder;
+                _moreArticles = true;
+                Task updateFeedCounters = UpdateFeedCounters();
+                setFeedTitle();
+                if (RootSplitView.DisplayMode == SplitViewDisplayMode.Overlay)
+                {
+                    RootSplitView.IsPaneOpen = false;
+                }
+                if (await LoadHeadlines())
+                {
+                    HeadlinesView.DataContext = ArticlesCollection;
+                }
+                MultiSelectAppBarButton.IsChecked = false;
+                HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
+                closeArticleGrid();
+                await updateFeedCounters;
+            } 
+            catch (TtRssException ex)
             {
-                RootSplitView.IsPaneOpen = false;
+                checkException(ex);
             }
-            if (await LoadHeadlines())
-            {
-                HeadlinesView.DataContext = ArticlesCollection;
-            }
-            MultiSelectAppBarButton.IsChecked = false;
-            HeadlinesView.SelectionMode = ListViewSelectionMode.Single;
-            closeArticleGrid();
-            await updateFeedCounters;
         }
 
         /// <summary>
