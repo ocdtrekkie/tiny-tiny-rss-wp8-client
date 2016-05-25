@@ -301,7 +301,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Grid  Grid.Row="0" Grid.Column="0">
+                            <Grid  Grid.Row="0" Grid.Column="0" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
