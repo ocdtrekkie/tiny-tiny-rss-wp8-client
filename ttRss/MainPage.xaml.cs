@@ -414,6 +414,7 @@ namespace TinyTinyRSS
         {
             if (sender.Equals(this.settingsAppBarButton))
             {
+                RootSplitView.IsPaneOpen = false;
                 Frame.Navigate(typeof(SettingsPage));
             }
             else if (sender.Equals(this.infoAppBarButton))
