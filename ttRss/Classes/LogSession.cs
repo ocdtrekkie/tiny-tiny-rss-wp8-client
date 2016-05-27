@@ -8,16 +8,16 @@ namespace TinyTinyRSS.Classes
 {
     public class LogSession
     {       
-        private static FileLoggingSession instance;
+        private static LoggingSession instance;
 
         private ConnectionSettings()
         {
         }
 
-        public static FileLoggingSession getInstance() {
+        public static LoggingSession getInstance() {
             if (instance == null)
             {
-                instance = new FileLoggingSession(App.LOGSESSION);
+                instance = new LoggingSession(App.LOGSESSION);
             }
             return instance;
         }
