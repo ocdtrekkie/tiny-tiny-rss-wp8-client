@@ -6,6 +6,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TinyTinyRSS.Interface;
+using TinyTinyRSS.Classes;
 using Windows.Storage;
 using Windows.UI.Core;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace TinyTinyRSS
         public const string LOGSESSION = "ttrrlogsession";
         // Error LogFile Name
         public const string LastLogFile = "lastSessionLog.etl";
-        public FileLoggingSession session;
         private LoggingChannel channel;
         private TransitionCollection transitions;
 
@@ -70,9 +70,8 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            session = new FileLoggingSession(LOGSESSION);
             channel = new LoggingChannel("App.cs", null);
-            session.AddLoggingChannel(channel, LoggingLevel.Warning);
+            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Warning);
             Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
             
             Frame rootFrame = Window.Current.Content as Frame;
@@ -184,7 +183,7 @@ namespace TinyTinyRSS
         {            
             StorageFolder storage = ApplicationData.Current.LocalFolder;
             // Save the final log file before closing the session.
-            StorageFile finalFileBeforeSuspend = await session.CloseAndSaveToFileAsync();
+            StorageFile finalFileBeforeSuspend = await LogSession.getInstance().CloseAndSaveToFileAsync();
             if (finalFileBeforeSuspend != null)
             {
                 StorageFolder storage = ApplicationData.Current.LocalFolder;
