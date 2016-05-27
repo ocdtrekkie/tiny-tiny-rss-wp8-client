@@ -6,7 +6,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TinyTinyRSS.Interface;
-using CaledosLab.Portable.Logging;
 using Windows.Storage;
 using Windows.UI.Core;
 using System.Threading.Tasks;
@@ -21,10 +20,11 @@ namespace TinyTinyRSS
     public sealed partial class App : Application
     {
         // LogFile Name
-        public const string LogFile = "currentLog.txt";
+        public const string LOGSESSION = "ttrrlogsession";
         // Error LogFile Name
-        public const string LastLogFile = "lastLog.txt";
-
+        public const string LastLogFile = "lastSessionLog.etl";
+        public FileLoggingSession session;
+        private LoggingChannel channel;
         private TransitionCollection transitions;
 
         /// <summary>
@@ -70,25 +70,11 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            session = new FileLoggingSession(LOGSESSION);
+            channel = new LoggingChannel("App.cs", null);
+            session.AddLoggingChannel(channel, LoggingLevel.Warning);
             Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
-            try
-            {
-                // init logger
-                StorageFolder storage = ApplicationData.Current.LocalFolder;
-                StorageFile file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.OpenIfExists);
-                
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated || e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
-                {
-                    StorageFile errorfile = await storage.CreateFileAsync(LastLogFile, CreationCollisionOption.ReplaceExisting);
-                    await file.CopyAndReplaceAsync(errorfile);
-                    file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.ReplaceExisting);
-                }
-                Logger.Load(file);   
-            }
-            catch
-            {
-                // yeah we can't log the error.
-            }
+            
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
@@ -134,11 +120,12 @@ namespace TinyTinyRSS
             Window.Current.Activate();
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Logger.WriteLine("Unhandled Exception: " + e.Message);
-            Logger.WriteLine(e.Exception.ToString());
-            FinalizeLogging();
+            channel.LogMessage("Unhandled Exception: " + e.Message,
+                            LoggingLevel.Critical);
+            channel.LogMessage(e.Exception.ToString(),
+                            LoggingLevel.Critical);
         }
         
 
@@ -182,10 +169,10 @@ namespace TinyTinyRSS
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            Logger.WriteLine("App suspended");
+            channel.LogMessage("App suspended",
+                                LoggingLevel.Critical);
             ConnectionSettings.getInstance().supsensionDate = DateTime.Now;
             FinalizeLogging();
-            Logger.ClearLog();
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();            
         }
@@ -193,18 +180,17 @@ namespace TinyTinyRSS
         /// <summary>
         /// Closes the logger.
         /// </summary>
-        public static async void FinalizeLogging()
+        private async void FinalizeLogging()
         {            
             StorageFolder storage = ApplicationData.Current.LocalFolder;
-            StorageFile file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.OpenIfExists);
-            Logger.WriteLine("Last Settings:");
-            Logger.WriteLine("Mark read:" + ConnectionSettings.getInstance().markRead);
-            Logger.WriteLine("Progress as Cntr:" + ConnectionSettings.getInstance().progressAsCntr);
-            Logger.WriteLine("Sort Order:" + ConnectionSettings.getInstance().sortOrder);
-            Logger.WriteLine("show Unread Only:" + ConnectionSettings.getInstance().showUnreadOnly);
-            Logger.WriteLine("Live Tile Active:" + ConnectionSettings.getInstance().liveTileActive);
-            Logger.WriteLine("Channel Uri:" + ConnectionSettings.getInstance().channelUri);
-            Logger.Save(file);
+            // Save the final log file before closing the session.
+            StorageFile finalFileBeforeSuspend = await session.CloseAndSaveToFileAsync();
+            if (finalFileBeforeSuspend != null)
+            {
+                StorageFolder storage = ApplicationData.Current.LocalFolder;
+                // Move the final log into the app-defined log file folder. 
+                await finalFileBeforeSuspend.MoveAsync(sampleAppDefinedLogFolder, LastLogFile);
+            }
         }
     }
 }
