@@ -183,13 +183,14 @@ namespace TinyTinyRSS
         {            
             StorageFolder storage = ApplicationData.Current.LocalFolder;
             // Save the final log file before closing the session.
-            StorageFile finalFileBeforeSuspend = await LogSession.getInstance().CloseAndSaveToFileAsync();
+            StorageFile finalFileBeforeSuspend = await LogSession.getInstance().SaveToFileAsync();
             if (finalFileBeforeSuspend != null)
             {
                 StorageFolder storage = ApplicationData.Current.LocalFolder;
                 // Move the final log into the app-defined log file folder. 
                 await finalFileBeforeSuspend.MoveAsync(sampleAppDefinedLogFolder, LastLogFile);
             }
+            LogSession.getInstance().Close();
         }
     }
 }
