@@ -504,14 +504,19 @@ namespace TinyTinyRSS
         /// </summary>
         protected async Task UpdateFeedCounters()
         {
-            await TtRssInterface.getInterface().getCounters();
-            Task sfUpdate = UpdateSpecialFeeds();
-            foreach (ExtendedFeed ex in extendedFeeds)
+            try {
+                await TtRssInterface.getInterface().getCounters();
+                Task sfUpdate = UpdateSpecialFeeds();
+                foreach (ExtendedFeed ex in extendedFeeds)
+                {
+                    ex.feed.unread = await TtRssInterface.getInterface().getCountForFeed(false, ex.feed.id);
+                    ex.cat.unread = await TtRssInterface.getInterface().getCountForCategory(false, ex.cat.id);
+                }
+                await sfUpdate;
+            } catch (TtRssException ex)
             {
-                ex.feed.unread = await TtRssInterface.getInterface().getCountForFeed(false, ex.feed.id);
-                ex.cat.unread = await TtRssInterface.getInterface().getCountForCategory(false, ex.cat.id);
+                    checkException(ex);
             }
-            await sfUpdate;
         }
 
         protected override void updateCount(bool p)
