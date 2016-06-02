@@ -697,11 +697,11 @@ namespace TinyTinyRSS
         private void UpdateLocalizedApplicationBar(Article article)
         {
             WrappedArticle current= (WrappedArticle) HeadlinesView.SelectedItem;
-            if(current==null || !article.Equals(current.Article))
+            if(article != null && (current==null || !article.Equals(current.Article)))
             {
                 return;
-            }
-            if (article.unread)
+            }            
+            if (article != null && article.unread)
             {
                 articleToogleReadAppBarButton.IsChecked = true;
             }
@@ -710,13 +710,13 @@ namespace TinyTinyRSS
                 articleToogleReadAppBarButton.IsChecked = false;
             }
 
-            if (!article.marked)
+            if (article != null && article.marked)
             {
-                articleToggleStarAppBarButton.IsChecked = false;
+                articleToggleStarAppBarButton.IsChecked = true;
             }
             else
             {
-                articleToggleStarAppBarButton.IsChecked = true;
+                articleToggleStarAppBarButton.IsChecked = false;
             }
         }
 
