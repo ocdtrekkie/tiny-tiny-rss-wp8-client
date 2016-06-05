@@ -73,7 +73,8 @@ namespace TinyTinyRSS
             channel = new LoggingChannel("App.cs", null);
             LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Warning);
             Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
-            
+
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

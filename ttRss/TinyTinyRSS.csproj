@@ -117,6 +117,9 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="project.json" />
+    <PRIResource Include="Strings\it\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <None Include="TinyTinyRSS_StoreKey.pfx" />
   </ItemGroup>
   <ItemGroup>
