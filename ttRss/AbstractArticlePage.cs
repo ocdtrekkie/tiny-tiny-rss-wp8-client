@@ -1,5 +1,4 @@
-﻿using CaledosLab.Portable.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +10,7 @@ using TinyTinyRSSInterface.Classes;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
+using Windows.Foundation.Diagnostics;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -21,6 +21,7 @@ namespace TinyTinyRSS
     {
         protected Collection<WrappedArticle> ArticlesCollection;
         protected ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+        protected LoggingChannel channel;
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         protected int _sortOrder;
         protected bool initialized;
@@ -38,6 +39,8 @@ namespace TinyTinyRSS
         public AbstractArticlePage()
         {
             activeInProgress = new Dictionary<FrameworkElement, List<ProgressMsg>>();
+            channel = new LoggingChannel("AbstractArticlePage.cs", null);
+            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)
@@ -149,7 +152,7 @@ namespace TinyTinyRSS
                 }
             } catch (NullReferenceException e)
             {
-                Logger.WriteLine("Nre in SetProgressBar - " + e.Message);
+                channel.LogMessage("Nre in SetProgressBar - " + e.Message);
             }
         }
 

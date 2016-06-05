@@ -1,12 +1,5 @@
-﻿using CaledosLab.Portable.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using TinyTinyRSS.Interface;
-using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 

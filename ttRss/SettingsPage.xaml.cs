@@ -6,6 +6,7 @@ using TinyTinyRSS.Interface;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Diagnostics;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -39,7 +40,7 @@ namespace TinyTinyRSS
             this.AppVersion.Text = loader.GetString("SettingsAboutVersion") + appVersion;
             this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse";
             channel = new LoggingChannel("SettingsPage.cs", null);
-            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Warning);
+            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
             this.Loaded += PageLoaded;
         }
 
@@ -169,7 +170,7 @@ namespace TinyTinyRSS
                 {
                     try
                     {
-                        file = await LogSession.getInstance().SaveToFileAsync();
+                        file = await LogSession.Save();
                     }
                     catch (Exception ex)
                     {
@@ -204,7 +205,7 @@ namespace TinyTinyRSS
                 MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsMailException"));
                 await msgbox.ShowAsync();                
             }
-            channel.LogMessage("End Send via email." + ex.Message, LoggingLevel.Information);
+            channel.LogMessage("End Send via email.", LoggingLevel.Information);
         }
 
 		// Live tile activated/deactivated
@@ -259,14 +260,14 @@ namespace TinyTinyRSS
                         
                         if (!responseString.Equals("1"))
                         {
-                            Logger.WriteLine("error deleting livetile user");
-                            Logger.WriteLine(responseString);
+                            channel.LogMessage("error deleting livetile user");
+                            channel.LogMessage(responseString);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLine("error deleting livetile user");
-                        Logger.WriteLine(ex.Message);
+                        channel.LogMessage("error deleting livetile user");
+                        channel.LogMessage(ex.Message);
                     }
                     await t;
                 }

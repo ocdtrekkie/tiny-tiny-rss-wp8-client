@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using TinyTinyRSS.Classes;
+using Windows.Foundation.Diagnostics;
 using Windows.Storage;
 
 namespace TinyTinyRSS.Interface
@@ -27,6 +29,7 @@ namespace TinyTinyRSS.Interface
         public static string _selectedFeedKey = "SelectedFeed";
         public static string _suspensionDateKey = "SuspensionDateTime";
         public static string _isCatKey = "IsSelectedFeedCategory";
+        public static string _lastLogKey = "lastLogFileName";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -48,6 +51,7 @@ namespace TinyTinyRSS.Interface
         private string _selectedFeed;
         private string _suspensionDate;
         private string _isCategory;
+        private string _lastLog;
 
         private ConnectionSettings()
         {
@@ -64,6 +68,23 @@ namespace TinyTinyRSS.Interface
         private static ApplicationDataContainer getLocalSettings()
         {
             return Windows.Storage.ApplicationData.Current.LocalSettings;
+        }
+
+        public string lastLog
+        {
+            get
+            {
+                if (_lastLog == null)
+                {
+                    _lastLog = ReadSetting(_lastLogKey);
+                }
+                return _lastLog;
+            }
+            set
+            {
+                SaveSetting(_lastLogKey, value);
+                _lastLog = value;
+            }
         }
 
         public string server
@@ -410,24 +431,38 @@ namespace TinyTinyRSS.Interface
 
         private static void SaveSetting(string key, string value)
         {
-            var values = getLocalSettings().Values;
-            if (!values.Keys.Contains(key))
+            using (var channel = new LoggingChannel("SaveSetting"))
             {
-                values.Add(key, value);
-            }
-            else
-            {
-                values[key] = value;
+                LogSession.getInstance().AddLoggingChannel(channel);
+                channel.LogMessage("Save setting " + key + " = " + value);
+                var values = getLocalSettings().Values;
+                if (!values.Keys.Contains(key))
+                {
+                    values.Add(key, value);
+                }
+                else
+                {
+                    values[key] = value;
+                }
             }
         }
 
         private string ReadSetting(string key)
         {
-            if (getLocalSettings().Values.Keys.Contains(key))
+            using (var channel = new LoggingChannel("ReadSetting"))
             {
-                return getLocalSettings().Values[key] as string;
+                LogSession.getInstance().AddLoggingChannel(channel);
+                string setting;
+                if (getLocalSettings().Values.Keys.Contains(key))
+                {
+                    setting = getLocalSettings().Values[key] as string;
+                } else
+                {
+                    setting = "";
+                }
+                channel.LogMessage("Read setting " + key + " = " + setting);
+                return setting;
             }
-            return "";
         }
     }
 }

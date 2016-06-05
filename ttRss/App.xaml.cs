@@ -10,6 +10,8 @@ using TinyTinyRSS.Classes;
 using Windows.Storage;
 using Windows.UI.Core;
 using System.Threading.Tasks;
+using Windows.Foundation.Diagnostics;
+using System.IO;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -20,8 +22,6 @@ namespace TinyTinyRSS
     /// </summary>
     public sealed partial class App : Application
     {
-        // LogFile Name
-        public const string LOGSESSION = "ttrrlogsession";
         // Error LogFile Name
         public const string LastLogFile = "lastSessionLog.etl";
         private LoggingChannel channel;
@@ -70,8 +70,12 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            if(e.PreviousExecutionState != ApplicationExecutionState.Running && e.PreviousExecutionState != ApplicationExecutionState.Suspended)
+            {
+                await MoveLastLog();
+            }
             channel = new LoggingChannel("App.cs", null);
-            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Warning);
+            LogSession.getInstance().AddLoggingChannel(channel);
             Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
 
 
@@ -122,10 +126,9 @@ namespace TinyTinyRSS
 
         private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            channel.LogMessage("Unhandled Exception: " + e.Message,
-                            LoggingLevel.Critical);
-            channel.LogMessage(e.Exception.ToString(),
-                            LoggingLevel.Critical);
+            channel.LogMessage("Unhandled Exception: " + e.Message);
+            channel.LogMessage(e.Exception.ToString());
+            await LogSession.Save();
         }
         
 
@@ -167,31 +170,37 @@ namespace TinyTinyRSS
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             channel.LogMessage("App suspended",
                                 LoggingLevel.Critical);
             ConnectionSettings.getInstance().supsensionDate = DateTime.Now;
-            FinalizeLogging();
+            await LogSession.Save();
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();            
         }
 
         /// <summary>
-        /// Closes the logger.
+        /// Save last log session.
         /// </summary>
-        private async void FinalizeLogging()
-        {            
-            StorageFolder storage = ApplicationData.Current.LocalFolder;
+        private async Task<bool> MoveLastLog()
+        {
             // Save the final log file before closing the session.
-            StorageFile finalFileBeforeSuspend = await LogSession.getInstance().SaveToFileAsync();
-            if (finalFileBeforeSuspend != null)
+            StorageFolder storage = ApplicationData.Current.LocalFolder;
+            try
             {
-                StorageFolder storage = ApplicationData.Current.LocalFolder;
-                // Move the final log into the app-defined log file folder. 
-                await finalFileBeforeSuspend.MoveAsync(sampleAppDefinedLogFolder, LastLogFile);
+                StorageFile finalFileBeforeSuspend = await storage.GetFileAsync(ConnectionSettings.getInstance().lastLog);
+                if (finalFileBeforeSuspend != null)
+                {
+                    // Move the final log into the app-defined log file folder. 
+                    await finalFileBeforeSuspend.MoveAsync(storage, LastLogFile, NameCollisionOption.ReplaceExisting);
+                }
+            } catch(FileNotFoundException ex)
+            {
+                return false;
             }
-            LogSession.getInstance().Close();
+            LogSession.Close();
+            return true;
         }
     }
 }

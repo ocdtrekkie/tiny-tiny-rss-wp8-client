@@ -1,5 +1,4 @@
-﻿using CaledosLab.Portable.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -485,7 +484,7 @@ namespace TinyTinyRSS
                 }
                 HeadlinesView.DataContext = ArticlesCollection;
                 initialIndex = nav.selectedIndex;
-                Logger.WriteLine("NavigatedTo MainPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+                channel.LogMessage("NavigatedTo MainPage from ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
                 await updateCounters;
             }
             else
@@ -638,7 +637,7 @@ namespace TinyTinyRSS
             {
                 return;
             }
-            Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
+            channel.LogMessage("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
             closeArticleGrid();
             if (await LoadHeadlines())
             {
@@ -677,7 +676,7 @@ namespace TinyTinyRSS
             {
                 return;
             }
-            Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
+            channel.LogMessage("ArticlePage: sortOrder changed = " + _sortOrder);
             closeArticleGrid();
             if (await LoadHeadlines())
             {

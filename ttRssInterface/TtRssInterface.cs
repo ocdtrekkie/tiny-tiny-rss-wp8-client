@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TinyTinyRSSInterface.Classes;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
-using CaledosLab.Portable.Logging;
 using Windows.Web.Http.Filters;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Foundation.Diagnostics;
+using TinyTinyRSS.Classes;
 
 namespace TinyTinyRSS.Interface
 {
@@ -20,6 +21,7 @@ namespace TinyTinyRSS.Interface
         public const string NONETWORKERROR = "HTTP Response is null.";
 
         private static TtRssInterface instance;
+        private LoggingChannel channel;
         private string sessionId;
         private Dictionary<int, Feed> FeedDictionary;
         private Dictionary<int, int> GlobalCounter;
@@ -35,6 +37,8 @@ namespace TinyTinyRSS.Interface
             GlobalCounter = new Dictionary<int, int>();
             FeedCounter = new Dictionary<int, int>();
             CategoryCounter = new Dictionary<int, int>();
+            channel = new LoggingChannel("Interface");
+            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
         }
 
         public static TtRssInterface getInterface()
@@ -186,12 +190,12 @@ namespace TinyTinyRSS.Interface
             }
             catch (KeyNotFoundException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
             catch (TtRssException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
         }
@@ -208,12 +212,12 @@ namespace TinyTinyRSS.Interface
             }
             catch (KeyNotFoundException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
             catch (TtRssException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
         }
@@ -348,7 +352,7 @@ namespace TinyTinyRSS.Interface
                 try
                 {
                     FeedDictionary.Clear();
-                    Logger.WriteLine("FEEDS got through API.");
+                    channel.LogMessage("FEEDS got through API.");
                     string getFeeds = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getFeeds\",\"cat_id\":-3,\"unread_only\":false}";
                     ResponseArray response = await SendRequestArrayAsync(null, getFeeds);
                     List<Feed> feeds = ParseContentOrError<Feed>(response);
@@ -364,7 +368,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("FEEDS got through Cache.");
+                channel.LogMessage("FEEDS got through Cache.");
             }
             return FeedDictionary.Values.ToList<Feed>();
         }
@@ -438,7 +442,7 @@ namespace TinyTinyRSS.Interface
                 {
                     retry = true;
                 } else {				
-					Logger.WriteLine(ex.Message);
+					channel.LogMessage(ex.Message);
 				}
             }
             if (retry)
@@ -447,7 +451,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("Exception twice in SendRequestAsync.");
+                channel.LogMessage("Exception twice in SendRequestAsync.");
                 return null;
             }
         }
@@ -510,7 +514,7 @@ namespace TinyTinyRSS.Interface
                 {
                     retry = true;
                 } else {				
-					Logger.WriteLine(ex.Message);
+					channel.LogMessage(ex.Message);
 				}
             }
             if (retry)
@@ -519,7 +523,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("NullReferenceException twice in SendRequestArrayAsync.");
+                channel.LogMessage("NullReferenceException twice in SendRequestArrayAsync.");
                 throw new TtRssException(NONETWORKERROR);
             }
         }
