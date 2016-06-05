@@ -1,13 +1,10 @@
-﻿using CaledosLab.Portable.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -123,11 +120,11 @@ namespace TinyTinyRSS
                 {
                     ArticlesCollection.Add(article);
                 }
-                Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
+                channel.LogMessage("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             else {
                 initialized = false;
-                Logger.WriteLine("NavigatedTo ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
+                channel.LogMessage("NavigatedTo ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             base.OnNavigatedTo(e);
         }
@@ -169,7 +166,7 @@ namespace TinyTinyRSS
                 }
                 catch (TtRssException)
                 {
-                    Logger.WriteLine("error loading content for article.");
+                    channel.LogMessage("error loading content for article.");
                 }
                 if (article != null && _selectedIndex == localSelected)
                 {
@@ -210,7 +207,7 @@ namespace TinyTinyRSS
             }
             else
             {
-                Logger.WriteLine("WebBrowser not found");
+                channel.LogMessage("WebBrowser not found");
             }
         }
 
@@ -404,7 +401,7 @@ namespace TinyTinyRSS
             }
             else
             {
-                Logger.WriteLine("WebBrowser not found");
+                channel.LogMessage("WebBrowser not found");
             }
         }
 

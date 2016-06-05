@@ -102,7 +102,7 @@
     <Compile Include="Classes\Headline.cs" />
     <Compile Include="Classes\InterfaceHelper.cs" />
     <Compile Include="Classes\LimitedSizeDictionary.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Classes\LogSession.cs" />
     <Compile Include="Classes\Response.cs" />
     <Compile Include="Classes\ResponseArray.cs" />
     <Compile Include="Classes\Session.cs" />

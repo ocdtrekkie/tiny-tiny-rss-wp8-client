@@ -1,5 +1,4 @@
-﻿using CaledosLab.Portable.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
@@ -7,6 +6,7 @@ using TinyTinyRSS.Interface;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Email;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Diagnostics;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -27,6 +27,7 @@ namespace TinyTinyRSS
     public sealed partial class SettingsPage : Page
     {
         private ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
+        private LoggingChannel channel;
         public SettingsPage()
         {
             InitializeComponent();
@@ -38,6 +39,8 @@ namespace TinyTinyRSS
                     Package.Current.Id.Version.Revision);
             this.AppVersion.Text = loader.GetString("SettingsAboutVersion") + appVersion;
             this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse";
+            channel = new LoggingChannel("SettingsPage.cs", null);
+            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
             this.Loaded += PageLoaded;
         }
 
@@ -133,7 +136,7 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Logger.WriteLine("NavigatedTo Settings.");
+            channel.LogMessage("NavigatedTo Settings.", LoggingLevel.Information);
             base.OnNavigatedTo(e);
         }
 		
@@ -152,7 +155,7 @@ namespace TinyTinyRSS
 		// Send mail
         private async void AboutSendButton_Click(object sender, RoutedEventArgs e)
         {
-            Logger.WriteLine("Begin Send via email");
+            channel.LogMessage("Begin Send via email", LoggingLevel.Information);
             string Subject = "TT-RSS Universal App Feedback";
             bool sent = true;
             try
@@ -165,15 +168,13 @@ namespace TinyTinyRSS
 
                 if (AboutRadio1.IsChecked.HasValue && AboutRadio1.IsChecked.Value)
                 {
-                    App.FinalizeLogging();
-                    StorageFolder storage = ApplicationData.Current.LocalFolder;
                     try
                     {
-                        file = await storage.GetFileAsync(App.LogFile);
+                        file = await LogSession.Save();
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLine("Could not read logfile to send email.", ex);
+                        channel.LogMessage("Could not read logfile to send email." + ex.Message, LoggingLevel.Critical);
                     }
                 }
                 else if (AboutRadio2.IsChecked.HasValue && AboutRadio2.IsChecked.Value)
@@ -185,26 +186,26 @@ namespace TinyTinyRSS
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLine("Could not read lastlogfile to send email.", ex);
+                        channel.LogMessage("Could not read logfile to send email." + ex.Message, LoggingLevel.Critical);
                     }
                 }
                 if(file!=null) {
-                email.Attachments.Add(new EmailAttachment(file.Name, file));   
+                    email.Attachments.Add(new EmailAttachment(file.Name, file));   
                 }
                 email.Body = "Tell me anything :)";
                 await EmailManager.ShowComposeNewEmailAsync(email);             
             }
-            catch
+            catch (Exception exc)
             {
                 sent = false;
-                Logger.WriteLine("unable to create the email message");
+                channel.LogMessage("unable to create the email message." + exc.Message, LoggingLevel.Critical);
             }
             if (!sent)
             {
                 MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsMailException"));
                 await msgbox.ShowAsync();                
             }
-            Logger.WriteLine("End Send via email");
+            channel.LogMessage("End Send via email.", LoggingLevel.Information);
         }
 
 		// Live tile activated/deactivated
@@ -259,14 +260,14 @@ namespace TinyTinyRSS
                         
                         if (!responseString.Equals("1"))
                         {
-                            Logger.WriteLine("error deleting livetile user");
-                            Logger.WriteLine(responseString);
+                            channel.LogMessage("error deleting livetile user");
+                            channel.LogMessage(responseString);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteLine("error deleting livetile user");
-                        Logger.WriteLine(ex.Message);
+                        channel.LogMessage("error deleting livetile user");
+                        channel.LogMessage(ex.Message);
                     }
                     await t;
                 }
