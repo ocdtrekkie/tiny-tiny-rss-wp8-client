@@ -52,9 +52,12 @@ namespace TinyTinyRSS.Interface
         private string _suspensionDate;
         private string _isCategory;
         private string _lastLog;
+        private LoggingChannel channel;
 
         private ConnectionSettings()
         {
+            channel = new LoggingChannel("Settings");
+            LogSession.getInstance().AddLoggingChannel(channel);
         }
 
         public static ConnectionSettings getInstance() {
@@ -429,40 +432,32 @@ namespace TinyTinyRSS.Interface
             SaveSetting(_favFeedsKey, _favFeeds);
         }
 
-        private static void SaveSetting(string key, string value)
+        private void SaveSetting(string key, string value)
         {
-            using (var channel = new LoggingChannel("SaveSetting"))
+            channel.LogMessage("Save setting " + key + " = " + value);
+            var values = getLocalSettings().Values;
+            if (!values.Keys.Contains(key))
             {
-                LogSession.getInstance().AddLoggingChannel(channel);
-                channel.LogMessage("Save setting " + key + " = " + value);
-                var values = getLocalSettings().Values;
-                if (!values.Keys.Contains(key))
-                {
-                    values.Add(key, value);
-                }
-                else
-                {
-                    values[key] = value;
-                }
+                values.Add(key, value);
+            }
+            else
+            {
+                values[key] = value;
             }
         }
 
         private string ReadSetting(string key)
         {
-            using (var channel = new LoggingChannel("ReadSetting"))
+            string setting;
+            if (getLocalSettings().Values.Keys.Contains(key))
             {
-                LogSession.getInstance().AddLoggingChannel(channel);
-                string setting;
-                if (getLocalSettings().Values.Keys.Contains(key))
-                {
-                    setting = getLocalSettings().Values[key] as string;
-                } else
-                {
-                    setting = "";
-                }
-                channel.LogMessage("Read setting " + key + " = " + setting);
-                return setting;
+                setting = getLocalSettings().Values[key] as string;
+            } else
+            {
+                setting = "";
             }
+            channel.LogMessage("Read setting " + key + " = " + setting);
+            return setting;
         }
     }
 }
