@@ -38,7 +38,7 @@ namespace TinyTinyRSS.Interface
             FeedCounter = new Dictionary<int, int>();
             CategoryCounter = new Dictionary<int, int>();
             channel = new LoggingChannel("Interface");
-            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
+            LogSession.addChannel(channel);
         }
 
         public static TtRssInterface getInterface()

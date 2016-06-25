@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 using TinyTinyRSS.Interface;
 using Windows.Foundation.Diagnostics;
@@ -17,31 +14,52 @@ namespace TinyTinyRSS.Classes
         {
         }
 
-        public static LoggingSession getInstance() {
+        private static LoggingSession getInstance() {
             if (instance == null)
             {
-                instance = new LoggingSession("Default");
+                try
+                {
+                    instance = new LoggingSession("Default");
+                } catch(Exception)
+                {
+                    // whatsoever
+                }
             }
             return instance;
         }
 
-        public static async void Close()
+        public static void addChannel(LoggingChannel channel)
         {
-            if (instance != null)
+            if (getInstance() != null)
+            {
+                try
+                {
+                    getInstance().AddLoggingChannel(channel);
+                } catch(Exception)
+                {
+
+                }
+            }
+        }
+
+        public static async Task Close()
+        {
+            if (getInstance() != null)
             {
                 await Save();
+                getInstance().Dispose();
                 instance = null;
             }
         }
 
         public static async Task<StorageFile> Save()
         {
-            if (instance != null)
+            if (getInstance() != null)
             {
                 StorageFolder storage = ApplicationData.Current.LocalFolder;
                 try
                 {
-                    StorageFile x = await instance.SaveToFileAsync(storage, "LogSession.etl");
+                    StorageFile x = await getInstance().SaveToFileAsync(storage, "LogSession.etl");
                     ConnectionSettings.getInstance().lastLog = x.Name;
                     return x;
                 } catch (Exception e)

@@ -40,7 +40,7 @@ namespace TinyTinyRSS
         {
             activeInProgress = new Dictionary<FrameworkElement, List<ProgressMsg>>();
             channel = new LoggingChannel("AbstractArticlePage.cs", null);
-            LogSession.getInstance().AddLoggingChannel(channel, LoggingLevel.Verbose);
+            LogSession.addChannel(channel);
         }
 
         protected void ShareAppBarButton_Click(object sender, RoutedEventArgs e)

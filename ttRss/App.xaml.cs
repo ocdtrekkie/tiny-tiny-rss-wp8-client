@@ -33,6 +33,8 @@ namespace TinyTinyRSS
         /// </summary>
         public App()
         {
+            channel = new LoggingChannel("App.cs", null);
+            LogSession.addChannel(channel);
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             //this.Resuming += App_Resuming;
@@ -70,12 +72,7 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
-            if(e.PreviousExecutionState != ApplicationExecutionState.Running && e.PreviousExecutionState != ApplicationExecutionState.Suspended)
-            {
-                await MoveLastLog();
-            }
-            channel = new LoggingChannel("App.cs", null);
-            LogSession.getInstance().AddLoggingChannel(channel);
+            await MoveLastLog();
             Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
 
 
@@ -128,7 +125,7 @@ namespace TinyTinyRSS
         {
             channel.LogMessage("Unhandled Exception: " + e.Message);
             channel.LogMessage(e.Exception.ToString());
-            await LogSession.Save();
+            LogSession.Close();
         }
         
 
@@ -170,12 +167,11 @@ namespace TinyTinyRSS
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        private async void OnSuspending(object sender, SuspendingEventArgs e)
+        private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            channel.LogMessage("App suspended",
-                                LoggingLevel.Critical);
+            channel.LogMessage("App suspended", LoggingLevel.Information);
             ConnectionSettings.getInstance().supsensionDate = DateTime.Now;
-            await LogSession.Save();
+            LogSession.Close();
             var deferral = e.SuspendingOperation.GetDeferral();
             deferral.Complete();            
         }
@@ -185,22 +181,22 @@ namespace TinyTinyRSS
         /// </summary>
         private async Task<bool> MoveLastLog()
         {
-            // Save the final log file before closing the session.
-            StorageFolder storage = ApplicationData.Current.LocalFolder;
             try
-            {
+            {// Save the final log file before closing the session.
+                StorageFolder storage = ApplicationData.Current.LocalFolder;
+            
                 StorageFile finalFileBeforeSuspend = await storage.GetFileAsync(ConnectionSettings.getInstance().lastLog);
                 if (finalFileBeforeSuspend != null)
                 {
                     // Move the final log into the app-defined log file folder. 
                     await finalFileBeforeSuspend.MoveAsync(storage, LastLogFile, NameCollisionOption.ReplaceExisting);
                 }
-            } catch(FileNotFoundException ex)
+                return true;
+            }
+            catch (Exception)
             {
                 return false;
             }
-            LogSession.Close();
-            return true;
         }
     }
 }

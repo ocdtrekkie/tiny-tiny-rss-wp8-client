@@ -33,7 +33,7 @@ namespace TinyTinyRSS.Classes
             PushNotificationChannel channel = null;
 
             LoggingChannel log = new LoggingChannel("PushNotficationHelper.cs", null);
-            LogSession.getInstance().AddLoggingChannel(log, LoggingLevel.Verbose);
+            LogSession.addChannel(log);
             try
             {
                 channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
@@ -82,7 +82,7 @@ namespace TinyTinyRSS.Classes
             }
             string deviceId = GetDeviceID();
             LoggingChannel log = new LoggingChannel("AddNotificationChannel", null);
-            LogSession.getInstance().AddLoggingChannel(log, LoggingLevel.Verbose);
+            LogSession.addChannel(log);
 
             PushNotificationChannel channel = null;
             try
@@ -125,7 +125,7 @@ namespace TinyTinyRSS.Classes
         public static async Task ClosePushNotifications()
         {
             LoggingChannel log = new LoggingChannel("ClosePushNotifications", null);
-            LogSession.getInstance().AddLoggingChannel(log, LoggingLevel.Verbose);
+            LogSession.addChannel(log);
             try
             {
                 PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();

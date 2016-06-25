@@ -57,7 +57,7 @@ namespace TinyTinyRSS.Interface
         private ConnectionSettings()
         {
             channel = new LoggingChannel("Settings");
-            LogSession.getInstance().AddLoggingChannel(channel);
+            LogSession.addChannel(channel);
         }
 
         public static ConnectionSettings getInstance() {
