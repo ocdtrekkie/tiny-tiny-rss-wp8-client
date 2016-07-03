@@ -80,14 +80,6 @@ namespace TinyTinyRSS
             {
                 server = string.Concat("http://", server);
             }
-            if (!server.EndsWith("/"))
-            {
-                server = string.Concat(server, "/");
-            }
-            if (!server.EndsWith("api/"))
-            {
-                server = string.Concat(server, "api/");
-            }
             ServerField.Text = server;
             string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
             if (error.Length == 0)
@@ -108,10 +100,39 @@ namespace TinyTinyRSS
             }
             else
             {
-                TestButton.Content = loader.GetString("FailedConnection");
-                ErrorMessage.Text = error;
-                MyProgressbar.Visibility = Visibility.Collapsed;
-                return false;
+                if (!server.EndsWith("/"))
+                {
+                    server = string.Concat(server, "/");
+                }
+                if (!server.EndsWith("api/"))
+                {
+                    server = string.Concat(server, "api/");
+                }
+                string error2 = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
+                if (error2.Length == 0)
+                {
+                    ServerField.Text = server;
+                    ConnectionSettings.getInstance().username = UsernameField.Text;
+                    ConnectionSettings.getInstance().server = ServerField.Text;
+                    ConnectionSettings.getInstance().password = PasswdField.Password;
+                    Task<bool> tsk = PushNotificationHelper.AddNotificationChannel(ConnectionSettings.getInstance().username, ConnectionSettings.getInstance().password, ConnectionSettings.getInstance().server);
+                    TestButton.Content = loader.GetString("SuccessfulConnection");
+                    ErrorMessage.Text = "";
+                    if (!await tsk)
+                    {
+                        MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsUpdateLiveTileError"));
+                        await msgbox.ShowAsync();
+                    }
+                    await statusBar.ProgressIndicator.HideAsync();
+                    return true;
+                }
+                else
+                {
+                    TestButton.Content = loader.GetString("FailedConnection");
+                    ErrorMessage.Text = error;
+                    await statusBar.ProgressIndicator.HideAsync();
+                    return false;
+                }
             }
         }
 
