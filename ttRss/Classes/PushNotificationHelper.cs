@@ -1,16 +1,11 @@
-﻿using CaledosLab.Portable.Logging;
-using NotificationsExtensions.BadgeContent;
+﻿using NotificationsExtensions.BadgeContent;
 using NotificationsExtensions.TileContent;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
-using TinyTinyRSSInterface;
-using Windows.Foundation.Metadata;
+using Windows.Foundation.Diagnostics;
 using Windows.Networking.PushNotifications;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
@@ -36,6 +31,9 @@ namespace TinyTinyRSS.Classes
             string deviceId = GetDeviceID();
 
             PushNotificationChannel channel = null;
+
+            LoggingChannel log = new LoggingChannel("PushNotficationHelper.cs", null);
+            LogSession.addChannel(log);
             try
             {
                 channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
@@ -60,7 +58,7 @@ namespace TinyTinyRSS.Classes
 
                 if (!responseString.Equals("1"))
                 {
-                    Logger.WriteLine("Could not update notific. channel" + responseString);
+                    log.LogMessage("Could not update notific. channel" + responseString);
                     return false;
                 }
                 else
@@ -70,7 +68,7 @@ namespace TinyTinyRSS.Classes
             }
             catch (Exception ex)
             {
-                Logger.WriteLine("Could not update notific. channel" + ex.Message);
+                log.LogMessage("Could not update notific. channel" + ex.Message);
                 return false;
             }
             return true;
@@ -83,6 +81,8 @@ namespace TinyTinyRSS.Classes
                 return true;
             }
             string deviceId = GetDeviceID();
+            LoggingChannel log = new LoggingChannel("AddNotificationChannel", null);
+            LogSession.addChannel(log);
 
             PushNotificationChannel channel = null;
             try
@@ -106,7 +106,7 @@ namespace TinyTinyRSS.Classes
 
                 if (!responseString.Equals("1"))
                 {
-                    Logger.WriteLine(responseString);
+                    log.LogMessage(responseString);
                     return false;
                 }
                 else
@@ -117,13 +117,15 @@ namespace TinyTinyRSS.Classes
             }
             catch (Exception ex)
             {
-                Logger.WriteLine(ex.Message);
+                log.LogMessage(ex.Message);
                 return false;
             }
         }
 
         public static async Task ClosePushNotifications()
         {
+            LoggingChannel log = new LoggingChannel("ClosePushNotifications", null);
+            LogSession.addChannel(log);
             try
             {
                 PushNotificationChannel channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
@@ -134,8 +136,8 @@ namespace TinyTinyRSS.Classes
             }
             catch (Exception exc)
             {
-                Logger.WriteLine("Could not close pushnotificationchannel.");
-                Logger.WriteLine(exc.Message);
+                log.LogMessage("Could not close pushnotificationchannel.");
+                log.LogMessage(exc.Message);
             }
         }
 

@@ -1,0 +1,1 @@
+MainPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\bin\x86\Release\Upload\TinyTinyRSS_4.0.5.0_x86.appx

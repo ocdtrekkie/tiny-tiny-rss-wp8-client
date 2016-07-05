@@ -1,6 +1,6 @@
 <?php
 require 'Cipher.php';
-
+require 'Logger.php';
 class WPNTypesEnum{       
     const Toast = 'wns/toast';
     const Badge = 'wns/badge';
@@ -49,65 +49,9 @@ class WPN{
         $output = json_decode($output);
 
         if(isset($output->error)){
-            throw new Exception($output->error_description);
+            logError("Error getAccessToken: " . $output->error_description, "cron"); 
         }
-
         $this->access_token = $output->access_token;
-    }
-
-    public function build_tile_xml(){
-        return '<?xml version="1.0" encoding="utf-16"?>'.
-        '<tile>'.
-            '<visual version="3">'.
-                //'<binding template="TileSquare71x71IconWithBadge">'.
-                 //   '<image id="1" src="ms-appx:///Assets/SquareTile71x71.png" />'.
-                //'</binding>'.
-                '<binding template="TileSquare150x150IconWithBadge">'.
-                    '<image id="1" src="ms-appx:///Assets/Tiles/IconicTileMediumLarge.png" />'.
-                '</binding>'.
-            '</visual>'.
-        '</tile>';
-    }
-
-    public function post_tile($uri, $xml_data, $type = WPNTypesEnum::Tile, $tileTag = ''){
-        if($this->access_token == ''){
-            $this->get_access_token();
-        }
-    
-        $headers = array('Content-Type: text/xml', "Content-Length: " . strlen($xml_data), "X-WNS-Type: $type", "Authorization: Bearer $this->access_token");
-        if($tileTag != ''){
-            array_push($headers, "X-WNS-Tag: $tileTag");
-        }
-
-        $ch = curl_init($uri);
-        # Tiles: http://msdn.microsoft.com/en-us/library/windows/apps/xaml/hh868263.aspx
-        # http://msdn.microsoft.com/en-us/library/windows/apps/hh465435.aspx
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $output = curl_exec($ch);
-        $response = curl_getinfo( $ch );
-        curl_close($ch);
-    
-        $code = $response['http_code'];
-        if($code == 200){
-            return new WPNResponse('Successfully sent message', $code);
-        }
-        else if($code == 401){
-            $this->access_token = '';
-            return $this->post_tile($uri, $xml_data, $type, $tileTag);
-        }
-        else if($code == 410 || $code == 404){
-            return new WPNResponse('Expired or invalid URI', $code, true);
-        }
-        else{
-            error_log($code. ' - ' . $uri);
-            return new WPNResponse('Unknown error while sending message', $code, true);
-        }
     }
 
     public function build_badge_xml($cnt){
@@ -129,7 +73,7 @@ class WPN{
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $output = curl_exec($ch);
         $response = curl_getinfo( $ch );
@@ -178,12 +122,11 @@ class TtRssAPI {
         $row = $result->fetch_object();
         $server = $row->server;
         $userName = $row->userName;
-        //$password = $row->password;
         $password = $this->cipher->decrypt($row->password);
         /* free result set */
         $result->close();
         /* login to tt-rss */
-        $loginData = json_decode($this->ttrsscurl($server, '{"op":"login","user":"' . $userName . '","password":"' . $password . '"}'), TRUE);
+        $loginData = json_decode($this->ttrsscurl($server, '{"op":"login","user":"' . $userName . '","password":"' . $password . '"}'), TRUE);       
         if ($loginData == null || $loginData['status'] == 1) {
             return 0;
         }
@@ -191,6 +134,7 @@ class TtRssAPI {
         /* get counters */
         $counters = json_decode($this->ttrsscurl($server, '{"op":"getCounters","sid":"' . $sessionId . '","output_mode":"f"}'), TRUE);
         if ($counters['status'] == 1) {
+            logError("Error getting counters: " .print_r($counters), "cron"); 
             $this->ttrsscurl($server, '{"op":"logout","sid":"' . $sessionId . '"}');
             return 0;
         }
@@ -228,51 +172,46 @@ class TtRssAPI {
         curl_close($ch);
         return $output;
     }
-
-    function iterate() {
-        $result = $this->db->query("SELECT deviceId,channel FROM users WHERE channelInactive=(0)");
-        if (!$result) {
-           return -1;
-        }
-        /* fetch object array */
-        while ($row = $result->fetch_object()) {
-            $deviceId = $row->deviceId;         
-            $cnt = $this->getUnreadCount($deviceId);
-            // Call WNS
-            $wns = new WPN();
-            $xml_tile_data = $wns->build_tile_xml();
-            error_log('Send tile to '.$deviceId);
-            $responseTile = $wns->post_tile($row->channel, $xml_tile_data);
-            if($responseTile->error) { 
-                error_log($responseTile->message);
-                if($responseTile->httpCode == 410 || $responseTile->httpCode == 404) {
-                    $this->db->query("UPDATE users SET channelInactive=(1)"
-                    . "WHERE deviceId='$deviceId'");
-                }
-            } else {
-                $xml_data = $wns->build_badge_xml($cnt);
-                error_log('Send badge to '.$deviceId);
-                $response = $wns->post_badge($row->channel, $xml_data);
-                  if($response->error) { 
-                   error_log($response->message);
-                   if($response->httpCode == 410 || $response->httpCode == 404) {
-                       $this->db->query("UPDATE users SET channelInactive=(1)"
-                       . "WHERE deviceId='$deviceId'");
-                   }
-                } 
-            }
-        }
-        /* free result set */
-        $result->close();
-    }
 }
 $options = getopt("p:");
 if ($options["p"] != 'myHash') {
     echo "You are not allowed to run this script.";
     return -1;
 } else {
-$api = new TtRssAPI;
-$api->iterate();
-
-return 1;
+    $db = new \mysqli('localhost', 'ttrssapi', 'YT6TMbjVJBeKdN4j', 'ttrss-api');
+	$result = $db->query("SELECT deviceId,channel FROM users WHERE channelInactive=(0)");
+	if (!$result) {
+	   return -1;
+	}
+	/* fetch object array */
+	while ($row = $result->fetch_object()) {
+		$deviceId = $row->deviceId; 
+		$pid = pcntl_fork();
+		if ($pid === -1) {
+			logError("Error forking process for " . $deviceId, "cron");  
+		} elseif ($pid === 0) {				
+			$api = new TtRssAPI;        
+			$cnt = $api->getUnreadCount($deviceId);
+			// Call WNS
+			$wns = new WPN();           
+			$xml_data = $wns->build_badge_xml($cnt);
+			$response = $wns->post_badge($row->channel, $xml_data);
+			if($response->error) { 
+				logError("Error sending badge. ".$response->message . " httpCode:" . $response->httpCode, "cron");                 
+				if($response->httpCode == 410 || $response->httpCode == 404) {
+				   logError("Set inactive: " .$deviceId, "cron");    
+				   $db->query("UPDATE users SET channelInactive=(1)"
+				   . "WHERE deviceId='$deviceId'");
+				}
+			}
+			break;
+		} else {
+			continue;
+		}
+	}		
+	pcntl_wait($status);
+	echo $status;
+	/* free result set */
+	$result->close();
+	return 1;
 }

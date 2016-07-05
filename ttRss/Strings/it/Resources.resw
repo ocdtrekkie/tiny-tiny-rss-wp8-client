@@ -1,0 +1,521 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllFeedsSpecialFeed.Text" xml:space="preserve">
+    <value>Tutti i Feeds</value>
+    <comment>Text for special Feed "All Feeds"</comment>
+  </data>
+  <data name="AllFeedsTitle.Text" xml:space="preserve">
+    <value>Tutti i Feeds</value>
+    <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="AppBarSortLabel" xml:space="preserve">
+    <value>Ordina: </value>
+    <comment>Label for sort options in appbar</comment>
+  </data>
+  <data name="ArchivedFeeds.Text" xml:space="preserve">
+    <value>Articoli Archiviati</value>
+    <comment>Text for Special Feed "Archived"</comment>
+  </data>
+  <data name="CancelAppBarButtonText" xml:space="preserve">
+    <value>Cancella</value>
+    <comment>Text for AppBarButton Cancel in Settings</comment>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categorie</value>
+    <comment>Headline for Categories View on Main Page</comment>
+  </data>
+  <data name="ErrorAddLiveTile" xml:space="preserve">
+    <value>Errore tentando di attivare Live Tiles. Contatta lo sviluppatore, se l'errore si frequenta nuovamente.</value>
+    <comment>Message to show when live tile activation fails.</comment>
+  </data>
+  <data name="FailedConnection" xml:space="preserve">
+    <value>Connessione Fallita</value>
+    <comment>Text to display if connection to server failed.</comment>
+  </data>
+  <data name="FreshFeeds.Text" xml:space="preserve">
+    <value>Ultimi Articoli</value>
+    <comment>Text for Special Feed "Fresh"</comment>
+  </data>
+  <data name="LoadMoreHeadlines" xml:space="preserve">
+    <value>...caricamento nuovi articoli</value>
+    <comment>Message shown in SystemTray when more articles are loaded.</comment>
+  </data>
+  <data name="LoginProgress" xml:space="preserve">
+    <value>Aggiornamento feeds...</value>
+    <comment>Progressbar message for initial login</comment>
+  </data>
+  <data name="MarkAllArticlesRead.Label" xml:space="preserve">
+    <value>Segna tutti come letti</value>
+    <comment>AppMenu Entry to mark all articles of a feed as read.</comment>
+  </data>
+  <data name="MarkReadAppBarButtonText" xml:space="preserve">
+    <value>Segna come letto</value>
+    <comment>Text for AppBarButton Mark as read</comment>
+  </data>
+  <data name="MarkReadSettings.Text" xml:space="preserve">
+    <value>Segna gli articoli come letti Automaticamente</value>
+    <comment>Label for checkbox in settings to mark articles read automatically.</comment>
+  </data>
+  <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
+    <value>Segna come Non Letto</value>
+    <comment>Text for AppBar Button Mark as Unread</comment>
+  </data>
+  <data name="NoArticlesMessage" xml:space="preserve">
+    <value>Nessun articolo trovato</value>
+    <comment>Message to show, when ArticleView has nothing to display.</comment>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>Impossibile effettuare la connessione. Controlla i tuoi settaggi oppure controlla il tuo collegamento ad internet.</value>
+    <comment>Text for MessageBox if Server could not be reached.</comment>
+  </data>
+  <data name="OpenExtAppBarButton.Label" xml:space="preserve">
+    <value>Apri nel Browser</value>
+    <comment>Text for AppBarButton to open article in Browser</comment>
+  </data>
+  <data name="PasswordSettings.Text" xml:space="preserve">
+    <value>Password</value>
+    <comment>Label for textfield password in settings.</comment>
+  </data>
+  <data name="PublishedFeeds.Text" xml:space="preserve">
+    <value>Articoli Pubblicati</value>
+    <comment>Text for Special Feed "Published"</comment>
+  </data>
+  <data name="RecentlyReadFeed.Text" xml:space="preserve">
+    <value>Letti di Recente</value>
+    <comment>Text of button to show recently read feeds.</comment>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>Ricarica</value>
+    <comment>Text for AppBarButton "Refresh" (Feed counters) </comment>
+  </data>
+  <data name="ResourceFlowDirection" xml:space="preserve">
+    <value>Da sinistra a Destra</value>
+    <comment>Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</comment>
+  </data>
+  <data name="ResourceLanguage" xml:space="preserve">
+    <value>it-IT</value>
+    <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
+  </data>
+  <data name="SaveAppBarButtonText" xml:space="preserve">
+    <value>Applica</value>
+    <comment>Text for AppBar Button Save (Settings)</comment>
+  </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>Salvare la Configurazione?</value>
+    <comment>Headline for messagebox unsaved settings</comment>
+  </data>
+  <data name="ServerSetting.Text" xml:space="preserve">
+    <value>Server</value>
+    <comment>Label for textfield server in settings.</comment>
+  </data>
+  <data name="SettingsAboutAuthor" xml:space="preserve">
+    <value>Autore: </value>
+    <comment>Label for author field in about pane of settings</comment>
+  </data>
+  <data name="SettingsAboutButtonPrivacyPolicy.Text" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="SettingsAboutButtonProjectWeb.Text" xml:space="preserve">
+    <value>Sito del progetto</value>
+    <comment>Label for button that links to the project website</comment>
+  </data>
+  <data name="SettingsAboutButtonSendLog.Content" xml:space="preserve">
+    <value>Scrivi una E-Mail</value>
+    <comment>Button Text to create the mail.</comment>
+  </data>
+  <data name="SettingsAboutHead.Text" xml:space="preserve">
+    <value>About</value>
+    <comment>Headline of About page in Settings</comment>
+  </data>
+  <data name="SettingsAboutRadioActualLog.Content" xml:space="preserve">
+    <value>Log-File di questa sessione</value>
+    <comment>Option to send the logs of this session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioLastLog.Content" xml:space="preserve">
+    <value>Log-File of last session</value>
+    <comment>Option to send the logs of last session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioNoLog.Content" xml:space="preserve">
+    <value>Non allegare alcun Log</value>
+    <comment>Option to send no log with mail.</comment>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>Usa questo bottone per mandare una segnalazione allo sviluppatore. Se hai riscontrato un errore, sarebbe utile se tu potessi inviare il Log File.</value>
+    <comment>Message to invite people sending logs.</comment>
+  </data>
+  <data name="SettingsAboutVersion" xml:space="preserve">
+    <value>Versione: </value>
+    <comment>Label for version field in about pane of settings</comment>
+  </data>
+  <data name="SettingsActivateLiveTile.Text" xml:space="preserve">
+    <value>Attiva Live Tile</value>
+    <comment>Label for live tile activation checkbox.</comment>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>Configurazione</value>
+  </data>
+  <data name="SettingsConnectionHead.Text" xml:space="preserve">
+    <value>Connessione</value>
+    <comment>Headline of connection settings page.</comment>
+  </data>
+  <data name="SettingsHead.Text" xml:space="preserve">
+    <value>Configurazione</value>
+    <comment>Headline of settings page.</comment>
+  </data>
+  <data name="SettingsLiveTile.Text" xml:space="preserve">
+    <value>Live Tile</value>
+    <comment>Label for live tile pivot in settings</comment>
+  </data>
+  <data name="SettingsLiveTileInfo.Text" xml:space="preserve">
+    <value>Quando hai attivato live tile, il titolo mostrerà il numero degli articoli non letti. Questo numero può essere anche visualizzato nella schermata di blocco di Windows, semplicemente segliendo l'app nella schermata di blocco.</value>
+    <comment>Info about live tile</comment>
+  </data>
+  <data name="SettingsLiveTileLockScreenLink.Text" xml:space="preserve">
+    <value>Configurazione lockscreen</value>
+    <comment>Link to lockscreen settings</comment>
+  </data>
+  <data name="SettingsMailException" xml:space="preserve">
+    <value>Scusa, c'è stato un errore nella creazione della mail.</value>
+    <comment>Message to show, if feedback mail could not be created.</comment>
+  </data>
+  <data name="SettingsScrollarAsCounter.Text" xml:space="preserve">
+    <value>Usa lo scroll invece del numero di articoli</value>
+    <comment>Option in Settings to change between ScrollBar and Counter</comment>
+  </data>
+  <data name="SettingsSortDefault.Text" xml:space="preserve">
+    <value>Default</value>
+    <comment>Text for Sort option Default in Settings</comment>
+  </data>
+  <data name="SettingsSortLabel.Text" xml:space="preserve">
+    <value>Opzioni di Ordinamento:</value>
+    <comment>Text of Label for Sort options in Settings</comment>
+  </data>
+  <data name="SettingsSortNew.Text" xml:space="preserve">
+    <value>Nuovi articoli prima</value>
+    <comment>Text for Sort option Newest first in Settings</comment>
+  </data>
+  <data name="SettingsSortOld.Text" xml:space="preserve">
+    <value>Vecchi articoli prima</value>
+    <comment>Text for Sort option OldestFirst in Settings</comment>
+  </data>
+  <data name="SettingsTileUpdatePeriod" xml:space="preserve">
+    <value>Intervallo di Aggiornamento</value>
+    <comment>Label for update interval checkbox</comment>
+  </data>
+  <data name="SettingsUpdateDay" xml:space="preserve">
+    <value>Tutti i Giorni</value>
+    <comment>Label for radio button</comment>
+  </data>
+  <data name="SettingsUpdateHalfHour" xml:space="preserve">
+    <value>Ogni Mezzora</value>
+  </data>
+  <data name="SettingsUpdateHour" xml:space="preserve">
+    <value>Ogni Ora</value>
+  </data>
+  <data name="SettingsUpdateLiveTileError" xml:space="preserve">
+    <value>Le tue nuove credenziali non possono essere inviate al server delle Live Tiles. Prova a selezionare/deselezionare il checkbox delle live tiles o inviami una mail.</value>
+    <comment>Error message if live tile user update fails.</comment>
+  </data>
+  <data name="ShareAppBarButton.Label" xml:space="preserve">
+    <value>Condividi</value>
+    <comment>Label for AppBarButton Share</comment>
+  </data>
+  <data name="ShowAllArticles.Text" xml:space="preserve">
+    <value>Mostra tutti gli Articoli</value>
+    <comment>AppBarMenu Text to show all articles.</comment>
+  </data>
+  <data name="ShowOnlyUnreadArticles.Text" xml:space="preserve">
+    <value>Mostra Articoli non letti</value>
+    <comment>AppBarMenu Text to show only unread articles.</comment>
+  </data>
+  <data name="SpecialFeeds.Text" xml:space="preserve">
+    <value>Feeds Speciali</value>
+    <comment>Title of Special Feeds Panel</comment>
+  </data>
+  <data name="StarAppBarButtonText" xml:space="preserve">
+    <value>Articoli Preferiti</value>
+    <comment>Text of AppBarButton "Star Article"</comment>
+  </data>
+  <data name="SuccessfulConnection" xml:space="preserve">
+    <value>Connessione avvenuta con successo.</value>
+    <comment>Info Text if test of connection was successful (in Settings)</comment>
+  </data>
+  <data name="TestConnectionSettingsButton.Content" xml:space="preserve">
+    <value>Salva login al server</value>
+    <comment>Text for Button to save connection in settings.</comment>
+  </data>
+  <data name="ToogleArchiveAppBarButton.Label" xml:space="preserve">
+    <value>Seleziona Archiviati</value>
+    <comment>Text for AppBarOption to toggle Archived state of Article</comment>
+  </data>
+  <data name="TooglePublishAppBarButton.Label" xml:space="preserve">
+    <value>Seleziona Pubblicati</value>
+    <comment>Text for AppBarOption to toggle Published state of Article</comment>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>Non Categorizzati</value>
+    <comment>Name of Uncategorized Category</comment>
+  </data>
+  <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <value>Ci Dispiace. Si è verificato un errore inaspettato, l'applicativo verrà chiuso</value>
+    <comment>Text for MessageBox when app is closed through  an unexpected error.</comment>
+  </data>
+  <data name="UnreadOnlySettings.Text" xml:space="preserve">
+    <value>Mostra solamente Articoli non Letti</value>
+    <comment>Label for checkbox in settings to show only unread articles from feeds.</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>Hai fatto dei cambiamenti che non sono stati salvati</value>
+    <comment>Messageboxtext for unsaved settings</comment>
+  </data>
+  <data name="UnStarAppBarButtonText" xml:space="preserve">
+    <value>Rimuovi articolo dai preferiti</value>
+    <comment>Text of AppBarButton to unstar an article</comment>
+  </data>
+  <data name="UserNameSettings.Text" xml:space="preserve">
+    <value>Username</value>
+    <comment>Label for textfield username in settings.</comment>
+  </data>
+  <data name="AllFeedsSpecialFeedText" xml:space="preserve">
+    <value>Tutti i Feed</value>
+    <comment>Text for special Feed "All Feeds"</comment>
+  </data>
+  <data name="ApplicationName.Text" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Application Name</comment>
+  </data>
+  <data name="ApplicationTitle.Title" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Application Name</comment>
+  </data>
+  <data name="ArchivedFeedsText" xml:space="preserve">
+    <value>Articoli Archiviati</value>
+    <comment>Text for Special Feed "Archived"</comment>
+  </data>
+  <data name="FreshFeedsText" xml:space="preserve">
+    <value>Nuovi Articoli</value>
+    <comment>Text for Special Feed "Fresh"</comment>
+  </data>
+  <data name="PublishedFeedsText" xml:space="preserve">
+    <value>Articoli Pubblicati</value>
+    <comment>Text for Special Feed "Published"</comment>
+  </data>
+  <data name="RecentlyReadFeedText" xml:space="preserve">
+    <value>Articoli Letti Recentemente</value>
+    <comment>Text of button to show recently read feeds.</comment>
+  </data>
+  <data name="StarredFeedsText" xml:space="preserve">
+    <value>Favoriti</value>
+    <comment>Text of Special Feed "Starred Articles"</comment>
+  </data>
+  <data name="TestConnectionSettingsButtonText" xml:space="preserve">
+    <value>Salva Login al Server</value>
+  </data>
+  <data name="StarredFeeds.Text" xml:space="preserve">
+    <value>Favoriti</value>
+  </data>
+  <data name="ArticlesSortDefault.Text" xml:space="preserve">
+    <value>Default</value>
+    <comment>Text for Sort option Default in Settings</comment>
+  </data>
+  <data name="ArticlesSortNew.Text" xml:space="preserve">
+    <value>Nuovi Articoli Prima</value>
+    <comment>Text for Sort option Newest first in Settings</comment>
+  </data>
+  <data name="ArticlesSortOld.Text" xml:space="preserve">
+    <value>Vecchi Articoli Prima</value>
+    <comment>Text for Sort option OldestFirst in Settings</comment>
+  </data>
+  <data name="AllFeedsTitleText" xml:space="preserve">
+    <value>Tutti i Feeds</value>
+    <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="MultiSelectAppBarButton.Label" xml:space="preserve">
+    <value>Selezione Multipla</value>
+    <comment>Label for Appbar button to switch to multi selection</comment>
+  </data>
+  <data name="SettingHeadlinesView.Text" xml:space="preserve">
+    <value>Usa ListView per:</value>
+  </data>
+  <data name="SettingHeadlinesViewAll.Text" xml:space="preserve">
+    <value>Sempre</value>
+  </data>
+  <data name="SettingHeadlinesViewList.Text" xml:space="preserve">
+    <value>Tutti tranne i Feed Speciali</value>
+  </data>
+  <data name="SettingHeadlinesViewNone.Text" xml:space="preserve">
+    <value>Mai</value>
+  </data>
+  <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
+    <value>Solo i Feed Speciali</value>
+  </data>
+  <data name="ToggleStarAppBarButton.Label" xml:space="preserve">
+    <value>Stato Selettore Favoriti</value>
+    <comment>Text for AppBarButton favorite on multiselection</comment>
+  </data>
+  <data name="ToggleUnreadAppBarButton.Label" xml:space="preserve">
+    <value>Stato Selettore Letti</value>
+    <comment>Text for AppBarButton read on multiselection</comment>
+  </data>
+  <data name="LoadOriginalLink" xml:space="preserve">
+    <value>Carica Pagina Originale</value>
+  </data>
+  <data name="SettingsDarkBackground.Text" xml:space="preserve">
+    <value>Usa lo sfondo nero per gli articoli</value>
+  </data>
+  <data name="InfoIcons" xml:space="preserve">
+    <value>Se la tua tiles non mostra l'icona, per favore, reinstalla il programma</value>
+  </data>
+  <data name="RemindMe" xml:space="preserve">
+    <value>Ricordamelo in seguito</value>
+  </data>
+  <data name="PinFlyout.Text" xml:space="preserve">
+    <value>Selezionano come feed speciale</value>
+    <comment>Text for Menu Item to pin a feed as favorite</comment>
+  </data>
+  <data name="UnpinFlyout" xml:space="preserve">
+    <value>Rimuovi della vista</value>
+    <comment>Label for MenuItem to unpin favorite feed</comment>
+  </data>
+  <data name="InfoAppBarButton.Label" xml:space="preserve">
+    <value>Aiuto</value>
+    <comment>Label for AppBarButton Help</comment>
+  </data>
+  <data name="SwipeMarginLabel.Text" xml:space="preserve">
+    <value>Spazio tra gli articoli</value>
+    <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+  <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
+    <value>Permetti certificati non firmati o firmati autonomamente</value>
+    <comment>Login option to allow unsigned or selfsigned certificates</comment>
+  </data>
+  <data name="LoadHeadlines" xml:space="preserve">
+    <value>Carica gli articoli dai Feeds</value>
+    <comment>Text for initial loading of Headlines of a Feed</comment>
+  </data>
+  <data name="showUnreadOnlyAppBarMenu.Label" xml:space="preserve">
+    <value>Filtro</value>
+    <comment>Label for AppBarButton to filter unread/all</comment>
+  </data>
+  <data name="sortAppBarMenu.Label" xml:space="preserve">
+    <value>Ordinamento</value>
+    <comment>Label for AppBarButton to change sorting</comment>
+  </data>
+</root>

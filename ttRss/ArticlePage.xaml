@@ -12,7 +12,8 @@
 
     <Page.Resources>
         <lclasses:StringToColumnConverter x:Key="LengthConverter" />
-        <DataTemplate x:Key="PivotTemplate">
+
+        <DataTemplate x:Key="ArticleTemplate">
             <Grid Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -42,22 +43,24 @@
     </Page.Resources>
     <Page.BottomAppBar>
         <CommandBar Name="AppBar">
-            <AppBarToggleButton x:Name="toogleReadAppBarButton" Icon="Mail" Click="AppBarButton_Click" />
-            <AppBarToggleButton x:Name="toggleStarAppBarButton" Icon="Favorite" 
-                                Click="AppBarButton_Click" />
-            <AppBarButton x:Name="shareLinkAppBarButton" Icon="ReShare" 
+            <AppBarToggleButton x:Uid="ToggleUnreadAppBarButton" x:Name="toogleReadAppBarButton" 
+                                Icon="Mail" Click="AppBarButton_Click" />
+            <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite" 
+                                          x:Uid="ToggleStarAppBarButton" Click="AppBarButton_Click" />
+            <AppBarButton x:Name="shareLinkAppBarButton" 
                           Click="ShareAppBarButton_Click" 
-                          Label="" x:Uid="ShareAppBarButton" />
+                          Label="" x:Uid="ShareAppBarButton">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
             <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
                           Label="" x:Uid="OpenExtAppBarButton" />
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
                           Label="" x:Uid="TooglePublishAppBarButton" />
-                <AppBarButton x:Name="showUnreadOnlyAppBarMenu" Click="AppBarButton_Click" />
                 <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
                           Label="" x:Uid="MarkAllArticlesRead" />
-                <AppBarButton x:Name="sort1AppBarMenu" Click="AppBarButton_Click" />
-                <AppBarButton x:Name="sort2AppBarMenu" Click="AppBarButton_Click" />
             </CommandBar.SecondaryCommands>
         </CommandBar>
 
@@ -65,28 +68,31 @@
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ProgressRing Grid.Row="0" Grid.Column="0" Name="ProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Name="ProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
-        <Controls:BackButton Grid.Row="1" Grid.Column="0" />
-        <ProgressBar Name="Scrollbar" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Maximum="5" Minimum="0" SmallChange="1" Value="0"
+        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="3" Margin="0">
+            <ProgressRing Name="ArticleProgressBar" Height="{StaticResource TextStyleSmallFontSize}" Foreground="{StaticResource PhoneAccentBrush}" />
+            <TextBlock Name="ArticleProgressBarText" FontSize="{StaticResource TextStyleSmallFontSize}" Margin="8,0,0,0" />
+        </StackPanel>
+        <ProgressBar Name="Scrollbar" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="1" Maximum="1" Minimum="0" SmallChange="1" Value="0"
                                  Opacity="0.6" Margin="5,0,25,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
         <TextBlock Name="Counter" Grid.Row="1" Grid.Column="2" TextWrapping="NoWrap" TextAlignment="Right" Visibility="Collapsed" Margin="0,0,5,0"/>
         <Pivot Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Name="PivotControl" PivotItemLoading="PivotControl_LoadingPivotItem" PivotItemUnloading="resetPivot" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item0" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item1" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
-            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=PivotTemplate}" Content="{Binding}" Margin="20,-40,20,0">
+            <PivotItem Name="Item2" ContentTemplate="{StaticResource ResourceKey=ArticleTemplate}" Content="{Binding}" Margin="20,-40,20,0">
             </PivotItem>
         </Pivot>
+        <ProgressBar Name="MarkArticleProgressBar" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" IsIndeterminate="True" Visibility="Collapsed" />
     </Grid>
 </local:AbstractArticlePage>

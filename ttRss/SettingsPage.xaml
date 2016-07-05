@@ -16,11 +16,9 @@
                 <PivotItem.Header>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                    <Controls:BackButton Grid.Column="0" />
-                    <TextBlock Grid.Column="1" Text="" x:Uid="SettingsConnectionHead"/>
+                        <TextBlock Grid.Column="0" Text="" x:Uid="SettingsConnectionHead"/>
                     </Grid>
 
                 </PivotItem.Header>
@@ -81,13 +79,6 @@
                             <TextBlock Name="SortDefault" Text="" x:Uid="SettingsSortDefault" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock Name="SortNewFirst" Text="" x:Uid="SettingsSortNew" FontSize="{StaticResource TextStyleMediumFontSize}" />
                             <TextBlock  Name="SortOldFirst" Text="" x:Uid="SettingsSortOld" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                        </ComboBox>
-                        <TextBlock x:Name="SettingHeadlinesView" Text="" x:Uid="SettingHeadlinesView"  FontSize="{StaticResource TextStyleMediumFontSize}" VerticalAlignment="Center" />
-                        <ComboBox  x:Name="SettingHeadlinesViewBox" SelectionChanged="SelChanged" Margin="10,0,0,0" >
-                            <TextBlock Name="SettingHeadlinesViewNone" Text="" x:Uid="SettingHeadlinesViewNone" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock Name="SettingHeadlinesViewSpecial" Text="" x:Uid="SettingHeadlinesViewSpecial" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock Name="SettingHeadlinesViewList" Text="" x:Uid="SettingHeadlinesViewList" FontSize="{StaticResource TextStyleMediumFontSize}" />
-                            <TextBlock  Name="SettingHeadlinesViewAll" Text="" x:Uid="SettingHeadlinesViewAll" FontSize="{StaticResource TextStyleMediumFontSize}" />
                         </ComboBox>
                     </StackPanel>
                 </ScrollViewer>

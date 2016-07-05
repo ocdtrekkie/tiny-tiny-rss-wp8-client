@@ -153,7 +153,7 @@
     <value>Новые статьи</value>
     <comment>Текст для особого канала "Новые статьи"</comment>
   </data>
-  <data name="LoadMoreArticles" xml:space="preserve">
+  <data name="LoadMoreHeadlines" xml:space="preserve">
     <value>...обновление статей</value>
     <comment>Сообщение в области уведомлений при загрузке статей.</comment>
   </data>
@@ -336,11 +336,11 @@
     <value>Поделиться</value>
     <comment>Текст для кнопки "Поделиться"</comment>
   </data>
-  <data name="ShowAllArticles" xml:space="preserve">
+  <data name="ShowAllArticles.Text" xml:space="preserve">
     <value>Все статьи</value>
     <comment>Текст пункта меню "Все статьи".</comment>
   </data>
-  <data name="ShowOnlyUnreadArticles" xml:space="preserve">
+  <data name="ShowOnlyUnreadArticles.Text" xml:space="preserve">
     <value>Только непрочитанные</value>
     <comment>Текст пункта меню "Только непрочитанные".</comment>
   </data>
@@ -360,7 +360,7 @@
     <value>Сохранить соединение</value>
     <comment>Текст для кнопки "Сохранить соединение" в настройках.</comment>
   </data>
-  <data name="ToogleArchiveAppBarButtonText" xml:space="preserve">
+  <data name="ToogleArchiveAppBarButton.Label" xml:space="preserve">
     <value>В архиве (+/-)</value>
     <comment>Текст для переключения нахождения статьи в архиве</comment>
   </data>
@@ -430,15 +430,15 @@
   <data name="StarredFeeds.Text" xml:space="preserve">
     <value>Избранное</value>
   </data>
-  <data name="ArticlesSortDefault" xml:space="preserve">
+  <data name="ArticlesSortDefault.Text" xml:space="preserve">
     <value>По умолчанию</value>
     <comment>Текст для  настройки "По умолчанию" </comment>
   </data>
-  <data name="ArticlesSortNew" xml:space="preserve">
+  <data name="ArticlesSortNew.Text" xml:space="preserve">
     <value>Сначала новые</value>
     <comment>Текст для  настройки "Сначала новые"</comment>
   </data>
-  <data name="ArticlesSortOld" xml:space="preserve">
+  <data name="ArticlesSortOld.Text" xml:space="preserve">
     <value>Сначала  старые</value>
     <comment>Текст для  настройки "Сначала старые"</comment>
   </data>
@@ -465,11 +465,11 @@
   <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
     <value>Только особые каналы</value>
   </data>
-  <data name="ToggleStarAppBarButtonText" xml:space="preserve">
+  <data name="ToggleStarAppBarButton.Label" xml:space="preserve">
     <value>В избранное (+/-)</value>
     <comment>Текст для кнопки переключения в избранное</comment>
   </data>
-  <data name="ToggleUnreadAppBarButtonText" xml:space="preserve">
+  <data name="ToggleUnreadAppBarButton.Label" xml:space="preserve">
     <value>Прочитано  (+/-)</value>
     <comment>Текст для кнопки  переключения прочитано</comment>
   </data>
@@ -504,5 +504,17 @@
   <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
     <value>Allow unsigned or self signed SSL certificates</value>
     <comment>Login option to allow unsigned or selfsigned certificates</comment>
+  </data>
+  <data name="LoadHeadlines" xml:space="preserve">
+    <value>обновление статей</value>
+    <comment>Сообщение в области уведомлений при загрузке статей.</comment>
+  </data>
+  <data name="showUnreadOnlyAppBarMenu.Label" xml:space="preserve">
+    <value>фильтр</value>
+    <comment>Label for AppBarButton to filter unread/all</comment>
+  </data>
+  <data name="sortAppBarMenu.Label" xml:space="preserve">
+    <value>Сортировка</value>
+    <comment>Label for AppBarButton to change sorting</comment>
   </data>
 </root>

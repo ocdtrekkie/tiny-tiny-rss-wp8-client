@@ -1,27 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TinyTinyRSS.Interface;
-using CaledosLab.Portable.Logging;
+using TinyTinyRSS.Classes;
 using Windows.Storage;
-using TinyTinyRSS;
-using TinyTinyRSS.Common;
-using Windows.Phone.UI.Input;
 using Windows.UI.Core;
+using System.Threading.Tasks;
+using Windows.Foundation.Diagnostics;
+using System.IO;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -32,11 +22,9 @@ namespace TinyTinyRSS
     /// </summary>
     public sealed partial class App : Application
     {
-        // LogFile Name
-        public const string LogFile = "currentLog.txt";
         // Error LogFile Name
-        public const string LastLogFile = "lastLog.txt";
-
+        public const string LastLogFile = "lastSessionLog.etl";
+        private LoggingChannel channel;
         private TransitionCollection transitions;
 
         /// <summary>
@@ -45,8 +33,29 @@ namespace TinyTinyRSS
         /// </summary>
         public App()
         {
+            channel = new LoggingChannel("App.cs", null);
+            LogSession.addChannel(channel);
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
+            //this.Resuming += App_Resuming;
+            this.UnhandledException += App_UnhandledException;
+            Microsoft.HockeyApp.HockeyClient.Current.Configure("920bbd7c3ad746fa91e80e46588ae87a");
+        }
+
+        private void App_Resuming(object sender, object e)
+        {
+            Frame rootFrame = Window.Current.Content as Frame;
+            var now = DateTime.Now;
+            var last = ConnectionSettings.getInstance().supsensionDate;
+            if (last != null && rootFrame != null)
+            {
+                TimeSpan span = now.Subtract(last);
+                if (span.Minutes > 10)
+                {
+                    rootFrame.BackStack.Clear();
+                    rootFrame.Navigate(typeof(MainPage));
+                }
+            }
         }
 
         /// <summary>
@@ -63,30 +72,12 @@ namespace TinyTinyRSS
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+            await MoveLastLog();
+            Task<bool> loginTask = TtRssInterface.getInterface().CheckLogin();
 
-            try
-            {
-                // init logger
-                StorageFolder storage = ApplicationData.Current.LocalFolder;
-                StorageFile file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.OpenIfExists);
-                
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated || e.PreviousExecutionState == ApplicationExecutionState.ClosedByUser)
-                {
-                    StorageFile errorfile = await storage.CreateFileAsync(LastLogFile, CreationCollisionOption.ReplaceExisting);
-                    await file.CopyAndReplaceAsync(errorfile);
-                    file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.ReplaceExisting);
-                }
-                Logger.Load(file);   
-            }
-            catch
-            {
-                // yeah we can't log the error.
-            }
 
             Frame rootFrame = Window.Current.Content as Frame;
-            // Suspension time auslesen und bei Alter >15 Min rootFrame null setzen.
-            
-            
+
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
             if (rootFrame == null)
@@ -95,7 +86,7 @@ namespace TinyTinyRSS
                 rootFrame = new Frame();
 
                 // TODO: change this value to a cache size that is appropriate for your application
-                rootFrame.CacheSize = 2;
+                rootFrame.CacheSize = 1;
 
                 // Place the frame in the current Window
                 Window.Current.Content = rootFrame;
@@ -115,7 +106,7 @@ namespace TinyTinyRSS
 
                 rootFrame.ContentTransitions = null;
                 rootFrame.Navigated += this.RootFrame_FirstNavigated;
-
+                
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
@@ -124,10 +115,19 @@ namespace TinyTinyRSS
                     throw new Exception("Failed to create initial page");
                 }
             }
+            await loginTask;
             SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             // Ensure the current window is active
             Window.Current.Activate();
         }
+
+        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            channel.LogMessage("Unhandled Exception: " + e.Message);
+            channel.LogMessage(e.Exception.ToString());
+            LogSession.Close();
+        }
+        
 
         private void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
@@ -169,29 +169,34 @@ namespace TinyTinyRSS
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            Logger.WriteLine("App suspended");
-            // Suspension time speichern
-            FinalizeLogging();
-            Logger.ClearLog();
+            channel.LogMessage("App suspended", LoggingLevel.Information);
+            ConnectionSettings.getInstance().supsensionDate = DateTime.Now;
+            LogSession.Close();
             var deferral = e.SuspendingOperation.GetDeferral();
-            deferral.Complete();
+            deferral.Complete();            
         }
 
         /// <summary>
-        /// Closes the logger.
+        /// Save last log session.
         /// </summary>
-        public static async void FinalizeLogging()
-        {            
-            StorageFolder storage = ApplicationData.Current.LocalFolder;
-            StorageFile file = await storage.CreateFileAsync(LogFile, CreationCollisionOption.OpenIfExists);
-            Logger.WriteLine("Last Settings:");
-            Logger.WriteLine("Mark read:" + ConnectionSettings.getInstance().markRead);
-            Logger.WriteLine("Progress as Cntr:" + ConnectionSettings.getInstance().progressAsCntr);
-            Logger.WriteLine("Sort Order:" + ConnectionSettings.getInstance().sortOrder);
-            Logger.WriteLine("show Unread Only:" + ConnectionSettings.getInstance().showUnreadOnly);
-            Logger.WriteLine("Live Tile Active:" + ConnectionSettings.getInstance().liveTileActive);
-            Logger.WriteLine("Channel Uri:" + ConnectionSettings.getInstance().channelUri);
-            Logger.Save(file);
+        private async Task<bool> MoveLastLog()
+        {
+            try
+            {// Save the final log file before closing the session.
+                StorageFolder storage = ApplicationData.Current.LocalFolder;
+            
+                StorageFile finalFileBeforeSuspend = await storage.GetFileAsync(ConnectionSettings.getInstance().lastLog);
+                if (finalFileBeforeSuspend != null)
+                {
+                    // Move the final log into the app-defined log file folder. 
+                    await finalFileBeforeSuspend.MoveAsync(storage, LastLogFile, NameCollisionOption.ReplaceExisting);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

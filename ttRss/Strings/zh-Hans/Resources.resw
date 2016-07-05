@@ -1,0 +1,545 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllFeedsSpecialFeed.Text" xml:space="preserve">
+    <value>所有文章</value>
+    <comment>Text for special Feed "All Feeds"</comment>
+  </data>
+  <data name="AllFeedsTitle.Text" xml:space="preserve">
+    <value>所有文章</value>
+    <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="AppBarSortLabel" xml:space="preserve">
+    <value>排序：</value>
+    <comment>Label for sort options in appbar</comment>
+  </data>
+  <data name="ArchivedFeeds.Text" xml:space="preserve">
+    <value>我的存档</value>
+    <comment>Text for Special Feed "Archived"</comment>
+  </data>
+  <data name="CancelAppBarButtonText" xml:space="preserve">
+    <value>取消</value>
+    <comment>Text for AppBarButton Cancel in Settings</comment>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>类别</value>
+    <comment>Headline for Categories View on Main Page</comment>
+  </data>
+  <data name="ErrorAddLiveTile" xml:space="preserve">
+    <value>动态磁贴激活失败，如果经常发生这种情况，请联系开发者。</value>
+    <comment>Message to show when live tile activation fails.</comment>
+  </data>
+  <data name="FailedConnection" xml:space="preserve">
+    <value>连接失败</value>
+    <comment>Text to display if connection to server failed.</comment>
+  </data>
+  <data name="FreshFeeds.Text" xml:space="preserve">
+    <value>最近更新</value>
+    <comment>Text for Special Feed "Fresh"</comment>
+  </data>
+  <data name="LoadMoreHeadlines" xml:space="preserve">
+    <value>...加载更多文章</value>
+    <comment>Message shown in SystemTray when more articles are loaded.</comment>
+  </data>
+  <data name="LoginProgress" xml:space="preserve">
+    <value>更新源...</value>
+    <comment>Progressbar message for initial login</comment>
+  </data>
+  <data name="MarkAllArticlesRead.Label" xml:space="preserve">
+    <value>标记为全部已读</value>
+    <comment>AppMenu Entry to mark all articles of a feed as read.</comment>
+  </data>
+  <data name="MarkReadAppBarButtonText" xml:space="preserve">
+    <value>标记已读</value>
+    <comment>Text for AppBarButton Mark as read</comment>
+  </data>
+  <data name="MarkReadSettings.Text" xml:space="preserve">
+    <value>自动将文章标记为已读</value>
+    <comment>Label for checkbox in settings to mark articles read automatically.</comment>
+  </data>
+  <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
+    <value>标记未读</value>
+    <comment>Text for AppBar Button Mark as Unread</comment>
+  </data>
+  <data name="NoArticlesMessage" xml:space="preserve">
+    <value>404:你的文章走丢了</value>
+    <comment>Message to show, when ArticleView has nothing to display.</comment>
+  </data>
+  <data name="NoConnection" xml:space="preserve">
+    <value>无法建立连接，请检查服务设置或等待更好的网络信号。</value>
+    <comment>Text for MessageBox if Server could not be reached.</comment>
+  </data>
+  <data name="OpenExtAppBarButton.Label" xml:space="preserve">
+    <value>用浏览器打开</value>
+    <comment>Text for AppBarButton to open article in Browser</comment>
+  </data>
+  <data name="PasswordSettings.Text" xml:space="preserve">
+    <value>密码</value>
+    <comment>Label for textfield password in settings.</comment>
+  </data>
+  <data name="PublishedFeeds.Text" xml:space="preserve">
+    <value>我的发布</value>
+    <comment>Text for Special Feed "Published"</comment>
+  </data>
+  <data name="RecentlyReadFeed.Text" xml:space="preserve">
+    <value>最近阅读</value>
+    <comment>Text of button to show recently read feeds.</comment>
+  </data>
+  <data name="RefreshAppBarButton.Label" xml:space="preserve">
+    <value>刷新</value>
+    <comment>Text for AppBarButton "Refresh" (Feed counters) </comment>
+  </data>
+  <data name="ResourceFlowDirection" xml:space="preserve">
+    <value>从左到右</value>
+    <comment>Controls the FlowDirection for all elements in the RootFrame. Set to the traditional direction of this resource file's language</comment>
+  </data>
+  <data name="ResourceLanguage" xml:space="preserve">
+    <value>英语</value>
+    <comment>Controls the Language and ensures that the font for all elements in the RootFrame aligns with the app's language. Set to the language code of this resource file's language.</comment>
+  </data>
+  <data name="SaveAppBarButtonText" xml:space="preserve">
+    <value>应用</value>
+    <comment>Text for AppBar Button Save (Settings)</comment>
+  </data>
+  <data name="SaveUnsavedSettings" xml:space="preserve">
+    <value>保存该设置?</value>
+    <comment>Headline for messagebox unsaved settings</comment>
+  </data>
+  <data name="ServerSetting.Text" xml:space="preserve">
+    <value>服务器</value>
+    <comment>Label for textfield server in settings.</comment>
+  </data>
+  <data name="SettingsAboutAuthor" xml:space="preserve">
+    <value>作者: </value>
+    <comment>Label for author field in about pane of settings</comment>
+  </data>
+  <data name="SettingsAboutButtonPrivacyPolicy.Text" xml:space="preserve">
+    <value>隐私权策略</value>
+  </data>
+  <data name="SettingsAboutButtonProjectWeb.Text" xml:space="preserve">
+    <value>此项目主页</value>
+    <comment>Label for button that links to the project website</comment>
+  </data>
+  <data name="SettingsAboutButtonSendLog.Content" xml:space="preserve">
+    <value>邮件联系我</value>
+    <comment>Button Text to create the mail.</comment>
+  </data>
+  <data name="SettingsAboutHead.Text" xml:space="preserve">
+    <value>关于</value>
+    <comment>Headline of About page in Settings</comment>
+  </data>
+  <data name="SettingsAboutRadioActualLog.Content" xml:space="preserve">
+    <value>本次会话的日志文件</value>
+    <comment>Option to send the logs of this session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioLastLog.Content" xml:space="preserve">
+    <value>最后会话的日志文件</value>
+    <comment>Option to send the logs of last session with mail.</comment>
+  </data>
+  <data name="SettingsAboutRadioNoLog.Content" xml:space="preserve">
+    <value>不附加日志文件</value>
+    <comment>Option to send no log with mail.</comment>
+  </data>
+  <data name="SettingsAboutText.Text" xml:space="preserve">
+    <value>通过以下的方式给我发邮件提供反馈意见。如果遇到了一些错误，希望能附上日志文件。</value>
+    <comment>Message to invite people sending logs.</comment>
+  </data>
+  <data name="SettingsAboutVersion" xml:space="preserve">
+    <value>版本: </value>
+    <comment>Label for version field in about pane of settings</comment>
+  </data>
+  <data name="SettingsActivateLiveTile.Text" xml:space="preserve">
+    <value>动态磁贴</value>
+    <comment>Label for live tile activation checkbox.</comment>
+  </data>
+  <data name="SettingsAppBarButton.Label" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="SettingsConnectionHead.Text" xml:space="preserve">
+    <value>连接</value>
+    <comment>Headline of connection settings page.</comment>
+  </data>
+  <data name="SettingsHead.Text" xml:space="preserve">
+    <value>常规</value>
+    <comment>Headline of settings page.</comment>
+  </data>
+  <data name="SettingsLiveTile.Text" xml:space="preserve">
+    <value>磁贴</value>
+    <comment>Label for live tile pivot in settings</comment>
+  </data>
+  <data name="SettingsLiveTileInfo.Text" xml:space="preserve">
+    <value>当激活动态磁贴选项，磁贴会显示新的未读文章数字。该数字也可以在锁屏界面显示。需要在锁屏设置中选择此应用程序。</value>
+    <comment>Info about live tile</comment>
+  </data>
+  <data name="SettingsLiveTileLockScreenLink.Text" xml:space="preserve">
+    <value>锁屏设置</value>
+    <comment>Link to lockscreen settings</comment>
+  </data>
+  <data name="SettingsMailException" xml:space="preserve">
+    <value>抱歉，创建电子邮件出现错误</value>
+    <comment>Message to show, if feedback mail could not be created.</comment>
+  </data>
+  <data name="SettingsScrollarAsCounter.Text" xml:space="preserve">
+    <value>使用顶部滚动条代替文章计数</value>
+    <comment>Option in Settings to change between ScrollBar and Counter</comment>
+  </data>
+  <data name="SettingsSortDefault.Text" xml:space="preserve">
+    <value>默认</value>
+    <comment>Text for Sort option Default in Settings</comment>
+  </data>
+  <data name="SettingsSortLabel.Text" xml:space="preserve">
+    <value>排序:</value>
+    <comment>Text of Label for Sort options in Settings</comment>
+  </data>
+  <data name="SettingsSortNew.Text" xml:space="preserve">
+    <value>最新优先</value>
+    <comment>Text for Sort option Newest first in Settings</comment>
+  </data>
+  <data name="SettingsSortOld.Text" xml:space="preserve">
+    <value>最早优先</value>
+    <comment>Text for Sort option OldestFirst in Settings</comment>
+  </data>
+  <data name="SettingsTileUpdatePeriod" xml:space="preserve">
+    <value>更新间隔</value>
+    <comment>Label for update interval checkbox</comment>
+  </data>
+  <data name="SettingsUpdateDay" xml:space="preserve">
+    <value>每天</value>
+    <comment>Label for radio button</comment>
+  </data>
+  <data name="SettingsUpdateHalfHour" xml:space="preserve">
+    <value>每半小时</value>
+  </data>
+  <data name="SettingsUpdateHour" xml:space="preserve">
+    <value>每小时</value>
+  </data>
+  <data name="SettingsUpdateLiveTileError" xml:space="preserve">
+    <value>如果磁贴更新不能发送到磁贴通知服务器。请设置取消/勾选动态磁贴复选框或给我发电子邮件。</value>
+    <comment>Error message if live tile user update fails.</comment>
+  </data>
+  <data name="ShareAppBarButton.Label" xml:space="preserve">
+    <value>共享</value>
+    <comment>Label for AppBarButton Share</comment>
+  </data>
+  <data name="ShowAllArticles.Text" xml:space="preserve">
+    <value>显示所有文章</value>
+    <comment>AppBarMenu Text to show all articles.</comment>
+  </data>
+  <data name="ShowOnlyUnreadArticles.Text" xml:space="preserve">
+    <value>显示未读文章</value>
+    <comment>AppBarMenu Text to show only unread articles.</comment>
+  </data>
+  <data name="SpecialFeeds.Text" xml:space="preserve">
+    <value>特定条目</value>
+    <comment>Title of Special Feeds Panel</comment>
+  </data>
+  <data name="StarAppBarButtonText" xml:space="preserve">
+    <value>收藏</value>
+    <comment>Text of AppBarButton "Star Article"</comment>
+  </data>
+  <data name="SuccessfulConnection" xml:space="preserve">
+    <value>连接成功了</value>
+    <comment>Info Text if test of connection was successful (in Settings)</comment>
+  </data>
+  <data name="TestConnectionSettingsButton.Content" xml:space="preserve">
+    <value>保存登录设置</value>
+    <comment>Text for Button to save connection in settings.</comment>
+  </data>
+  <data name="ToogleArchiveAppBarButton.Label" xml:space="preserve">
+    <value>保存</value>
+    <comment>Text for AppBarOption to toggle Archived state of Article</comment>
+  </data>
+  <data name="TooglePublishAppBarButton.Label" xml:space="preserve">
+    <value>发布</value>
+    <comment>Text for AppBarOption to toggle Published state of Article</comment>
+  </data>
+  <data name="Uncategorized" xml:space="preserve">
+    <value>未分类</value>
+    <comment>Name of Uncategorized Category</comment>
+  </data>
+  <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <value>很抱歉，发生意外的错误。该应用程序将会关闭。</value>
+    <comment>Text for MessageBox when app is closed through  an unexpected error.</comment>
+  </data>
+  <data name="UnreadOnlySettings.Text" xml:space="preserve">
+    <value>只显示未读文章</value>
+    <comment>Label for checkbox in settings to show only unread articles from feeds.</comment>
+  </data>
+  <data name="UnsavedSettings" xml:space="preserve">
+    <value>设置更改尚未保存</value>
+    <comment>Messageboxtext for unsaved settings</comment>
+  </data>
+  <data name="UnStarAppBarButtonText" xml:space="preserve">
+    <value>取消收藏</value>
+    <comment>Text of AppBarButton to unstar an article</comment>
+  </data>
+  <data name="UserNameSettings.Text" xml:space="preserve">
+    <value>用户名</value>
+    <comment>Label for textfield username in settings.</comment>
+  </data>
+  <data name="AllFeedsSpecialFeedText" xml:space="preserve">
+    <value>所有文章</value>
+    <comment>Text for special Feed "All Feeds"</comment>
+  </data>
+  <data name="ApplicationName.Text" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Application Name</comment>
+  </data>
+  <data name="ApplicationTitle.Title" xml:space="preserve">
+    <value>Tiny Tiny RSS Reader</value>
+    <comment>Application Name</comment>
+  </data>
+  <data name="ArchivedFeedsText" xml:space="preserve">
+    <value>我的存档</value>
+    <comment>Text for Special Feed "Archived"</comment>
+  </data>
+  <data name="FreshFeedsText" xml:space="preserve">
+    <value>最新更新</value>
+    <comment>Text for Special Feed "Fresh"</comment>
+  </data>
+  <data name="PublishedFeedsText" xml:space="preserve">
+    <value>我的发布</value>
+    <comment>Text for Special Feed "Published"</comment>
+  </data>
+  <data name="RecentlyReadFeedText" xml:space="preserve">
+    <value>最近阅读</value>
+    <comment>Text of button to show recently read feeds.</comment>
+  </data>
+  <data name="StarredFeedsText" xml:space="preserve">
+    <value>我的收藏</value>
+    <comment>Text of Special Feed "Starred Articles"</comment>
+  </data>
+  <data name="TestConnectionSettingsButtonText" xml:space="preserve">
+    <value>保存登录设置</value>
+  </data>
+  <data name="StarredFeeds.Text" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="ArticlesSortDefault.Text" xml:space="preserve">
+    <value>默认</value>
+    <comment>Text for Sort option Default in Settings</comment>
+  </data>
+  <data name="ArticlesSortNew.Text" xml:space="preserve">
+    <value>最新优先</value>
+    <comment>Text for Sort option Newest first in Settings</comment>
+  </data>
+  <data name="ArticlesSortOld.Text" xml:space="preserve">
+    <value>最早优先</value>
+    <comment>Text for Sort option OldestFirst in Settings</comment>
+  </data>
+  <data name="AllFeedsTitleText" xml:space="preserve">
+    <value>所有文章</value>
+    <comment>Title for All Feeds Pivot Item at Start Page.</comment>
+  </data>
+  <data name="MultiSelectAppBarButton.Label" xml:space="preserve">
+    <value>多选</value>
+    <comment>Label for Appbar button to switch to multi selection</comment>
+  </data>
+  <data name="SettingHeadlinesView.Text" xml:space="preserve">
+    <value>列表显示:</value>
+  </data>
+  <data name="SettingHeadlinesViewAll.Text" xml:space="preserve">
+    <value>永远</value>
+  </data>
+  <data name="SettingHeadlinesViewList.Text" xml:space="preserve">
+    <value>显示全部条目</value>
+  </data>
+  <data name="SettingHeadlinesViewNone.Text" xml:space="preserve">
+    <value>从不</value>
+  </data>
+  <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
+    <value>只显示特定条目</value>
+  </data>
+  <data name="ToggleStarAppBarButton.Label" xml:space="preserve">
+    <value>收藏</value>
+    <comment>Text for AppBarButton favorite on multiselection</comment>
+  </data>
+  <data name="ToggleUnreadAppBarButton.Label" xml:space="preserve">
+    <value>已读</value>
+    <comment>Text for AppBarButton read on multiselection</comment>
+  </data>
+  <data name="LoadOriginalLink" xml:space="preserve">
+    <value>加载原始页面</value>
+  </data>
+  <data name="SettingsDarkBackground.Text" xml:space="preserve">
+    <value>使用黑色背景主题</value>
+  </data>
+  <data name="InfoIcons" xml:space="preserve">
+    <value>如果磁贴没有显示图标，请重新安装应用程序。</value>
+  </data>
+  <data name="RemindMe" xml:space="preserve">
+    <value>再次提醒我</value>
+  </data>
+  <data name="PinFlyout.Text" xml:space="preserve">
+    <value>通过特定条目查看</value>
+    <comment>Text for Menu Item to pin a feed as favorite</comment>
+  </data>
+  <data name="UnpinFlyout" xml:space="preserve">
+    <value>删除</value>
+    <comment>Label for MenuItem to unpin favorite feed</comment>
+  </data>
+  <data name="InfoAppBarButton.Label" xml:space="preserve">
+    <value>帮助</value>
+    <comment>Label for AppBarButton Help</comment>
+  </data>
+  <data name="SwipeMarginLabel.Text" xml:space="preserve">
+    <value>滑动文章的空白区域调整</value>
+    <comment>Text for slider in settings to set margin of webview</comment>
+  </data>
+  <data name="SettingsUnsignedSsl.Text" xml:space="preserve">
+    <value>允许未签名或自签署的SSL证书</value>
+    <comment>Login option to allow unsigned or selfsigned certificates</comment>
+  </data>
+  <data name="LoadHeadlines" xml:space="preserve">
+    <value>加载文章</value>
+    <comment>Text for initial loading of Headlines of a Feed</comment>
+  </data>
+  <data name="showUnreadOnlyAppBarMenu.Label" xml:space="preserve">
+    <value>过滤</value>
+    <comment>Label for AppBarButton to filter unread/all</comment>
+  </data>
+  <data name="sortAppBarMenu.Label" xml:space="preserve">
+    <value>排序</value>
+    <comment>Label for AppBarButton to change sorting</comment>
+  </data>
+  <data name="IAPBuy" xml:space="preserve">
+    <value>Buy</value>
+    <comment>Text for IAPBuy Buttons</comment>
+  </data>
+  <data name="IAPDonation.Text" xml:space="preserve">
+    <value>Donate</value>
+    <comment>Text for IAP Donation</comment>
+  </data>
+  <data name="IAPPurchaseFailed" xml:space="preserve">
+    <value>An error occured while trying to buy the feature. Please try again later.</value>
+    <comment>Error Message for failed IAP</comment>
+  </data>
+  <data name="IAPRemoveAds.Text" xml:space="preserve">
+    <value>Remove ads</value>
+    <comment>Text for IAP to remove ads</comment>
+  </data>
+  <data name="SettingsIAPHead.Text" xml:space="preserve">
+    <value>Extra features</value>
+    <comment>Headline for settings page IAP</comment>
+  </data>
+  <data name="SettingsAboutButtonProjectNewsWeb.Text" xml:space="preserve">
+    <value>News</value>
+    <comment>Text for Link to News in impressum</comment>
+  </data>
+</root>

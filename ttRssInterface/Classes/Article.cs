@@ -1,22 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.ComponentModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Graphics.Display;
-using Windows.UI.ViewManagement;
 
 namespace TinyTinyRSS.Interface.Classes
 {
-    public sealed class Article
+    public sealed class Article : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public int id { get; set; }
+        private bool _unread;
+        private bool _marked;
         public string title { get; set; }
         public string link { get; set; }
         public object[] labels { get; set; }
-        public bool unread { get; set; }
-        public bool marked { get; set; }
+        public bool unread
+        {
+            get { return _unread; }
+            set
+            {
+                _unread = value;
+                OnPropertyChanged("unread");
+            }
+        }
+        public bool marked
+        {
+            get { return _marked; }
+            set
+            {
+                _marked = value;
+                OnPropertyChanged("marked");
+            }
+        }
         public bool published { get; set; }
         public string comments { get; set; }
         public string author { get; set; }
@@ -52,5 +66,15 @@ namespace TinyTinyRSS.Interface.Classes
         public object attachments { get; set; }
         public int score { get; set; }
         public string feed_title { get; set; }
+
+        // Create the OnPropertyChanged method to raise the event 
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
     }
 }

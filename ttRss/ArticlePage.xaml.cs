@@ -1,13 +1,10 @@
-﻿using CaledosLab.Portable.Logging;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using TinyTinyRSSInterface.Classes;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -26,7 +23,6 @@ namespace TinyTinyRSS
         {
             this.Loaded += PageLoaded;
             InitializeComponent();
-            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             ArticlesCollection = new ObservableCollection<WrappedArticle>();
             _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
             _sortOrder = ConnectionSettings.getInstance().sortOrder;
@@ -35,6 +31,7 @@ namespace TinyTinyRSS
             _selectedIndex = 0;
             _lastPivotIndex = -1;
             RegisterForShare();
+            SystemNavigationManager.GetForCurrentView().BackRequested += App_BackRequested;
             if (!ConnectionSettings.getInstance().progressAsCntr)
             {
                 Scrollbar.Visibility = Visibility.Collapsed;
@@ -44,10 +41,26 @@ namespace TinyTinyRSS
             {
                 Scrollbar.IsIndeterminate = false;
             }
-            BuildLocalizedApplicationBar();
         }
 
-        private void App_BackRequested(object sender, BackRequestedEventArgs e)
+        protected override ProgressRing getProgressRing()
+        {
+            return this.ArticleProgressBar;
+        }
+        protected override ProgressBar getMarkProgressBar()
+        {
+            return MarkArticleProgressBar;
+        }
+        protected override ProgressBar getMultipleMarkProgressBar()
+        {
+            return MarkArticleProgressBar;
+        }        
+        protected override TextBlock getProgressRingText()
+        {
+            return ArticleProgressBarText;
+        }
+
+        public void App_BackRequested(object sender, BackRequestedEventArgs e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -58,7 +71,6 @@ namespace TinyTinyRSS
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = _selectedIndex;
-                    parameter.feedId = feedId;
                     parameter._showUnreadOnly = _showUnreadOnly;
                     parameter._sortOrder = _sortOrder;
                     parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -66,7 +78,7 @@ namespace TinyTinyRSS
                     {
                         parameter.ArticlesCollection.Add(article);
                     }
-                    Frame.Navigate(typeof(HeadlinesPage), parameter);
+                    Frame.Navigate(typeof(MainPage), parameter);
                 }
                 else
                 {
@@ -77,6 +89,11 @@ namespace TinyTinyRSS
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
         {
+            Frame rootFrame = Window.Current.Content as Frame;
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
+                    rootFrame.CanGoBack ?
+                        AppViewBackButtonVisibility.Visible :
+                        AppViewBackButtonVisibility.Collapsed;
             if (!initialized)
             {
                 bool result = await LoadHeadlines();
@@ -91,20 +108,23 @@ namespace TinyTinyRSS
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if(e.Parameter is NavigationObject) {
+            if (e.Parameter is NavigationObject)
+            {
                 initialized = true;
                 NavigationObject nav = e.Parameter as NavigationObject;
-                feedId = nav.feedId;
                 _selectedIndex = nav.selectedIndex;
                 _sortOrder = nav._sortOrder;
                 _showUnreadOnly = nav._showUnreadOnly;
-                ArticlesCollection = nav.ArticlesCollection;
-                BuildLocalizedApplicationBar();
-                Logger.WriteLine("NavigatedTo ArticlePage from ListView for Feed " + feedId);
-            } else {
+                ArticlesCollection = new ObservableCollection<WrappedArticle>();
+                foreach (WrappedArticle article in nav.ArticlesCollection)
+                {
+                    ArticlesCollection.Add(article);
+                }
+                channel.LogMessage("NavigatedTo ArticlePage from ListView for Feed " + ConnectionSettings.getInstance().selectedFeed);
+            }
+            else {
                 initialized = false;
-                feedId = (int)e.Parameter;
-                Logger.WriteLine("NavigatedTo ArticlePage for Feed " + feedId);
+                channel.LogMessage("NavigatedTo ArticlePage for Feed " + ConnectionSettings.getInstance().selectedFeed);
             }
             base.OnNavigatedTo(e);
         }
@@ -134,7 +154,7 @@ namespace TinyTinyRSS
                     _selectedIndex = positiveMod(_selectedIndex - 1, ArticlesCollection.Count);
                 }
                 int localSelected = _selectedIndex;
-                SetProgressBar(true);
+                SetProgressBar(true, ProgressMsg.LoadArticle);
                 updateCount(false);
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
@@ -146,45 +166,19 @@ namespace TinyTinyRSS
                 }
                 catch (TtRssException)
                 {
-                    Logger.WriteLine("error loading content for article.");
+                    channel.LogMessage("error loading content for article.");
                 }
                 if (article != null && _selectedIndex == localSelected)
                 {
                     setHtml(article.content);
-                    /*var icon = Helper.FindDescendantByName(e.Item, "Icon") as Image;
-                    if (icon != null)
-                    {
-                        Feed articlesFeed = TtRssInterface.getInterface().getFeedById(item.Headline.feed_id);
-                        if (articlesFeed != null)
-                        {
-                            icon.Source = articlesFeed.icon;
-                        }
-                    }*/
                     UpdateLocalizedApplicationBar(article);
                 }
                 e.Item.UpdateLayout();
-                SetProgressBar(false);
-                if (ConnectionSettings.getInstance().markRead && article != null && article.unread)
+                SetProgressBar(false, ProgressMsg.LoadArticle);
+                if (await markArticleReadAutomatically(article))
                 {
-                    List<int> idList = new List<int>();
-                    idList.Add(article.id);
-                    try
-                    {
-                        bool success = await TtRssInterface.getInterface().updateArticles(idList, UpdateField.Unread, UpdateMode.False);
-
-                        if (success)
-                        {
-                            Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                            article.unread = false;
-                            item.Headline.unread = false;
-                            UpdateLocalizedApplicationBar(article);
-                            await tsk;
-                        }
-                    }
-                    catch (TtRssException ex)
-                    {
-                        checkException(ex);
-                    }
+                    item.Headline.unread = false;
+                    UpdateLocalizedApplicationBar(article);
                 }
                 if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
                 {
@@ -193,7 +187,7 @@ namespace TinyTinyRSS
             }
             catch (TtRssException ex)
             {
-                SetProgressBar(false);
+                SetProgressBar(false, ProgressMsg.LoadArticle);
                 checkException(ex);
             }
         }
@@ -213,23 +207,23 @@ namespace TinyTinyRSS
             }
             else
             {
-                Logger.WriteLine("WebBrowser not found");
+                channel.LogMessage("WebBrowser not found");
             }
         }
 
         protected override async void updateCount(bool force)
         {
             int actual = _selectedIndex + 1;
-            if (_IsSpecial() || _showUnreadOnly)
+            if (ConnectionSettings.getInstance().selectedFeed<0 || _showUnreadOnly)
             {
                 int max;
-                if (feedId == (int)FeedId.Fresh)
+                if (ConnectionSettings.getInstance().selectedFeed == (int)FeedId.Fresh)
                 {
                     max = await TtRssInterface.getInterface().getUnReadCount(force);
                 }
                 else
                 {
-                    int ifOfFeed = feedId;
+                    int ifOfFeed = ConnectionSettings.getInstance().selectedFeed;
                     if (ifOfFeed == (int)FeedId.RecentlyRead)
                     {
                         ifOfFeed = (int)FeedId.All;
@@ -267,33 +261,20 @@ namespace TinyTinyRSS
             if (article.unread)
             {
                 toogleReadAppBarButton.IsChecked = true;
-                toogleReadAppBarButton.Label = loader.GetString("MarkReadAppBarButtonText");
             }
             else
             {
                 toogleReadAppBarButton.IsChecked = false;
-                toogleReadAppBarButton.Label = loader.GetString("MarkUnreadAppBarButtonText");
             }
 
             if (!article.marked)
             {
                 toggleStarAppBarButton.IsChecked = false;
-                toggleStarAppBarButton.Label = loader.GetString("StarAppBarButtonText");
             }
             else
             {
                 toggleStarAppBarButton.IsChecked = true;
-                toggleStarAppBarButton.Label = loader.GetString("UnStarAppBarButtonText");
             }
-        }
-
-        private void BuildLocalizedApplicationBar()
-        {
-            showUnreadOnlyAppBarMenu.Label = _showUnreadOnly ? loader.GetString("ShowAllArticles") : loader.GetString("ShowOnlyUnreadArticles");
-
-            List<string> options = getSortOptions();
-            sort1AppBarMenu.Label = options[0];
-            sort2AppBarMenu.Label = options[1];
         }
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -315,10 +296,9 @@ namespace TinyTinyRSS
             }
             else if (sender == markAllReadMenu)
             {
-                SetProgressBar(true);
                 try
                 {
-                    bool success = await TtRssInterface.getInterface().markAllArticlesRead(feedId);
+                    bool success = await markAllRead();
                     if (success)
                     {
                         foreach (WrappedArticle wa in ArticlesCollection)
@@ -337,67 +317,11 @@ namespace TinyTinyRSS
                             UpdateLocalizedApplicationBar(current);
                         }
                     }
-                    Task tsk = PushNotificationHelper.UpdateLiveTile(-1);
-                    SetProgressBar(false);
-                    await tsk;
                 }
                 catch (TtRssException ex)
                 {
                     checkException(ex);
                 }
-                return;
-            }
-            else if (sender == showUnreadOnlyAppBarMenu)
-            {
-                _showUnreadOnly = !_showUnreadOnly;
-                Logger.WriteLine("ArticlePage: showUnreadOnly changed = " + _showUnreadOnly);
-                showUnreadOnlyAppBarMenu.Label = _showUnreadOnly ? loader.GetString("ShowAllArticles") : loader.GetString("ShowOnlyUnreadArticles");
-                await LoadHeadlines();
-                _lastPivotIndex = -1;
-                if (PivotControl.SelectedIndex == 0)
-                {
-                    _selectedIndex = 0;
-                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
-                }
-                else
-                {
-                    _selectedIndex = 0;
-                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
-                }
-                updateCount(_showUnreadOnly);
-                return;
-            }
-            else if (sender == sort1AppBarMenu || sender == sort2AppBarMenu)
-            {
-                if (_sortOrder == 0 && sender == sort1AppBarMenu || _sortOrder == 2 && sender == sort2AppBarMenu)
-                {
-                    _sortOrder = 1;
-                }
-                else if (_sortOrder != 0 && sender == sort1AppBarMenu)
-                {
-                    _sortOrder = 0;
-                }
-                else if (_sortOrder != 2 && sender == sort2AppBarMenu)
-                {
-                    _sortOrder = 2;
-                }
-                Logger.WriteLine("ArticlePage: sortOrder changed = " + _sortOrder);
-                List<string> options = getSortOptions();
-                sort1AppBarMenu.Label = options[0];
-                sort2AppBarMenu.Label = options[1];
-                await LoadHeadlines();
-                _lastPivotIndex = -1;
-                if (PivotControl.SelectedIndex == 0)
-                {
-                    _selectedIndex = 0;
-                    PivotControl_LoadingPivotItem(null, new PivotItemEventArgs());
-                }
-                else
-                {
-                    _selectedIndex = 0;
-                    PivotControl.SelectedIndex = 0; // go back to first pivotItem
-                }
-                updateCount(_showUnreadOnly);
                 return;
             }
             else
@@ -406,7 +330,7 @@ namespace TinyTinyRSS
             }
             try
             {
-                SetProgressBar(true);
+                SetProgressBar(true, ProgressMsg.MarkArticle);
                 List<int> idList = new List<int>();
                 idList.Add(current.id);
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
@@ -422,37 +346,12 @@ namespace TinyTinyRSS
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
-                SetProgressBar(false);
+                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
             }
-        }
-
-        protected override async void SetProgressBar(bool on, bool setText)
-        {
-            if (_moreArticlesLoading && !on)
-            {
-                return;
-            }
-            ApplicationViewOrientation orientation = ApplicationView.GetForCurrentView().Orientation;
-            if (on)
-                {
-                    ProgressBar.IsActive = true;
-                }
-                else
-                {
-                    ProgressBar.IsActive = false;
-                }
-                if (setText)
-                {
-                ProgressBarText.Text = loader.GetString("LoadMoreArticles");
-                }
-                else
-                {
-                ProgressBarText.Text = "";
-                }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -502,7 +401,7 @@ namespace TinyTinyRSS
             }
             else
             {
-                Logger.WriteLine("WebBrowser not found");
+                channel.LogMessage("WebBrowser not found");
             }
         }
 
@@ -514,7 +413,7 @@ namespace TinyTinyRSS
         private void Icon_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             Image img = sender as Image;
-            if(img!=null)
+            if (img != null)
             {
                 img.Visibility = Visibility.Collapsed;
             }

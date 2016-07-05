@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using TinyTinyRSSInterface.Classes;
 using Windows.Web.Http;
 using Windows.Web.Http.Headers;
-using CaledosLab.Portable.Logging;
 using Windows.Web.Http.Filters;
 using Windows.Security.Cryptography.Certificates;
+using Windows.Foundation.Diagnostics;
+using TinyTinyRSS.Classes;
 
 namespace TinyTinyRSS.Interface
 {
@@ -20,6 +21,7 @@ namespace TinyTinyRSS.Interface
         public const string NONETWORKERROR = "HTTP Response is null.";
 
         private static TtRssInterface instance;
+        private LoggingChannel channel;
         private string sessionId;
         private Dictionary<int, Feed> FeedDictionary;
         private Dictionary<int, int> GlobalCounter;
@@ -35,6 +37,8 @@ namespace TinyTinyRSS.Interface
             GlobalCounter = new Dictionary<int, int>();
             FeedCounter = new Dictionary<int, int>();
             CategoryCounter = new Dictionary<int, int>();
+            channel = new LoggingChannel("Interface");
+            LogSession.addChannel(channel);
         }
 
         public static TtRssInterface getInterface()
@@ -186,26 +190,39 @@ namespace TinyTinyRSS.Interface
             }
             catch (KeyNotFoundException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
             catch (TtRssException e)
             {
-                Logger.WriteLine(e.StackTrace);
+                channel.LogMessage(e.StackTrace);
                 return 0;
             }
         }
 
         public async Task<int> getCountForCategory(bool forceUpdate, int feedId)
         {
-            if (forceUpdate || !CategoryCounter.ContainsKey(feedId))
+            try
             {
-                await getCounters();
+                if (forceUpdate || !CategoryCounter.ContainsKey(feedId))
+                {
+                    await getCounters();
+                }
+                return CategoryCounter[feedId];
             }
-            return CategoryCounter[feedId];
+            catch (KeyNotFoundException e)
+            {
+                channel.LogMessage(e.StackTrace);
+                return 0;
+            }
+            catch (TtRssException e)
+            {
+                channel.LogMessage(e.StackTrace);
+                return 0;
+            }
         }
 
-        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder)
+        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder, bool isCat)
         {
             string view_mode = "all_articles";
             int limit = INITIALHEADLINECOUNT;
@@ -230,7 +247,7 @@ namespace TinyTinyRSS.Interface
             }
             try
             {
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\"}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\", \"is_cat\":\"" + isCat + "\"}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 return headlines;
@@ -292,10 +309,18 @@ namespace TinyTinyRSS.Interface
             }
         }
 
-        public async Task<bool> markAllArticlesRead(int feedId)
+        public async Task<bool> markAllArticlesRead(int feedId, bool is_cat)
         {
-             string catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + "}";
-             Response status = await SendRequestAsync(null, catchUp);
+            string catchUp = "";
+            if(feedId<=0)
+            {
+                catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + "}";
+            } else
+            {
+                catchUp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"catchupFeed\",\"feed_id\":" + (int)feedId + ",\"is_cat \":\"" + is_cat + "\"}";
+            }
+
+            Response status = await SendRequestAsync(null, catchUp);
              if (status.content.ToString().Contains("OK"))
              {
                  return true;
@@ -327,7 +352,7 @@ namespace TinyTinyRSS.Interface
                 try
                 {
                     FeedDictionary.Clear();
-                    Logger.WriteLine("FEEDS got through API.");
+                    channel.LogMessage("FEEDS got through API.");
                     string getFeeds = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getFeeds\",\"cat_id\":-3,\"unread_only\":false}";
                     ResponseArray response = await SendRequestArrayAsync(null, getFeeds);
                     List<Feed> feeds = ParseContentOrError<Feed>(response);
@@ -343,7 +368,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("FEEDS got through Cache.");
+                channel.LogMessage("FEEDS got through Cache.");
             }
             return FeedDictionary.Values.ToList<Feed>();
         }
@@ -416,7 +441,9 @@ namespace TinyTinyRSS.Interface
                 if (!second)
                 {
                     retry = true;
-                }
+                } else {				
+					channel.LogMessage(ex.Message);
+				}
             }
             if (retry)
             {
@@ -424,7 +451,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("Exception twice in SendRequestAsync.");
+                channel.LogMessage("Exception twice in SendRequestAsync.");
                 return null;
             }
         }
@@ -486,7 +513,9 @@ namespace TinyTinyRSS.Interface
                 if (!second)
                 {
                     retry = true;
-                }
+                } else {				
+					channel.LogMessage(ex.Message);
+				}
             }
             if (retry)
             {
@@ -494,7 +523,7 @@ namespace TinyTinyRSS.Interface
             }
             else
             {
-                Logger.WriteLine("NullReferenceException twice in SendRequestArrayAsync.");
+                channel.LogMessage("NullReferenceException twice in SendRequestArrayAsync.");
                 throw new TtRssException(NONETWORKERROR);
             }
         }

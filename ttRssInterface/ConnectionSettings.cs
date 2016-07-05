@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using Windows.Security.Cryptography.DataProtection;
+using TinyTinyRSS.Classes;
+using Windows.Foundation.Diagnostics;
 using Windows.Storage;
 
 namespace TinyTinyRSS.Interface
@@ -25,6 +26,10 @@ namespace TinyTinyRSS.Interface
         public static string _favFeedsKey = "FavoriteFeeds";
         public static string _swipeMarginKey = "SwipeMargin";
         public static string _allowSelfSignedKey = "AllowSelfSigned";
+        public static string _selectedFeedKey = "SelectedFeed";
+        public static string _suspensionDateKey = "SuspensionDateTime";
+        public static string _isCatKey = "IsSelectedFeedCategory";
+        public static string _lastLogKey = "lastLogFileName";
 
         private static ConnectionSettings instance;
         private string _server;
@@ -43,9 +48,16 @@ namespace TinyTinyRSS.Interface
         private string _favFeeds;
         private string _swipeMargin;
         private string _allowSelfSigned;
+        private string _selectedFeed;
+        private string _suspensionDate;
+        private string _isCategory;
+        private string _lastLog;
+        private LoggingChannel channel;
 
         private ConnectionSettings()
         {
+            channel = new LoggingChannel("Settings");
+            LogSession.addChannel(channel);
         }
 
         public static ConnectionSettings getInstance() {
@@ -59,6 +71,23 @@ namespace TinyTinyRSS.Interface
         private static ApplicationDataContainer getLocalSettings()
         {
             return Windows.Storage.ApplicationData.Current.LocalSettings;
+        }
+
+        public string lastLog
+        {
+            get
+            {
+                if (_lastLog == null)
+                {
+                    _lastLog = ReadSetting(_lastLogKey);
+                }
+                return _lastLog;
+            }
+            set
+            {
+                SaveSetting(_lastLogKey, value);
+                _lastLog = value;
+            }
         }
 
         public string server
@@ -126,6 +155,23 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool isCategory
+        {
+            get
+            {
+                if (_isCategory == null)
+                {
+                    _isCategory = ReadSetting(_isCatKey);
+                }
+                return _isCategory.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_isCatKey, value.ToString());
+                _isCategory = value.ToString();
             }
         }
 
@@ -252,6 +298,25 @@ namespace TinyTinyRSS.Interface
             }
         }
 
+        public int selectedFeed
+        {
+            get
+            {
+                if (_selectedFeed == null)
+                {
+                    _selectedFeed = ReadSetting(_selectedFeedKey);
+                    if (_selectedFeed.Equals(""))
+                        _selectedFeed = "-3";
+                }
+                return int.Parse(_selectedFeed);
+            }
+            set
+            {
+                SaveSetting(_selectedFeedKey, value.ToString());
+                _selectedFeed = value.ToString();
+            }
+        }
+
         public int swipeMargin
         {
             get
@@ -268,25 +333,6 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_swipeMarginKey, value.ToString());
                 _swipeMargin = value.ToString();
-            }
-        }
-
-        public int headlinesView
-        {
-            get
-            {
-                if (_headlinesView == null)
-                {
-                    _headlinesView = ReadSetting(_headlinesViewKey);
-                    if (_headlinesView.Equals(""))
-                        _headlinesView = "3";
-                }
-                return int.Parse(_headlinesView);
-            }
-            set
-            {
-                SaveSetting(_headlinesViewKey, value.ToString());
-                _headlinesView = value.ToString();
             }
         }
 
@@ -323,6 +369,25 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_channelUriKey, value);
                 _liveTileChannelUri = value;
+            }
+        }
+        
+        public DateTime supsensionDate {
+            get
+            {
+                if (_suspensionDate == null)
+                {
+                    _suspensionDate = ReadSetting(_suspensionDateKey);
+                }
+                if("".Equals(_suspensionDate)) {
+                    return DateTime.Now.AddMinutes(-15);
+                }
+                return DateTime.ParseExact(_suspensionDate, "F", CultureInfo.InvariantCulture);
+            }
+            set
+            {
+                SaveSetting(_suspensionDateKey, value.ToString("F", CultureInfo.InvariantCulture));
+                _suspensionDate = value.ToString("F", CultureInfo.InvariantCulture);
             }
         }
 
@@ -367,8 +432,9 @@ namespace TinyTinyRSS.Interface
             SaveSetting(_favFeedsKey, _favFeeds);
         }
 
-        private static void SaveSetting(string key, string value)
+        private void SaveSetting(string key, string value)
         {
+            channel.LogMessage("Save setting " + key + " = " + value);
             var values = getLocalSettings().Values;
             if (!values.Keys.Contains(key))
             {
@@ -382,11 +448,16 @@ namespace TinyTinyRSS.Interface
 
         private string ReadSetting(string key)
         {
+            string setting;
             if (getLocalSettings().Values.Keys.Contains(key))
             {
-                return getLocalSettings().Values[key] as string;
+                setting = getLocalSettings().Values[key] as string;
+            } else
+            {
+                setting = "";
             }
-            return "";
+            channel.LogMessage("Read setting " + key + " = " + setting);
+            return setting;
         }
     }
 }
