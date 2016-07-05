@@ -123,14 +123,14 @@ namespace TinyTinyRSS
                         MessageDialog msgbox = new MessageDialog(loader.GetString("SettingsUpdateLiveTileError"));
                         await msgbox.ShowAsync();
                     }
-                    await statusBar.ProgressIndicator.HideAsync();
+                    MyProgressbar.Visibility = Visibility.Collapsed;
                     return true;
                 }
                 else
                 {
                     TestButton.Content = loader.GetString("FailedConnection");
                     ErrorMessage.Text = error;
-                    await statusBar.ProgressIndicator.HideAsync();
+                    MyProgressbar.Visibility = Visibility.Collapsed;
                     return false;
                 }
             }
