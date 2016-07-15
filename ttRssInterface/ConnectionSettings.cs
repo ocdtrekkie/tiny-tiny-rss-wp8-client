@@ -30,6 +30,8 @@ namespace TinyTinyRSS.Interface
         public static string _suspensionDateKey = "SuspensionDateTime";
         public static string _isCatKey = "IsSelectedFeedCategory";
         public static string _lastLogKey = "lastLogFileName";
+        public static string _httpAuthKey = "httpAuth";
+
 
         private static ConnectionSettings instance;
         private string _server;
@@ -52,6 +54,7 @@ namespace TinyTinyRSS.Interface
         private string _suspensionDate;
         private string _isCategory;
         private string _lastLog;
+        private string _httpAuth;
         private LoggingChannel channel;
 
         private ConnectionSettings()
@@ -155,6 +158,23 @@ namespace TinyTinyRSS.Interface
             {
                 SaveSetting(_markReadKey, value.ToString());
                 _markRead = value.ToString();
+            }
+        }
+
+        public bool httpAuth
+        {
+            get
+            {
+                if (_httpAuth == null)
+                {
+                    _httpAuth = ReadSetting(_httpAuthKey);
+                }
+                return _httpAuth.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_httpAuthKey, value.ToString());
+                _httpAuth = value.ToString();
             }
         }
 

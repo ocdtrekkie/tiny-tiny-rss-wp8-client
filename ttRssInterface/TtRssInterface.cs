@@ -11,6 +11,8 @@ using Windows.Web.Http.Filters;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Foundation.Diagnostics;
 using TinyTinyRSS.Classes;
+using System.Text;
+using Windows.Security.Cryptography;
 
 namespace TinyTinyRSS.Interface
 {
@@ -423,6 +425,13 @@ namespace TinyTinyRSS.Interface
                 HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
                 msg.Content = new HttpStringContent(requestUrl);
                 msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+                if (ConnectionSettings.getInstance().httpAuth)
+                {
+                    string authInfo = ConnectionSettings.getInstance().username + ":" + ConnectionSettings.getInstance().password;
+                    string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                    var header = new HttpCredentialsHeaderValue("Basic", base64token);
+                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                }
                 HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
                 var responseString = await httpresponse.Content.ReadAsStringAsync();
 
@@ -486,6 +495,13 @@ namespace TinyTinyRSS.Interface
                 HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
                 msg.Content = new HttpStringContent(requestUrl);
                 msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+                if(ConnectionSettings.getInstance().httpAuth)
+                {
+                    string authInfo = ConnectionSettings.getInstance().username + ":" + ConnectionSettings.getInstance().password;
+                    string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                    var header = new HttpCredentialsHeaderValue("Basic", base64token);
+                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                }
                 HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
                 var responseString = await httpresponse.Content.ReadAsStringAsync();
 

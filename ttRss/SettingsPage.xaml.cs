@@ -67,6 +67,7 @@ namespace TinyTinyRSS
             LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
             SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
             UnsignedSslCb.IsChecked = ConnectionSettings.getInstance().allowSelfSignedCert;
+            HttpAuthCb.IsChecked = ConnectionSettings.getInstance().httpAuth;
         }
 		
 		// Test and save connection settings.        
@@ -79,6 +80,10 @@ namespace TinyTinyRSS
             if (!server.StartsWith("http://") && !server.StartsWith("https://"))
             {
                 server = string.Concat("http://", server);
+            }
+            if (!server.EndsWith("/"))
+            {
+                server = string.Concat(server, "/");
             }
             ServerField.Text = server;
             string error = await TtRssInterface.getInterface().CheckLogin(server, UsernameField.Text, PasswdField.Password);
@@ -100,10 +105,6 @@ namespace TinyTinyRSS
             }
             else
             {
-                if (!server.EndsWith("/"))
-                {
-                    server = string.Concat(server, "/");
-                }
                 if (!server.EndsWith("api/"))
                 {
                     server = string.Concat(server, "api/");
@@ -320,6 +321,9 @@ namespace TinyTinyRSS
                 ConnectionSettings.getInstance().useDarkBackground = DarkArticleBackgroundCheckbox.IsChecked.Value;
             } else if (sender == UnsignedSslCb) {
                 ConnectionSettings.getInstance().allowSelfSignedCert = UnsignedSslCb.IsChecked.Value;
+            } else if (sender == HttpAuthCb)
+            {
+                ConnectionSettings.getInstance().httpAuth = HttpAuthCb.IsChecked.Value;
             }
         }
 

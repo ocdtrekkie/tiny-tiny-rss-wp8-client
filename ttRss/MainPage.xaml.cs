@@ -18,6 +18,8 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Input;
 using Windows.UI.ViewManagement;
 using Windows.Foundation.Metadata;
+using Windows.UI.Xaml.Controls.Primitives;
+using Universal.UI.Xaml.Controls;
 
 namespace TinyTinyRSS
 {
@@ -762,7 +764,7 @@ namespace TinyTinyRSS
                 field = UpdateField.Unread;
             }
             else if (sender == markAllReadMenu)
-            {               
+            {
                 bool success = await markAllRead();
                 if (success)
                 {
@@ -775,7 +777,7 @@ namespace TinyTinyRSS
                         }
                         if (wa.Article != null && wa.Article.unread)
                         {
-                            wa.Article.unread = false;                            
+                            wa.Article.unread = false;
                         }
                     }
                     await updateFeedCounters;
@@ -788,9 +790,22 @@ namespace TinyTinyRSS
             }
             try
             {
+                SetProgressBar(true, ProgressMsg.MarkArticle);
                 int selectedIndex = HeadlinesView.SelectedIndex;
                 WrappedArticle current = ArticlesCollection[selectedIndex];
-                SetProgressBar(true, ProgressMsg.MarkArticle);
+                await updateArticle(current, field);
+                UpdateLocalizedApplicationBar(current.Article);
+            }
+            finally
+            {
+                SetProgressBar(false, ProgressMsg.MarkArticle);
+            }
+        }
+
+        private async Task updateArticle(WrappedArticle current, UpdateField field)
+        {
+            try
+            {
                 List<int> idList = new List<int>();
                 idList.Add(current.Headline.id);
                 bool success = await TtRssInterface.getInterface().updateArticles(idList, field, UpdateMode.Toggle);
@@ -823,19 +838,16 @@ namespace TinyTinyRSS
                             UpdateCountManually((int)FeedId.Starred, current.Headline.marked);
                             break;
                     }
-                    UpdateLocalizedApplicationBar(current.Article);
-                    if (sender == articleToogleReadAppBarButton)
+                    if (field == UpdateField.Unread)
                     {
                         UpdateCountManually((int)current.Headline.feed_id, current.Headline.unread);
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }
                 }
-                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
             catch (TtRssException ex)
             {
                 checkException(ex);
-                SetProgressBar(false, ProgressMsg.MarkArticle);
             }
         }
 
@@ -969,6 +981,58 @@ namespace TinyTinyRSS
             SpecialFeedsList.SelectedItem = null;
             ConnectionSettings.getInstance().isCategory = true;
             await feedSelectionChanged();
+        }
+
+        private async void SwipeListView_ItemSwipe(object sender, Universal.UI.Xaml.Controls.ItemSwipeEventArgs e)
+        {
+            var item = e.SwipedItem as WrappedArticle;
+            UpdateField field;
+            if(e.Direction == SwipeListDirection.Left)
+            {
+                field = UpdateField.Unread;
+            } else
+            {
+                field = UpdateField.Starred;
+            }
+            try
+            {
+                SetProgressBar(true, ProgressMsg.MarkMultipleArticle);
+                await updateArticle(item, field);
+            }
+            finally
+            {
+                SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
+            }
+        }
+
+        private async void ToggleReadButton_Click(object sender, RoutedEventArgs e)
+        {
+            var toggle = sender as Button;
+            var item = (sender as FrameworkElement).Tag as WrappedArticle;
+            try
+            {
+                SetProgressBar(true, ProgressMsg.MarkMultipleArticle);
+                await updateArticle(item, UpdateField.Unread);
+            }
+            finally
+            {
+                SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
+            }
+        }
+
+        private async void ToggleFavButton_Click(object sender, RoutedEventArgs e)
+        {
+            var toggle = sender as Button;
+            var item = (sender as FrameworkElement).Tag as WrappedArticle;
+            try
+            {
+                SetProgressBar(true, ProgressMsg.MarkMultipleArticle);
+                await updateArticle(item, UpdateField.Starred);
+            }
+            finally
+            {
+                SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
+            }
         }
     }
 }

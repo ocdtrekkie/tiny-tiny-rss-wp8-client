@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:TinyTinyRSS"
+    xmlns:uwp="using:Universal.UI.Xaml.Controls"
     xmlns:converter="using:TinyTinyRSS.Classes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,6 +16,77 @@
         <converter:ZeroToNoStringConverter x:Key="ZeroToNoStringConverter" />
         <converter:BoolToBoldConverter x:Key="BoldConverter" />
         <converter:MultiSelectToVisibilityConverter x:Key="MultiSelectToVisibilityConverter" />
+        <converter:MarkedSymbolConverter x:Key="MarkedSymbolConverter" />
+        <converter:UnReadSymbolConverter x:Key="UnReadSymbolConverter" />
+        <converter:TouchToInvisiblityConverter x:Key="TouchToInvisiblityConverter" />
+        <converter:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
+        <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" /> 
+        <Style x:Key="ListButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+            <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}"/>
+            <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+            <Setter Property="Padding" Value="8,4,8,4"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+            <Setter Property="UseSystemFocusVisuals" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal">
+                                        <Storyboard>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PhoneAccentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerUpThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource PhoneAccentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <PointerDownThemeAnimation Storyboard.TargetName="RootGrid"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="RootGrid">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseLowBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ContentPresenter">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledTransparentBrush}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
 
     <Grid>
@@ -233,14 +305,22 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ListView Name="HeadlinesView" ItemsSource="{Binding}" SelectionMode="Single" 
-    				          SelectionChanged="HeadlinesView_SelectionChanged" Grid.Row="0" Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-                            <ListView.ItemTemplate>
+                        <uwp:SwipeListView Name="HeadlinesView" ItemsSource="{Binding}" 
+                                           SelectionMode="Single" 
+    				                       SelectionChanged="HeadlinesView_SelectionChanged" 
+                                           Grid.Row="0" ItemSwipe="SwipeListView_ItemSwipe" 
+                                           ItemLeftBackground="{StaticResource PhoneAccentBrush}"
+                                           ItemRightBackground="{StaticResource PhoneAccentBrush}"
+                                           ItemRightBehavior="Collapse"
+                                           Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+                            <uwp:SwipeListView.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="0 0 0 1" 
-    											BorderBrush="Gray" Padding="0,0,0,4" >
+    											BorderBrush="Gray" Padding="0,0,0,4">
                                         <Grid Margin="0">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
@@ -249,26 +329,74 @@
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
-                                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                                            <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
                                                        HorizontalAlignment="Left" TextWrapping="Wrap" 
     												   FontSize="{StaticResource TextStyleMediumFontSize}" Text="{Binding Headline.title}" 
     												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
-                                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
-                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" Margin="0">
+                                            <Button x:Name="ListReadButton" Tag="{Binding}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
+                                                          Background="Transparent"
+                                                          Padding="4,4,4,4" Click="ToggleReadButton_Click"
+                                                          Visibility="{Binding Path=Headline, Converter={StaticResource TouchToInvisiblityConverter}}"
+                                                          Style="{StaticResource ListButtonStyle}">
+                                                <ToolTipService.ToolTip>
+                                                    <ToolTip Content="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" />
+                                                </ToolTipService.ToolTip>
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                          Glyph="{Binding Path=Headline.unread, Converter={StaticResource UnReadSymbolConverter}}" 
+                                                          FontSize="16"/>
+                                            </Button>
+                                            <Button x:Name="ListFavButton" Tag="{Binding}" Grid.Row="1" Grid.Column="1" Grid.RowSpan="2"
+                                                          Background="Transparent" BorderBrush="Transparent"
+                                                          Click="ToggleFavButton_Click" Padding="4,4,4,4" 
+                                                          Visibility="{Binding Path=Headline, Converter={StaticResource TouchToInvisiblityConverter}}"
+                                                          Style="{StaticResource ListButtonStyle}" Margin="0,0,4,0">
+                                                <ToolTipService.ToolTip>
+                                                    <ToolTip Content="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" />
+                                                </ToolTipService.ToolTip>
+                                                <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                          Glyph="{Binding Path=Headline.marked, Converter={StaticResource MarkedSymbolConverter}}" 
+                                                          FontSize="16"/>
+                                            </Button>
+                                            <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                            <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                                            <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="2" Margin="0">
                                                 <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,4,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
                                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             </StackPanel>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
-                            </ListView.ItemTemplate>
-                            <ListView.ItemContainerStyle>
+                            </uwp:SwipeListView.ItemTemplate>
+                            <uwp:SwipeListView.ItemLeftContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{StaticResource PhoneAccentBrush}">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                          Glyph="{Binding Path=Headline.unread, Converter={StaticResource UnReadSymbolConverter}}" 
+                                                          FontSize="16" Margin="0,0,4,0"/>
+                                        <TextBlock Text="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
+                                                   Foreground="White" Style="{ThemeResource BodyTextBlockStyle}" 
+                                                   TextAlignment="Center" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </uwp:SwipeListView.ItemLeftContentTemplate>
+                            <uwp:SwipeListView.ItemRightContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Background="{StaticResource PhoneAccentBrush}">
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                          Glyph="{Binding Path=Headline.marked, Converter={StaticResource MarkedSymbolConverter}}" 
+                                                          FontSize="16" Margin="8,0,4,0"/>
+                                        <TextBlock Text="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
+                                                   Foreground="White" Style="{ThemeResource BodyTextBlockStyle}" 
+                                                   TextAlignment="Center" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </uwp:SwipeListView.ItemRightContentTemplate>
+                            <uwp:SwipeListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                 </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
+                            </uwp:SwipeListView.ItemContainerStyle>
+                        </uwp:SwipeListView>
                         <StackPanel Orientation="Vertical" Margin="0" Grid.Row="1">
                             <ProgressRing Name="ProgressBar" Foreground="{StaticResource PhoneAccentBrush}" />
                             <TextBlock Name="ProgressBarText" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}" Margin="8,0,0,0" />

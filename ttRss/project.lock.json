@@ -270,6 +270,14 @@
           "lib/dotnet/Microsoft.Win32.Primitives.dll": {}
         }
       },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "4.0.0",
@@ -2055,6 +2063,14 @@
           "runtimes/win8-arm/native/mscorrc.dll": {}
         }
       },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "4.0.0",
@@ -3677,6 +3693,14 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -5313,6 +5337,14 @@
           "runtimes/win7-x64/native/mscorrc.dll": {}
         }
       },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "4.0.0",
@@ -6935,6 +6967,14 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -8571,6 +8611,14 @@
           "runtimes/win7-x86/native/mscorrc.dll": {}
         }
       },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        }
+      },
       "System.AppContext/4.0.0": {
         "dependencies": {
           "System.Collections": "4.0.0",
@@ -10193,6 +10241,14 @@
         },
         "runtime": {
           "runtimes/win8-aot/lib/netcore50/System.Private.DataContractSerialization.dll": {}
+        }
+      },
+      "SwipeListView/1.2.0": {
+        "compile": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
+        },
+        "runtime": {
+          "lib/uap10.0/Universal.UI.Xaml.Controls.dll": {}
         }
       },
       "System.AppContext/4.0.0": {
@@ -12253,6 +12309,29 @@
         "runtimes/win8-arm/native/mscordbi.dll",
         "runtimes/win8-arm/native/mscorrc.debug.dll",
         "runtimes/win8-arm/native/mscorrc.dll"
+      ]
+    },
+    "SwipeListView/1.2.0": {
+      "sha512": "Ep54ikiNdmncUtlZEUyoQCGcGRPCk2XIlXbljNCXdfo9cEK8ZgoUd9llXj6yOFsPMPGNwqS6GXeSgy3TbgvTsQ==",
+      "type": "package",
+      "files": [
+        "SwipeListView.1.2.0.nupkg.sha512",
+        "SwipeListView.nuspec",
+        "lib/uap10.0/Universal.UI.Xaml.Controls.dll",
+        "lib/uap10.0/Universal.UI.Xaml.Controls.pdb",
+        "lib/uap10.0/Universal.UI.Xaml.Controls.pri",
+        "lib/uap10.0/Universal.UI.Xaml.Controls/Properties/Universal.UI.Xaml.Controls.rd.xml",
+        "lib/uap10.0/Universal.UI.Xaml.Controls/Themes/Generic.xbf",
+        "lib/uap10.0/Universal.UI.Xaml.Controls/Universal.UI.Xaml.Controls.xr.xml",
+        "lib/wp8/Universal.UI.Xaml.Controls.dll",
+        "lib/wp8/Universal.UI.Xaml.Controls.pdb",
+        "lib/wp81/Universal.UI.Xaml.Controls.dll",
+        "lib/wp81/Universal.UI.Xaml.Controls.pdb",
+        "lib/wpa81/Universal.UI.Xaml.Controls.dll",
+        "lib/wpa81/Universal.UI.Xaml.Controls.pdb",
+        "lib/wpa81/Universal.UI.Xaml.Controls.pri",
+        "lib/wpa81/Universal.UI.Xaml.Controls/Themes/Generic.xbf",
+        "lib/wpa81/Universal.UI.Xaml.Controls/Universal.UI.Xaml.Controls.xr.xml"
       ]
     },
     "System.AppContext/4.0.0": {
@@ -15030,7 +15109,8 @@
   "projectFileDependencyGroups": {
     "": [
       "HockeySDK.UWP >= 4.0.0",
-      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0"
+      "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0",
+      "SwipeListView >= 1.2.0"
     ],
     "UAP,Version=v10.0": []
   }
