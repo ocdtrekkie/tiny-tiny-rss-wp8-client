@@ -74,16 +74,22 @@ namespace TinyTinyRSS.Interface
         public async Task<string> CheckLogin(string server, string username, string password)
         {
             string login = "{\"op\":\"login\",\"user\":\"" + username + "\",\"password\":\"" + password + "\"}";
+            string oldUser = ConnectionSettings.getInstance().username;
+            string oldPass = ConnectionSettings.getInstance().password;
             try
             {
+                ConnectionSettings.getInstance().username = username;
+                ConnectionSettings.getInstance().password = password;
                 Response response = await SendRequestAsync(server, login);
                 Session session = ParseContentOrError<Session>(response);
                 sessionId = session.session_id;
-                //Config = await getConfig(false);
+
                 return "";
             }
             catch (TtRssException e)
             {
+                ConnectionSettings.getInstance().username = oldUser;
+                ConnectionSettings.getInstance().password = oldPass;
                 if (e.Message.Equals("Unexpected character encountered while parsing value: <. Path '', line 0, position 0."))
                 {
                     return string.Concat("Something went wrong, probably your Server Url is misspelled.", e.Message);
@@ -96,6 +102,8 @@ namespace TinyTinyRSS.Interface
             }
             catch (NullReferenceException nre)
             {
+                ConnectionSettings.getInstance().username = oldUser;
+                ConnectionSettings.getInstance().password = oldPass;
                 return "Error sending http request. Check server field.";
             }
         }
