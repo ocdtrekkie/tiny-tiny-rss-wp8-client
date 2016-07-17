@@ -410,39 +410,10 @@ namespace TinyTinyRSS.Interface
 
         public async Task<Response> SendRequestAsync(string server, string requestUrl, bool second)
         {
-            if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
-            {
-                await Login(false);
-            }
-            requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
             bool retry = false;
             try
             {
-                if (server == null)
-                {
-                    server = ConnectionSettings.getInstance().server;
-                }
-                // Create a Base Protocol Filter to add certificate errors I want to ignore...
-                var allowSelfSigned = new HttpBaseProtocolFilter();
-                // Untrused because this is a self signed cert that is not installed
-                if (ConnectionSettings.getInstance().allowSelfSignedCert)
-                {
-                    allowSelfSigned.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-                }
-                HttpClient httpClient = new HttpClient(allowSelfSigned);
-                HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
-                msg.Content = new HttpStringContent(requestUrl);
-                msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
-                if (ConnectionSettings.getInstance().httpAuth)
-                {
-                    string authInfo = ConnectionSettings.getInstance().username + ":" + ConnectionSettings.getInstance().password;
-                    string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
-                    var header = new HttpCredentialsHeaderValue("Basic", base64token);
-                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
-                }
-                HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
-                var responseString = await httpresponse.Content.ReadAsStringAsync();
-
+                var responseString = await SendRequest(server, requestUrl);
                 Response obj = JsonConvert.DeserializeObject<Response>(responseString);
                 if (obj != null)
                 {
@@ -473,6 +444,44 @@ namespace TinyTinyRSS.Interface
             }
         }
 
+        private async Task<string> SendRequest(string server, string requestUrl)
+        {
+            //server = "https://api-1afaa57ac327a243e9e49e045113fbe6.oasis.sandstorm.io/api/";
+            if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
+            {
+                await Login(false);
+            }
+            requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
+            if (server == null)
+            {
+                server = ConnectionSettings.getInstance().server;
+            }
+            // Create a Base Protocol Filter to add certificate errors I want to ignore...
+            var allowSelfSigned = new HttpBaseProtocolFilter();
+            // Untrused because this is a self signed cert that is not installed
+            if (ConnectionSettings.getInstance().allowSelfSignedCert)
+            {
+                allowSelfSigned.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
+            }
+            HttpClient httpClient = new HttpClient(allowSelfSigned);
+            HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
+            msg.Content = new HttpStringContent(requestUrl);
+            msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
+            if (ConnectionSettings.getInstance().httpAuth)
+            {
+                string username = ConnectionSettings.getInstance().username;
+                string password = ConnectionSettings.getInstance().password;
+                string authInfo = username + ":" + password;
+                string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                msg.Headers.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+            }
+            HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
+            var responseString = await httpresponse.Content.ReadAsStringAsync();
+            return responseString;
+        }
+
+
         public async Task<ResponseArray> SendRequestArrayAsync(string server, string requestUrl)
         {
             return await SendRequestArrayAsync(server, requestUrl, false);
@@ -483,36 +492,7 @@ namespace TinyTinyRSS.Interface
             bool retry = false;
             try
             {
-                if (sessionId == null && !requestUrl.Contains("\"op\":\"login\""))
-                {
-                    await Login(false);
-                }
-                requestUrl = requestUrl.Replace(SidPlaceholder, sessionId);
-                if (server == null)
-                {
-                    server = ConnectionSettings.getInstance().server;
-                }
-                // Create a Base Protocol Filter to add certificate errors I want to ignore...
-                var allowSelfSigned = new HttpBaseProtocolFilter();
-                // Untrused because this is a self signed cert that is not installed
-                if (ConnectionSettings.getInstance().allowSelfSignedCert)
-                {
-                    allowSelfSigned.IgnorableServerCertificateErrors.Add(ChainValidationResult.Untrusted);
-                }
-                HttpClient httpClient = new HttpClient(allowSelfSigned);
-                HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(server));
-                msg.Content = new HttpStringContent(requestUrl);
-                msg.Content.Headers.ContentType = new HttpMediaTypeHeaderValue("application/json");
-                if(ConnectionSettings.getInstance().httpAuth)
-                {
-                    string authInfo = ConnectionSettings.getInstance().username + ":" + ConnectionSettings.getInstance().password;
-                    string base64token = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
-                    var header = new HttpCredentialsHeaderValue("Basic", base64token);
-                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
-                }
-                HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
-                var responseString = await httpresponse.Content.ReadAsStringAsync();
-
+                 var responseString = await SendRequest(server, requestUrl);
                 try
                 {
                     ResponseArray obj = JsonConvert.DeserializeObject<ResponseArray>(responseString);
