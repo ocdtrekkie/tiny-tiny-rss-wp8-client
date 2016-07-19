@@ -24,6 +24,7 @@ namespace TinyTinyRSS.Interface.Classes
             //Uri uri = new Uri(iconsUrl + feedId + ".ico");
             return iconsUrl + feedId + ".ico";
             //return new BitmapImage(uri);
+            // see here for http auth https://social.msdn.microsoft.com/Forums/vstudio/en-US/2b24ce07-19d1-46a6-a9b6-d3ac27e57352/image-basic-http-authentication?forum=wpf
         }
     }
 }
