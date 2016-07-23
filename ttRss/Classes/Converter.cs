@@ -1,9 +1,15 @@
 ﻿using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
+using TinyTinyRSS.Interface;
+using TinyTinyRSS.Interface.Classes;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace TinyTinyRSS.Classes
 {
@@ -184,4 +190,57 @@ namespace TinyTinyRSS.Classes
             throw new NotImplementedException();
         }
     }
+    public class FeedIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            string feedId = value.ToString();
+            string server = ConnectionSettings.getInstance().server;
+            Config conf = TtRssInterface.getInterface().Config;
+            if (conf == null || feedId == null)
+            {
+                return null;
+            }
+
+            string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(iconsUrl);
+                if (ConnectionSettings.getInstance().httpAuth)
+                {
+                    request.Credentials = new NetworkCredential(
+                        ConnectionSettings.getInstance().username, 
+                        ConnectionSettings.getInstance().password);
+                } else
+                {
+                    return iconsUrl;
+                }
+
+                Task<WebResponse> response = request.GetResponseAsync();
+                Task.WaitAll(response);
+                WebResponse resp = response.Result;
+                BitmapImage image = new BitmapImage();
+                using (var responseStream = resp.GetResponseStream()) { 
+                    using (var memStream = new MemoryStream()) 
+                    {
+                        Task memStreamTask = responseStream.CopyToAsync(memStream);
+                        Task.WaitAll(memStreamTask);
+                        memStream.Position = 0;
+                        image.SetSource(memStream.AsRandomAccessStream());
+                    }
+                }
+                return image;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
+
