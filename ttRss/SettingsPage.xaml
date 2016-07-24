@@ -89,7 +89,7 @@
             </PivotItem>
             <PivotItem x:Name="FeatureSettingsPivot">
                 <PivotItem.Header>
-                    <TextBlock Text="Fetaure Requests" />
+                    <TextBlock Text="Feature Requests" />
                 </PivotItem.Header>
                 <StackPanel Margin="12,0,12,0" Orientation="Vertical">
                     <TextBlock Text="Please vote for up to 2 feature you want to have implemented in the next version. You can vote once per version." TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
@@ -114,6 +114,7 @@
                     <Button x:Name="FeatureRequestButton" Click="FeatureRequest_Click" HorizontalAlignment="Center" >
                         <TextBlock Text="Vote" FontSize="{StaticResource TextStyleMediumFontSize}" />
                     </Button>
+                    <TextBlock Text="As always you can also send me an email for any issue with the app: stefan@thescientist.eu" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                 </StackPanel>
             </PivotItem>
             <PivotItem x:Name="LiveTileSettingsPivot">

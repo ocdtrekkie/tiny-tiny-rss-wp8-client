@@ -101,6 +101,18 @@ namespace TinyTinyRSS
             {
                 Frame.Navigate(typeof(SettingsPage));
             }
+            if (ConnectionSettings.getInstance().firstStart)
+            {
+                MessageDialog msgbox = new MessageDialog("Please have a look at the settings page 'Feature Requests' to vote for the next feature.");
+                msgbox.Commands.Add(new UICommand("OK",
+                new UICommandInvokedHandler(this.CommandInvokedHandler), "close"));
+                msgbox.Commands.Add(new UICommand(
+                    "Remind Me Again",
+                    new UICommandInvokedHandler(this.CommandInvokedHandler), "remindme"));
+                // Set the command to be invoked when escape is pressed
+                msgbox.CancelCommandIndex = 1;
+                await msgbox.ShowAsync();
+            }
             try
             {
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
@@ -149,6 +161,14 @@ namespace TinyTinyRSS
             catch (TtRssException ex)
             {
                 checkException(ex);
+            }
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
+            if (command.Id.Equals("close"))
+            {
+                ConnectionSettings.getInstance().firstStart = false;
             }
         }
 

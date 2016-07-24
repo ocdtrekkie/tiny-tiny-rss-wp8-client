@@ -236,13 +236,13 @@ namespace TinyTinyRSS.Interface
             {
                 if (_firstStart == null)
                 {
-                    _firstStart = ReadSetting("firstStartKey");
+                    _firstStart = ReadSetting("firstStartKeyFeatureRequests");
                 }
                 return !_firstStart.ToLower().Equals("false");
             }
             set
             {
-                SaveSetting("firstStartKey", value.ToString());
+                SaveSetting("firstStartKeyFeatureRequests", value.ToString());
                 _firstStart = value.ToString();
             }
         }
