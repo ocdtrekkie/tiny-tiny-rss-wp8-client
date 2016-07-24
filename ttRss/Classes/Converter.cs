@@ -1,15 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Web.Http;
+using Windows.Web.Http.Headers;
 
 namespace TinyTinyRSS.Classes
 {
@@ -205,25 +209,23 @@ namespace TinyTinyRSS.Classes
             string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(iconsUrl);
-                if (ConnectionSettings.getInstance().httpAuth)
-                {
-                    request.Credentials = new NetworkCredential(
-                        ConnectionSettings.getInstance().username, 
-                        ConnectionSettings.getInstance().password);
-                } else
-                {
+                if (!ConnectionSettings.getInstance().httpAuth) { 
                     return iconsUrl;
                 }
 
-                Task<WebResponse> response = request.GetResponseAsync();
-                Task.WaitAll(response);
-                WebResponse resp = response.Result;
+                HttpClient httpClient = new HttpClient();
+                string username = ConnectionSettings.getInstance().username;
+                    string password = ConnectionSettings.getInstance().password;
+                    string authInfo = username + ":" + password;
+                    string base64token = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                Task<IInputStream> bufferTask = httpClient.GetInputStreamAsync(new Uri(iconsUrl)).AsTask();
+                bufferTask.Wait();
                 BitmapImage image = new BitmapImage();
-                using (var responseStream = resp.GetResponseStream()) { 
+                using (var buffer = bufferTask.Result) { 
                     using (var memStream = new MemoryStream()) 
                     {
-                        Task memStreamTask = responseStream.CopyToAsync(memStream);
+                        Task memStreamTask = buffer.AsStreamForRead().CopyToAsync(memStream);
                         Task.WaitAll(memStreamTask);
                         memStream.Position = 0;
                         image.SetSource(memStream.AsRandomAccessStream());
@@ -231,7 +233,7 @@ namespace TinyTinyRSS.Classes
                 }
                 return image;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return "";
             }
