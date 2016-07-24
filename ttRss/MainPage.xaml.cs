@@ -420,7 +420,7 @@ namespace TinyTinyRSS
             }
             else if (sender.Equals(this.infoAppBarButton))
             {
-                var uri = new Uri("https://thescientist.eu/?p=1057");
+                var uri = new Uri("https://thescientist.eu/category/it-en/tiny-tiny-rss/");
                 await Windows.System.Launcher.LaunchUriAsync(uri);
             }
             else if (sender.Equals(this.refreshAppBarButton))
