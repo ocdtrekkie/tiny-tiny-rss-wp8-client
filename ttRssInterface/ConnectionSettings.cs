@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TinyTinyRSS.Classes;
+using Windows.ApplicationModel;
 using Windows.Foundation.Diagnostics;
 using Windows.Storage;
 
@@ -31,6 +32,7 @@ namespace TinyTinyRSS.Interface
         public static string _isCatKey = "IsSelectedFeedCategory";
         public static string _lastLogKey = "lastLogFileName";
         public static string _httpAuthKey = "httpAuth";
+        public static string _featuresVotedKey = "featureVote";
 
 
         private static ConnectionSettings instance;
@@ -55,6 +57,7 @@ namespace TinyTinyRSS.Interface
         private string _isCategory;
         private string _lastLog;
         private string _httpAuth;
+        private string _featuresVoted;
         private LoggingChannel channel;
 
         private ConnectionSettings()
@@ -178,6 +181,36 @@ namespace TinyTinyRSS.Interface
             }
         }
 
+        public bool featuresVoted
+        {
+            get
+            {
+                if (_featuresVoted == null)
+                {
+                    _featuresVoted = ReadSetting(featureKey);
+                }
+                return _featuresVoted.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(featureKey, value.ToString());
+                _featuresVoted = value.ToString();
+            }
+        }
+
+        private string featureKey
+        {
+            get
+            {
+                string key = string.Format("{0}_{1}.{2}.{3}",
+                    _featuresVotedKey,
+                    Package.Current.Id.Version.Major,
+                    Package.Current.Id.Version.Minor,
+                    Package.Current.Id.Version.Build);
+                return key;
+            }
+        }
+        
         public bool isCategory
         {
             get
@@ -203,13 +236,13 @@ namespace TinyTinyRSS.Interface
             {
                 if (_firstStart == null)
                 {
-                    _firstStart = ReadSetting("firstStartKey");
+                    _firstStart = ReadSetting("firstStartKeyFeatureRequests");
                 }
                 return !_firstStart.ToLower().Equals("false");
             }
             set
             {
-                SaveSetting("firstStartKey", value.ToString());
+                SaveSetting("firstStartKeyFeatureRequests", value.ToString());
                 _firstStart = value.ToString();
             }
         }

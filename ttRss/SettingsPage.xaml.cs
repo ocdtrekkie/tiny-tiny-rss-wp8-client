@@ -68,6 +68,7 @@ namespace TinyTinyRSS
             SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
             UnsignedSslCb.IsChecked = ConnectionSettings.getInstance().allowSelfSignedCert;
             HttpAuthCb.IsChecked = ConnectionSettings.getInstance().httpAuth;
+            FeatureRequestButton.IsEnabled = !ConnectionSettings.getInstance().featuresVoted;
         }
 		
 		// Test and save connection settings.        
@@ -344,6 +345,55 @@ namespace TinyTinyRSS
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             ConnectionSettings.getInstance().swipeMargin = Convert.ToInt32(e.NewValue);
+        }
+
+        private void FeatureRequest_Click(object sender, RoutedEventArgs e)
+        {
+            if(ManageFeedsCheckbox.IsChecked.HasValue && ManageFeedsCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_ManageFeeds");
+            }
+            else if (AutoReadScrollCheckbox.IsChecked.HasValue && AutoReadScrollCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AutoReadScroll");
+            }
+            else if (LiveTileFeatureCheckbox.IsChecked.HasValue && LiveTileFeatureCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AdvancedLiveTiles");
+            }
+            else if (FeedTreeFeatureCheckbox.IsChecked.HasValue && FeedTreeFeatureCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_FeedTree");
+            }
+            else if (LabelNotesFeatureCheckbox.IsChecked.HasValue && LabelNotesFeatureCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_LabelsAndNotes");
+            }
+            else if (ShortcutsFeatureCheckbox.IsChecked.HasValue && ShortcutsFeatureCheckbox.IsChecked.Value)
+            {
+                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_KeyboardShortcuts");
+            }
+            ConnectionSettings.getInstance().featuresVoted = true;
+            FeatureRequestButton.IsEnabled = !ConnectionSettings.getInstance().featuresVoted;
+        }
+
+        private void FeatureCheckbox_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox[] options = new CheckBox[] { ManageFeedsCheckbox, AutoReadScrollCheckbox,
+                LiveTileFeatureCheckbox, FeedTreeFeatureCheckbox, LabelNotesFeatureCheckbox,
+                ShortcutsFeatureCheckbox };
+            int selected = 0;
+            foreach (CheckBox box in options)
+            {
+                if(box.IsChecked.HasValue && box.IsChecked.Value)
+                {
+                    selected++;
+                }
+            }
+            if(selected>2)
+            {
+                ((CheckBox)sender).IsChecked = false;
+            }
         }
     }
 }

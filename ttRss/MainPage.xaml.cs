@@ -101,6 +101,18 @@ namespace TinyTinyRSS
             {
                 Frame.Navigate(typeof(SettingsPage));
             }
+            if (ConnectionSettings.getInstance().firstStart)
+            {
+                MessageDialog msgbox = new MessageDialog("Please have a look at the settings page 'Feature Requests' to vote for the next feature.");
+                msgbox.Commands.Add(new UICommand("OK",
+                new UICommandInvokedHandler(this.CommandInvokedHandler), "close"));
+                msgbox.Commands.Add(new UICommand(
+                    "Remind Me Again",
+                    new UICommandInvokedHandler(this.CommandInvokedHandler), "remindme"));
+                // Set the command to be invoked when escape is pressed
+                msgbox.CancelCommandIndex = 1;
+                await msgbox.ShowAsync();
+            }
             try
             {
                 validConnection = await TtRssInterface.getInterface().CheckLogin();
@@ -149,6 +161,14 @@ namespace TinyTinyRSS
             catch (TtRssException ex)
             {
                 checkException(ex);
+            }
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
+            if (command.Id.Equals("close"))
+            {
+                ConnectionSettings.getInstance().firstStart = false;
             }
         }
 
@@ -420,7 +440,7 @@ namespace TinyTinyRSS
             }
             else if (sender.Equals(this.infoAppBarButton))
             {
-                var uri = new Uri("https://thescientist.eu/?p=1057");
+                var uri = new Uri("https://thescientist.eu/category/it-en/tiny-tiny-rss/");
                 await Windows.System.Launcher.LaunchUriAsync(uri);
             }
             else if (sender.Equals(this.refreshAppBarButton))

@@ -46,16 +46,8 @@ namespace TinyTinyRSS.Interface.Classes
             }
         }
 
-        public string icon
-        {
-            get
-            {
-                return InterfaceHelper.getIcon(id);
-            }
-        }
-
         // Create the OnPropertyChanged method to raise the event 
-        protected void OnPropertyChanged(string name)
+        public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)

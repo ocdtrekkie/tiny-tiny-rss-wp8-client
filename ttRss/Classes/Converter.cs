@@ -1,9 +1,19 @@
 ﻿using System;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using TinyTinyRSS.Interface;
+using TinyTinyRSS.Interface.Classes;
 using Windows.ApplicationModel.Resources;
+using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Web.Http;
+using Windows.Web.Http.Headers;
 
 namespace TinyTinyRSS.Classes
 {
@@ -184,4 +194,55 @@ namespace TinyTinyRSS.Classes
             throw new NotImplementedException();
         }
     }
+    public class FeedIconConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            string feedId = value.ToString();
+            string server = ConnectionSettings.getInstance().server;
+            Config conf = TtRssInterface.getInterface().Config;
+            if (conf == null || feedId == null)
+            {
+                return null;
+            }
+
+            string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
+            try
+            {
+                if (!ConnectionSettings.getInstance().httpAuth) { 
+                    return iconsUrl;
+                }
+
+                HttpClient httpClient = new HttpClient();
+                string username = ConnectionSettings.getInstance().username;
+                    string password = ConnectionSettings.getInstance().password;
+                    string authInfo = username + ":" + password;
+                    string base64token = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                Task<IInputStream> bufferTask = httpClient.GetInputStreamAsync(new Uri(iconsUrl)).AsTask();
+                bufferTask.Wait();
+                BitmapImage image = new BitmapImage();
+                using (var buffer = bufferTask.Result) { 
+                    using (var memStream = new MemoryStream()) 
+                    {
+                        Task memStreamTask = buffer.AsStreamForRead().CopyToAsync(memStream);
+                        Task.WaitAll(memStreamTask);
+                        memStream.Position = 0;
+                        image.SetSource(memStream.AsRandomAccessStream());
+                    }
+                }
+                return image;
+            }
+            catch (Exception e)
+            {
+                return "";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
+

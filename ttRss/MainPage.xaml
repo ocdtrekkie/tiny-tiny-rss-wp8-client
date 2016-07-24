@@ -20,7 +20,8 @@
         <converter:UnReadSymbolConverter x:Key="UnReadSymbolConverter" />
         <converter:TouchToInvisiblityConverter x:Key="TouchToInvisiblityConverter" />
         <converter:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
-        <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" /> 
+        <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
+        <converter:FeedIconConverter x:Key="FeedIconConverter" />
         <Style x:Key="ListButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
@@ -191,7 +192,7 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.icon}" 
+                                            <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.id, Converter={StaticResource FeedIconConverter}}" 
                                                            Grid.Column="0" HorizontalAlignment="Left" 
                                                            ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
                                             <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
@@ -360,7 +361,7 @@
                                             <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="2" Margin="0">
-                                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,4,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
+                                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,4,0" Source="{Binding Headline.feed_id, Converter={StaticResource FeedIconConverter}}" ImageFailed="Icon_ImageFailed" />
                                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             </StackPanel>
                                         </Grid>
