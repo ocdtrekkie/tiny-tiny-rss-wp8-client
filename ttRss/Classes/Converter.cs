@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -212,26 +213,7 @@ namespace TinyTinyRSS.Classes
                 if (!ConnectionSettings.getInstance().httpAuth) { 
                     return iconsUrl;
                 }
-
-                HttpClient httpClient = new HttpClient();
-                string username = ConnectionSettings.getInstance().username;
-                    string password = ConnectionSettings.getInstance().password;
-                    string authInfo = username + ":" + password;
-                    string base64token = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
-                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
-                Task<IInputStream> bufferTask = httpClient.GetInputStreamAsync(new Uri(iconsUrl)).AsTask();
-                bufferTask.Wait();
-                BitmapImage image = new BitmapImage();
-                using (var buffer = bufferTask.Result) { 
-                    using (var memStream = new MemoryStream()) 
-                    {
-                        Task memStreamTask = buffer.AsStreamForRead().CopyToAsync(memStream);
-                        Task.WaitAll(memStreamTask);
-                        memStream.Position = 0;
-                        image.SetSource(memStream.AsRandomAccessStream());
-                    }
-                }
-                return image;
+                return "";
             }
             catch (Exception e)
             {
@@ -242,6 +224,76 @@ namespace TinyTinyRSS.Classes
         public object ConvertBack(object value, Type targetType, object parameter, string str)
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class AsyncConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            return new AsyncTask(value);                
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            throw new NotImplementedException();
+        }
+
+        public class AsyncTask : INotifyPropertyChanged
+        {
+            public AsyncTask(object value)
+            {
+                AsyncValue = null; 
+                LoadValue(value);
+            }
+
+            private async Task LoadValue(object value)
+            {
+                string feedId = value.ToString();
+                string server = ConnectionSettings.getInstance().server;
+                Config conf = TtRssInterface.getInterface().Config;
+                if (conf == null || feedId == null)
+                {
+                    AsyncValue = null;
+                }
+
+                string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
+                try
+                {
+                    if (!ConnectionSettings.getInstance().httpAuth)
+                    {
+                        AsyncValue = new BitmapImage(new Uri(iconsUrl));
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AsyncValue"));
+                    }
+                    HttpClient httpClient = new HttpClient();
+                    string username = ConnectionSettings.getInstance().username;
+                    string password = ConnectionSettings.getInstance().password;
+                    string authInfo = username + ":" + password;
+                    string base64token = System.Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
+                    httpClient.DefaultRequestHeaders.Authorization = new HttpCredentialsHeaderValue("Basic", base64token);
+                    Task<IInputStream> bufferTask = httpClient.GetInputStreamAsync(new Uri(iconsUrl)).AsTask();
+                    BitmapImage image = new BitmapImage();
+                    using (var buffer = await bufferTask)
+                    {
+                        using (var memStream = new MemoryStream())
+                        {
+                            await buffer.AsStreamForRead().CopyToAsync(memStream);
+                            memStream.Position = 0;
+                            image.SetSource(memStream.AsRandomAccessStream());
+                        }
+                    }
+                    AsyncValue = image;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AsyncValue"));
+                }
+                catch (Exception e)
+                {
+                    AsyncValue = null;
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public BitmapImage AsyncValue { get; set; }
         }
     }
 }

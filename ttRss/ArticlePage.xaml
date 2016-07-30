@@ -12,6 +12,7 @@
 
     <Page.Resources>
         <lclasses:StringToColumnConverter x:Key="LengthConverter" />
+        <lclasses:AsyncConverter x:Key="FeedIconConverterNew" />
 
         <DataTemplate x:Key="ArticleTemplate">
             <Grid Margin="0">
@@ -33,7 +34,9 @@
                     <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
                     <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
+                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0"  Source="{Binding AsyncValue}" 
+                               DataContext="{Binding Headline.feed_id, Converter={StaticResource FeedIconConverterNew}}" 
+                               ImageFailed="Icon_ImageFailed" />
                         <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
                     </StackPanel>
                 </Grid>
