@@ -195,6 +195,19 @@ namespace TinyTinyRSS.Classes
             throw new NotImplementedException();
         }
     }
+    
+    public class InvertBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            return !(bool)value;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class FeedIconConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string str)

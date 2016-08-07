@@ -587,7 +587,6 @@ namespace TinyTinyRSS
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-                    UpdateLocalizedApplicationBar(item.Article);
                     if (landscape)
                     {
                         Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
@@ -607,7 +606,6 @@ namespace TinyTinyRSS
                     {
                         item.Headline.unread = false;
                         item.Article.unread = false;
-                        UpdateLocalizedApplicationBar(item.Article);
                         UpdateCountManually((int)FeedId.Fresh, item.Headline.unread);
                         UpdateCountManually((int)item.Headline.feed_id, item.Headline.unread);
                         await UpdateFeedCounters();
@@ -715,32 +713,6 @@ namespace TinyTinyRSS
             }
         }
 
-        private void UpdateLocalizedApplicationBar(Article article)
-        {
-            WrappedArticle current= (WrappedArticle) HeadlinesView.SelectedItem;
-            if(article != null && (current==null || !article.Equals(current.Article)))
-            {
-                return;
-            }            
-            if (article != null && article.unread)
-            {
-                articleToogleReadAppBarButton.IsChecked = true;
-            }
-            else
-            {
-                articleToogleReadAppBarButton.IsChecked = false;
-            }
-
-            if (article != null && article.marked)
-            {
-                articleToggleStarAppBarButton.IsChecked = true;
-            }
-            else
-            {
-                articleToggleStarAppBarButton.IsChecked = false;
-            }
-        }
-
         private void ArticleGridClose(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             closeArticleGrid();
@@ -814,7 +786,6 @@ namespace TinyTinyRSS
                 int selectedIndex = HeadlinesView.SelectedIndex;
                 WrappedArticle current = ArticlesCollection[selectedIndex];
                 await updateArticle(current, field);
-                UpdateLocalizedApplicationBar(current.Article);
             }
             finally
             {
