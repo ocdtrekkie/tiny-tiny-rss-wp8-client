@@ -171,14 +171,12 @@ namespace TinyTinyRSS
                 if (article != null && _selectedIndex == localSelected)
                 {
                     setHtml(article.content);
-                    UpdateLocalizedApplicationBar(article);
                 }
                 e.Item.UpdateLayout();
                 SetProgressBar(false, ProgressMsg.LoadArticle);
                 if (await markArticleReadAutomatically(article))
                 {
                     item.Headline.unread = false;
-                    UpdateLocalizedApplicationBar(article);
                 }
                 if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
                 {
@@ -256,45 +254,25 @@ namespace TinyTinyRSS
             Scrollbar.Value = actual;
         }
 
-        private void UpdateLocalizedApplicationBar(Article article)
-        {
-            if (article.unread)
-            {
-                toogleReadAppBarButton.IsChecked = true;
-            }
-            else
-            {
-                toogleReadAppBarButton.IsChecked = false;
-            }
-
-            if (!article.marked)
-            {
-                toggleStarAppBarButton.IsChecked = false;
-            }
-            else
-            {
-                toggleStarAppBarButton.IsChecked = true;
-            }
-        }
-
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             UpdateField field;
             int selectedIndex = _selectedIndex;
+            FrameworkElement element = (FrameworkElement) sender;
             Article current = await ArticlesCollection[selectedIndex].getContent();
-            if (sender == publishAppBarMenu)
+            if ("publishAppBarMenu".Equals(element.Name))
             {
                 field = UpdateField.Published;
             }
-            else if (sender == toggleStarAppBarButton)
+            else if ("toggleStarAppBarButton".Equals(element.Name))
             {
                 field = UpdateField.Starred;
             }
-            else if (sender == toogleReadAppBarButton)
+            else if ("toogleReadAppBarButton".Equals(element.Name))
             {
                 field = UpdateField.Unread;
             }
-            else if (sender == markAllReadMenu)
+            else if ("markAllReadMenu".Equals(element.Name))
             {
                 try
                 {
@@ -311,10 +289,6 @@ namespace TinyTinyRSS
                             {
                                 wa.Article.unread = false;
                             }
-                        }
-                        if (_selectedIndex == selectedIndex)
-                        {
-                            UpdateLocalizedApplicationBar(current);
                         }
                     }
                 }
@@ -337,11 +311,11 @@ namespace TinyTinyRSS
                 if (success)
                 {
                     ArticlesCollection[selectedIndex].Article = await TtRssInterface.getInterface().getArticle(current.id, true);
-                    if (selectedIndex == _selectedIndex)
-                    {
-                        UpdateLocalizedApplicationBar(ArticlesCollection[selectedIndex].Article);
-                    }
-                    if (sender == toogleReadAppBarButton)
+                    ArticlesCollection[selectedIndex].Headline.unread = ArticlesCollection[selectedIndex].Article.unread;
+                    ArticlesCollection[selectedIndex].Headline.published = ArticlesCollection[selectedIndex].Article.published;
+                    ArticlesCollection[selectedIndex].Headline.marked = ArticlesCollection[selectedIndex].Article.marked;
+
+                    if ("toogleReadAppBarButton".Equals(element.Name))
                     {
                         await PushNotificationHelper.UpdateLiveTile(-1);
                     }

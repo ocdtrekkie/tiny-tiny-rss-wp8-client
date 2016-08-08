@@ -1,2 +1,2 @@
-MainPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\bin\x86\Release\TinyTinyRSS_4.1.2.0_x86.appx
-SymbolPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\AppPackages\TinyTinyRSS_4.1.2.0_Test\TinyTinyRSS_4.1.2.0_x86.appxsym
+MainPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\bin\x86\Release\TinyTinyRSS_4.1.5.0_x86.appx
+SymbolPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\AppPackages\TinyTinyRSS_4.1.5.0_Test\TinyTinyRSS_4.1.5.0_x86.appxsym

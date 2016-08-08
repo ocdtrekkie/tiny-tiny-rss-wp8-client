@@ -22,6 +22,8 @@
         <converter:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
         <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
         <converter:FeedIconConverter x:Key="FeedIconConverter" />
+        <converter:AsyncConverter x:Key="FeedIconConverterNew" />
+        <converter:BoolToItalicConverter x:Key="BoolToItalicConverter" /> 
         <Style x:Key="ListButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
@@ -192,9 +194,11 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <Image MaxWidth="20" MaxHeight="20" Source="{Binding feed.id, Converter={StaticResource FeedIconConverter}}" 
-                                                           Grid.Column="0" HorizontalAlignment="Left" 
-                                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
+                                            <Image MaxWidth="20" MaxHeight="20" 
+                                                   DataContext="{Binding feed.id, Converter={StaticResource FeedIconConverterNew}}" 
+                                                   Source="{Binding AsyncValue}" 
+                                                   Grid.Column="0" HorizontalAlignment="Left" 
+                                                   ScrollViewer.VerticalScrollBarVisibility="Disabled"/>
                                             <TextBlock TextWrapping="Wrap" HorizontalAlignment="Stretch" Text="{Binding feed.title}" Margin="4,0,0,0" Grid.Column="1" />
                                             <TextBlock Text="{Binding feed.unread, Converter={StaticResource IntStringConverter}}" Margin="0,0,8,0" Grid.Column="2" />
                                         </Grid>
@@ -333,7 +337,8 @@
                                             <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
                                                        HorizontalAlignment="Left" TextWrapping="Wrap" 
     												   FontSize="{StaticResource TextStyleMediumFontSize}" Text="{Binding Headline.title}" 
-    												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
+    												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}" 
+                                                       FontStyle="{Binding Path=Headline.marked, Converter={StaticResource BoolToItalicConverter}}"/>
                                             <Button x:Name="ListReadButton" Tag="{Binding}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
                                                           Background="Transparent"
                                                           Padding="4,4,4,4" Click="ToggleReadButton_Click"
@@ -361,7 +366,12 @@
                                             <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,4,0" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="2" Margin="0">
-                                                <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,4,0" Source="{Binding Headline.feed_id, Converter={StaticResource FeedIconConverter}}" ImageFailed="Icon_ImageFailed" />
+                                                <Image x:Name="Icon" HorizontalAlignment="Left" 
+                                                       VerticalAlignment="Center" Height="Auto" 
+                                                       Width="Auto" MaxHeight="16" MaxWidth="16" 
+                                                       Margin="0,0,4,0" Source="{Binding AsyncValue}" 
+                                                       DataContext="{Binding Headline.feed_id, Converter={StaticResource FeedIconConverterNew}}" 
+                                                       ImageFailed="Icon_ImageFailed" />
                                                 <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                                             </StackPanel>
                                         </Grid>
@@ -435,7 +445,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="Headline" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
+                                <TextBlock x:Name="Headline" Grid.Column="0" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" 
+                                           Text="{Binding Path=Headline.title}"/>
                                 <SymbolIcon Symbol="Clear" Width="16" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Tapped="ArticleGridClose" Margin="0,4,4,0"  />
                             </Grid>
                             <StackPanel Orientation="Horizontal" Grid.Row="1" VerticalAlignment="Top" Grid.Column="0" Margin="0" Visibility="Collapsed">
@@ -449,11 +460,13 @@
                         <ProgressBar Name="MarkArticleProgressBar" Grid.Row="2" IsIndeterminate="True" Visibility="Collapsed" />
                         <CommandBar Name="ArticleAppBar" Grid.Row="3">
                             <AppBarToggleButton x:Name="articleToogleReadAppBarButton" Icon="Mail"
-                                          x:Uid="ToggleUnreadAppBarButton" Label=""
-                                                Click="ArticleAppBarButton_Click" IsChecked="False" />
+                                                Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
+                                                Click="ArticleAppBarButton_Click" 
+                                                IsChecked="{Binding Path=Headline.unread, Mode=OneWay}" />
                             <AppBarToggleButton x:Name="articleToggleStarAppBarButton" Icon="Favorite"
-                                          x:Uid="ToggleStarAppBarButton" Label="" 
-                                Click="ArticleAppBarButton_Click" IsChecked="False" />
+                                                Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
+                                                Click="ArticleAppBarButton_Click"
+                                                IsChecked="{Binding Path=Headline.marked, Mode=OneWay}" />
                             <AppBarButton x:Name="shareLinkAppBarButton"  
                                   Click="ShareAppBarButton_Click" 
                                   Label="" x:Uid="ShareAppBarButton">

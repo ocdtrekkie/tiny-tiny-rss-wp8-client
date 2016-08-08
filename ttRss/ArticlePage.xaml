@@ -12,12 +12,16 @@
 
     <Page.Resources>
         <lclasses:StringToColumnConverter x:Key="LengthConverter" />
-
+        <lclasses:AsyncConverter x:Key="FeedIconConverterNew" />
+        <lclasses:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
+        <lclasses:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
+        
         <DataTemplate x:Key="ArticleTemplate">
             <Grid Margin="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -29,42 +33,53 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Text="{Binding Headline.title}"/>
-                    <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Text="{Binding Headline.formattedDate, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
-                    <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding Headline.author, Mode=OneWay}" FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
+                    <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                               HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" 
+                               FontSize="20" Text="{Binding Headline.title}"/>
+                    <TextBlock x:Name="Time" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" 
+                               VerticalAlignment="Top" 
+                               Text="{Binding Headline.formattedDate, Mode=OneWay}" 
+                               FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
+                    <TextBlock x:Name="Author" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" 
+                               VerticalAlignment="Top" TextWrapping="Wrap" 
+                               Text="{Binding Headline.author, Mode=OneWay}" 
+                               FontStyle="Italic" Margin="0,0,5,0" FontSize="14"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="2" VerticalAlignment="Top" Grid.Column="0" Grid.ColumnSpan="2" Margin="0">
-                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0" Source="{Binding Headline.iconurl}" ImageFailed="Icon_ImageFailed" />
+                        <Image x:Name="Icon" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" MaxHeight="16" MaxWidth="16" Margin="0,0,5,0"  Source="{Binding AsyncValue}" 
+                               DataContext="{Binding Headline.feed_id, Converter={StaticResource FeedIconConverterNew}}" 
+                               ImageFailed="Icon_ImageFailed" />
                         <TextBlock x:Name="FeedUrl" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding Headline.feed_title}" FontSize="14"/>
                     </StackPanel>
                 </Grid>
-                <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="3" Margin="{Binding}"/>
+                <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="{Binding}"/>
+                <CommandBar Name="AppBar"  Grid.Row="2">
+                    <AppBarToggleButton Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
+                                        x:Name="toogleReadAppBarButton" 
+                                        Icon="Mail" Click="AppBarButton_Click" 
+                                        IsChecked="{Binding Headline.unread, Mode=OneWay}" />
+                    <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite"  
+                                         IsChecked="{Binding Headline.marked, Mode=OneWay}"
+                                         Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
+                                         Click="AppBarButton_Click" />
+                    <AppBarButton x:Name="shareLinkAppBarButton" 
+                          Click="ShareAppBarButton_Click" 
+                          Label="" x:Uid="ShareAppBarButton">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
+                          Label="" x:Uid="OpenExtAppBarButton" />
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
+                          Label="" x:Uid="TooglePublishAppBarButton" />
+                        <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
+                          Label="" x:Uid="MarkAllArticlesRead" />
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Page.BottomAppBar>
-        <CommandBar Name="AppBar">
-            <AppBarToggleButton x:Uid="ToggleUnreadAppBarButton" x:Name="toogleReadAppBarButton" 
-                                Icon="Mail" Click="AppBarButton_Click" />
-            <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite" 
-                                          x:Uid="ToggleStarAppBarButton" Click="AppBarButton_Click" />
-            <AppBarButton x:Name="shareLinkAppBarButton" 
-                          Click="ShareAppBarButton_Click" 
-                          Label="" x:Uid="ShareAppBarButton">
-                <AppBarButton.Icon>
-                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
-                </AppBarButton.Icon>
-            </AppBarButton>
-            <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
-                          Label="" x:Uid="OpenExtAppBarButton" />
-            <CommandBar.SecondaryCommands>
-                <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
-                          Label="" x:Uid="TooglePublishAppBarButton" />
-                <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
-                          Label="" x:Uid="MarkAllArticlesRead" />
-            </CommandBar.SecondaryCommands>
-        </CommandBar>
-
-    </Page.BottomAppBar>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>

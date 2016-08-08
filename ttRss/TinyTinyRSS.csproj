@@ -76,13 +76,6 @@
     <MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <ProjectReference Include="..\ttRssInterface\ttRssInterface.csproj">
-      <Project>{fd35a92c-6853-48c7-b702-29b610501be2}</Project>
-      <Name>ttRssInterface</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AbstractArticlePage.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -203,6 +196,12 @@
     <Reference Include="NotificationsExtensions">
       <HintPath>..\..\NotificationsExtensions.winmd</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ttRssInterface\ttRssInterface.csproj">
+      <Project>{fd35a92c-6853-48c7-b702-29b610501be2}</Project>
+      <Name>ttRssInterface</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
