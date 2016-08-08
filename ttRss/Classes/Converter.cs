@@ -104,6 +104,18 @@ namespace TinyTinyRSS.Classes
             return value.Equals(Windows.UI.Text.FontWeights.Bold);
         }
     }
+    public class BoolToItalicConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string str)
+        {
+            return System.Convert.ToBoolean(value) ? Windows.UI.Text.FontStyle.Italic : Windows.UI.Text.FontStyle.Normal;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string str)
+        {
+            return value.Equals(Windows.UI.Text.FontWeights.Bold);
+        }
+    }
     public class NullToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string str)

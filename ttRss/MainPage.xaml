@@ -22,7 +22,8 @@
         <converter:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
         <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
         <converter:FeedIconConverter x:Key="FeedIconConverter" />
-        <converter:AsyncConverter x:Key="FeedIconConverterNew" /> 
+        <converter:AsyncConverter x:Key="FeedIconConverterNew" />
+        <converter:BoolToItalicConverter x:Key="BoolToItalicConverter" /> 
         <Style x:Key="ListButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
@@ -336,7 +337,8 @@
                                             <TextBlock x:Name="Headline" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
                                                        HorizontalAlignment="Left" TextWrapping="Wrap" 
     												   FontSize="{StaticResource TextStyleMediumFontSize}" Text="{Binding Headline.title}" 
-    												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}"/>
+    												   FontWeight="{Binding Path=Headline.unread, Converter={StaticResource BoldConverter}}" 
+                                                       FontStyle="{Binding Path=Headline.marked, Converter={StaticResource BoolToItalicConverter}}"/>
                                             <Button x:Name="ListReadButton" Tag="{Binding}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"
                                                           Background="Transparent"
                                                           Padding="4,4,4,4" Click="ToggleReadButton_Click"
