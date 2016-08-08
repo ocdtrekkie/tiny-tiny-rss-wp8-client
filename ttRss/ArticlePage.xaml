@@ -13,6 +13,8 @@
     <Page.Resources>
         <lclasses:StringToColumnConverter x:Key="LengthConverter" />
         <lclasses:AsyncConverter x:Key="FeedIconConverterNew" />
+        <lclasses:UnReadTooltipConverter x:Key="UnReadTooltipConverter" />
+        <lclasses:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
         
         <DataTemplate x:Key="ArticleTemplate">
             <Grid Margin="0">
@@ -51,11 +53,14 @@
                 </Grid>
                 <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="{Binding}"/>
                 <CommandBar Name="AppBar"  Grid.Row="2">
-                    <AppBarToggleButton x:Uid="ToggleUnreadAppBarButton" x:Name="toogleReadAppBarButton" 
-                                Icon="Mail" Click="AppBarButton_Click" IsChecked="{Binding Headline.unread, Mode=OneWay}" />
+                    <AppBarToggleButton Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
+                                        x:Name="toogleReadAppBarButton" 
+                                        Icon="Mail" Click="AppBarButton_Click" 
+                                        IsChecked="{Binding Headline.unread, Mode=OneWay}" />
                     <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite"  
                                          IsChecked="{Binding Headline.marked, Mode=OneWay}"
-                                          x:Uid="ToggleStarAppBarButton" Click="AppBarButton_Click" />
+                                         Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
+                                         Click="AppBarButton_Click" />
                     <AppBarButton x:Name="shareLinkAppBarButton" 
                           Click="ShareAppBarButton_Click" 
                           Label="" x:Uid="ShareAppBarButton">
