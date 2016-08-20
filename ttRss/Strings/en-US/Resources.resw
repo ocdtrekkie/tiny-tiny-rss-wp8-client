@@ -466,6 +466,14 @@
   <data name="SettingHeadlinesViewSpecial.Text" xml:space="preserve">
     <value>Special Feeds only</value>
   </data>
+  <data name="ToggleStarAppBarButton.Label" xml:space="preserve">
+    <value>Toggle Favorite State</value>
+    <comment>Text for AppBarButton favorite on multiselection</comment>
+  </data>
+  <data name="ToggleUnreadAppBarButton.Label" xml:space="preserve">
+    <value>Toggle Read State</value>
+    <comment>Text for AppBarButton read on multiselection</comment>
+  </data>
   <data name="LoadOriginalLink" xml:space="preserve">
     <value>Load original page</value>
   </data>
