@@ -1025,5 +1025,46 @@ namespace TinyTinyRSS
                 SetProgressBar(false, ProgressMsg.MarkMultipleArticle);
             }
         }
+
+        private async void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            if(senderElement.DataContext == null || !(senderElement.DataContext is ExtendedFeed))
+            {
+                return;
+            }
+            ExtendedFeed feed = (ExtendedFeed) senderElement.DataContext;
+            MessageDialog msgbox = new MessageDialog("Are you sure you want to unsubscribe from this feed?");
+            msgbox.Commands.Add(new UICommand("Unsubscribe",
+            new UICommandInvokedHandler(this.DeleteInvokedHandler), feed.feed));
+            msgbox.Commands.Add(new UICommand(
+                "Cancel",
+                new UICommandInvokedHandler(this.DeleteInvokedHandler), null));
+            // Set the command to be invoked when escape is pressed
+            msgbox.CancelCommandIndex = 1;
+            await msgbox.ShowAsync();
+        }
+
+        private async void DeleteInvokedHandler(IUICommand command)
+        {
+            if (command.Id != null && command.Id is Feed)
+            {
+                if(await TtRssInterface.getInterface().unsubscribeFromFeed((Feed) command.Id))
+                {
+                    UpdateAllFeedsList(true);
+                } else
+                {
+                    MessageDialog msgbox = new MessageDialog("Unsubscribing failed.");
+                    await msgbox.ShowAsync();
+                }
+            }
+        }
+
+        private void AllFeedsList_Holding(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
+            flyoutBase.ShowAt(senderElement);
+        }
     }
 }

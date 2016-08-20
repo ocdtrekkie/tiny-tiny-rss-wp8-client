@@ -184,11 +184,21 @@
                             </ListView>
                             <ListView x:Name="AllFeedsList" 
                                         ItemsSource="{Binding Source={StaticResource groupedFeeds}}" 
-                                        SelectionChanged="AllFeedsList_SelectionChanged"                                
+                                        SelectionChanged="AllFeedsList_SelectionChanged"  
                                         Background="Transparent" VerticalContentAlignment="Top">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid HorizontalAlignment="Stretch">
+                                        <Grid HorizontalAlignment="Stretch" 
+                                              Holding="AllFeedsList_Holding"
+                                              RightTapped="AllFeedsList_Holding">
+                                            <FlyoutBase.AttachedFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyout.Items>
+                                                        <MenuFlyoutItem x:Name="Remove" Text="Remove"    
+                                                            Click="Remove_Click" DataContext="{Binding}" />
+                                                    </MenuFlyout.Items>
+                                                </MenuFlyout>
+                                            </FlyoutBase.AttachedFlyout>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="*"/>

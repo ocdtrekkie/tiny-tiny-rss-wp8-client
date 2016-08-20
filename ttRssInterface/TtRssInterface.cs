@@ -301,6 +301,52 @@ namespace TinyTinyRSS.Interface
             }
         }
 
+        public async Task<bool> subscribeToFeed(string url, int group_id, string username, string password)
+        {
+            try
+            {
+                string subscribeOp;
+                if (username != null)
+                {
+                    subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
+                         + "\"login\":\"" + username + "\",\"password\":\"" + password + "\",\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
+                } else
+                {
+                    subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
+                         + "\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
+                }
+                Response response = await SendRequestAsync(null, subscribeOp);
+                if (response.content.ToString().Contains("OK"))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (TtRssException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> unsubscribeFromFeed(Feed feed)
+        {
+            try
+            {
+                string subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"unsubscribeFeed\","
+                         + "\"feed_id\":" + feed.id + "}";
+                Response response = await SendRequestAsync(null, subscribeOp);
+                if (response.content.ToString().Contains("OK"))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (TtRssException)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> updateArticles(IEnumerable<int> ids, UpdateField field, UpdateMode mode)
         {
             try
