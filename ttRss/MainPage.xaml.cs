@@ -1066,5 +1066,10 @@ namespace TinyTinyRSS
             FlyoutBase flyoutBase = FlyoutBase.GetAttachedFlyout(senderElement);
             flyoutBase.ShowAt(senderElement);
         }
+
+        private void SubscribeButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SubscribePage));
+        }
     }
 }

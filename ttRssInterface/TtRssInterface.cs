@@ -301,31 +301,25 @@ namespace TinyTinyRSS.Interface
             }
         }
 
-        public async Task<bool> subscribeToFeed(string url, int group_id, string username, string password)
+        public async Task<string> subscribeToFeed(string url, int group_id, string username, string password)
         {
-            try
+             string subscribeOp;
+            if (username != null && username.Length != 0)
             {
-                string subscribeOp;
-                if (username != null)
-                {
-                    subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
-                         + "\"login\":\"" + username + "\",\"password\":\"" + password + "\",\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
-                } else
-                {
-                    subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
-                         + "\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
-                }
-                Response response = await SendRequestAsync(null, subscribeOp);
-                if (response.content.ToString().Contains("OK"))
-                {
-                    return true;
-                }
-                return false;
-            }
-            catch (TtRssException)
+                subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
+                        + "\"login\":\"" + username + "\",\"password\":\"" + password + "\",\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
+            } else
             {
-                return false;
+                subscribeOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"subscribeToFeed\","
+                        + "\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
             }
+            Response response = await SendRequestAsync(null, subscribeOp);
+            if (response.content.ToString().Contains("OK"))
+            {
+                return null;
+            }
+            channel.LogMessage(response.content.ToString(), LoggingLevel.Error);
+            return response.content.ToString();           
         }
 
         public async Task<bool> unsubscribeFromFeed(Feed feed)

@@ -11,9 +11,6 @@ using Windows.Storage;
 using Windows.UI.Core;
 using System.Threading.Tasks;
 using Windows.Foundation.Diagnostics;
-using System.IO;
-
-// The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
 namespace TinyTinyRSS
 {

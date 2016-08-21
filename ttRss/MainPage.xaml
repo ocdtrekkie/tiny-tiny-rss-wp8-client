@@ -152,6 +152,16 @@
                     </Grid.RowDefinitions>
                     <ScrollViewer Grid.Row="0">
                         <StackPanel>
+                            <Button x:Name="SubscribeButton" Click="SubscribeButton_Click" 
+                                    Background="{StaticResource AppBarBackgroundThemeBrush}" 
+                                    BorderThickness="0" HorizontalAlignment="Left"
+                                    Margin="8,0,0,0"
+                                    Padding="0 4 0 4" Style="{StaticResource ListButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <SymbolIcon Symbol="Add" Width="20" HorizontalAlignment="Left" />
+                                    <TextBlock x:Uid="SubscribeButton" Text="Subscribe to Feed" Margin="4,0,0,0"/>
+                                </StackPanel>
+                            </Button>
                             <TextBlock Text="" x:Uid="SpecialFeeds" Margin="12,0,0,0" 
                                         FontSize="{StaticResource TextStyleLargeFontSize}"
                                         Foreground="{StaticResource PhoneAccentBrush}" />
