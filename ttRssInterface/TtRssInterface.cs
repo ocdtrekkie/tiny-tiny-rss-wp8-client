@@ -314,12 +314,13 @@ namespace TinyTinyRSS.Interface
                         + "\"category_id\":" + group_id + ",\"feed_url\":\"" + url + "\"}";
             }
             Response response = await SendRequestAsync(null, subscribeOp);
-            if (response.content.ToString().Contains("OK"))
+            string resp = response.content.ToString();
+            if (resp.Contains("code\": 1") || resp.Contains("code\": 0"))
             {
                 return null;
             }
             channel.LogMessage(response.content.ToString(), LoggingLevel.Error);
-            return response.content.ToString();           
+            return resp;           
         }
 
         public async Task<bool> unsubscribeFromFeed(Feed feed)

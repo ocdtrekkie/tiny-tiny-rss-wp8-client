@@ -71,6 +71,13 @@ namespace TinyTinyRSS
                 if (response == null)
                 {
                     await TtRssInterface.getInterface().getFeeds();
+                    if (Frame.CanGoBack)
+                    {
+                        Frame.GoBack();
+                    } else
+                    {
+                        Frame.Navigate(typeof(MainPage));
+                    }
                 }
                 else
                 {
