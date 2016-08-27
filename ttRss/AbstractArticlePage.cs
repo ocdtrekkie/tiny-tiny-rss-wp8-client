@@ -25,6 +25,7 @@ namespace TinyTinyRSS
         protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
         protected int _sortOrder;
         protected bool initialized;
+        private IAsyncOperation<IUICommand> asyncMsgDialogCommand = null;
 
         protected enum ProgressMsg { LoadHeadlines, LoadMoreHeadlines, MarkArticle, MarkMultipleArticle, LoadArticle, LoginProgress };
         protected Dictionary<FrameworkElement, List<ProgressMsg>> activeInProgress { get; set; }
@@ -238,8 +239,18 @@ namespace TinyTinyRSS
         {
             if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
             {
+                if (asyncMsgDialogCommand != null)
+                {
+                    return;
+                }
                 MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                await msgbox.ShowAsync();
+                asyncMsgDialogCommand = msgbox.ShowAsync();
+                await asyncMsgDialogCommand;
+                asyncMsgDialogCommand = null;
+                if (this is MainPage)
+                {
+                    return;
+                }
                 Frame rootFrame = Window.Current.Content as Frame;
                 if (rootFrame != null && rootFrame.CanGoBack)
                 {
