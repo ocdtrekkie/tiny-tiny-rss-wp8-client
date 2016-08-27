@@ -16,6 +16,10 @@ build/
 [Oo]bj/
 PerfLogs/
 
+ttRss/AppPackages/
+ttRss/BundleArtifacts/
+ttRss/*.appx
+
 #ignore nuget
 [Pp]ackages/
 
