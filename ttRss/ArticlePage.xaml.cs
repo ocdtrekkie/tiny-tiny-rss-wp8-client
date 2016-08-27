@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
@@ -158,11 +159,13 @@ namespace TinyTinyRSS
                 updateCount(false);
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
-                e.Item.DataContext = item;
                 Article article = null;
+                e.Item.DataContext = item;
                 try
                 {
-                    article = await item.getContent();
+                    Task<Article> getContentTask = item.getContent();
+                    setCommandBarChecked(item.Headline);
+                    article = await getContentTask;
                 }
                 catch (TtRssException)
                 {
@@ -187,6 +190,27 @@ namespace TinyTinyRSS
             {
                 SetProgressBar(false, ProgressMsg.LoadArticle);
                 checkException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Fix IsChecked Property after Binding change
+        /// </summary>
+        /// <param name="headline">Headline holding data</param>
+        private void setCommandBarChecked(Headline headline)
+        {
+            PivotItem myPivotItem =
+                (PivotItem)(PivotControl.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
+
+            var toggleRead = Helper.FindDescendantByName(myPivotItem, "toogleReadAppBarButton") as AppBarToggleButton;
+            if (toggleRead != null)
+            {
+                toggleRead.IsChecked = headline.unread;
+            }
+            var toggleStar = Helper.FindDescendantByName(myPivotItem, "toggleStarAppBarButton") as AppBarToggleButton;
+            if (toggleStar != null)
+            {
+                toggleStar.IsChecked = headline.marked;
             }
         }
 
