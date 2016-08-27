@@ -1,9 +1,0 @@
-MainPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\bin\ARM\Release\Upload\TinyTinyRSS_4.1.5.0_ARM.appx
-SymbolPackage=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\AppPackages\TinyTinyRSS_4.1.5.0\TinyTinyRSS_4.1.5.0_ARM.appxsym
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_language-de.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_language-it.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_language-ru.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_language-zh-hans.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_scale-100.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_scale-240.appx
-ResourcePack=D:\Code\Git\tiny-tiny-rss-wp8-client\ttRss\_scale-400.appx
