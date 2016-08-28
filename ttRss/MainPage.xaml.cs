@@ -81,6 +81,10 @@ namespace TinyTinyRSS
             _moreArticles = true;
             _moreArticlesLoading = false;
             RegisterForShare();
+            Window.Current.SizeChanged += (sender, args) =>
+            {
+                Article_Grid.DataContext = null;
+            };
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
@@ -565,11 +569,8 @@ namespace TinyTinyRSS
                     return;
                 }
                 var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
-                bool landscape = orientation == DisplayOrientations.Landscape || orientation == DisplayOrientations.LandscapeFlipped;
                 double width = RootSplitView.ActualWidth;
-                double height = RootSplitView.ActualHeight;
-                if (landscape && width < 720 ||
-                    !landscape && height < 800)
+                if (width < 720)
                 {
                     NavigationObject parameter = new NavigationObject();
                     parameter.selectedIndex = HeadlinesView.SelectedIndex;
@@ -588,19 +589,11 @@ namespace TinyTinyRSS
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
                     await item.getContent();
                     Article_Grid.DataContext = item;
-                    if (landscape)
+                    Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
+                    Article_Grid.MaxWidth = RootSplitView.ActualWidth / 2;
+                    if (RootSplitView.ActualWidth / 2 < 600 && RootSplitView.IsPaneOpen)
                     {
-                        Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
-                        Article_Grid.MaxWidth = RootSplitView.ActualWidth / 2;
-                        if (RootSplitView.ActualWidth / 2 < 600 && RootSplitView.IsPaneOpen)
-                        {
-                            VisualStateManager.GoToState(this, "paneclosed", true);
-                        }
-                    }
-                    else
-                    {
-                        Article_Grid.MinHeight = RootSplitView.ActualHeight / 2;
-                        Article_Grid.MaxHeight = RootSplitView.ActualHeight / 2;
+                        VisualStateManager.GoToState(this, "paneclosed", true);
                     }
                     WebContent.NavigateToString(item.Article.content);
                     if (await markArticleReadAutomatically(item.Article))
