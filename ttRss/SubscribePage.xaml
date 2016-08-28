@@ -11,7 +11,7 @@
           HorizontalAlignment="Center" Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="60" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,14 +20,15 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock x:Uid="SubscribeUrl" Text="Url" Grid.Row="0" Grid.Column="0" 
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribeUrl" Grid.Row="0" Grid.Column="1" Margin="0,4" />
         <TextBlock x:Uid="SubscribeGroup" Text="Group" Grid.Row="1" Grid.Column="0" 
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <ComboBox x:Name="SubscribeGroup" Grid.Row="1" Grid.Column="1" 
-                  ItemsSource="{Binding}" Margin="0,4">
+                  ItemsSource="{Binding}" Margin="0,4" HorizontalAlignment="Stretch">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=title}" />
@@ -38,13 +39,16 @@
                    Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,4" />
         <TextBlock x:Uid="SubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" 
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribeUsername" Grid.Row="3" Grid.Column="1" Margin="0,4" />
         <TextBlock x:Uid="SubscribePassword" Text="Password" Grid.Row="4" Grid.Column="0" 
-                   VerticalAlignment="Center" />
+                   VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribePassword" Grid.Row="4" Grid.Column="1" Margin="0,4" />
         <Button x:Uid="SubscribeButton" Content="Subscribe" Click="Button_Click"
                 Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"
                 VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <ProgressBar IsIndeterminate="True" Visibility="Collapsed" 
+                     x:Name="ProgressBar" HorizontalAlignment="Stretch"
+                Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" />
     </Grid>
 </Page>

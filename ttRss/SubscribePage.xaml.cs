@@ -54,17 +54,20 @@ namespace TinyTinyRSS
                 categories.Add(c);
             }
             SubscribeGroup.DataContext = categories;
+            SubscribeGroup.SelectedIndex = 0;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            if(SubscribeUrl.Text.Length == 0)
+            if (SubscribeUrl.Text.Length == 0)
             {
                 MessageDialog msgbox = new MessageDialog("Field url must not be empty!");
                 await msgbox.ShowAsync();
+                return;
             }
             try
             {
+                ProgressBar.Visibility = Visibility.Visible;
                 int groupId = ((Category)SubscribeGroup.SelectedItem).id;
                 string response = await TtRssInterface.getInterface().subscribeToFeed(SubscribeUrl.Text,
                     groupId, SubscribeUsername.Text, SubscribePassword.Text);
@@ -96,6 +99,9 @@ namespace TinyTinyRSS
                     MessageDialog msgbox = new MessageDialog(ex.Message);
                     await msgbox.ShowAsync();
                 }
+            } finally
+            {
+                ProgressBar.Visibility = Visibility.Collapsed;
             }
         }
     }

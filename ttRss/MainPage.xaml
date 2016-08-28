@@ -330,7 +330,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <uwp:SwipeListView Name="HeadlinesView" ItemsSource="{Binding}" 
+                        <uwp:SwipeListView x:Name="HeadlinesView" ItemsSource="{Binding}" 
                                            SelectionMode="Single" 
     				                       SelectionChanged="HeadlinesView_SelectionChanged" 
                                            Grid.Row="0" ItemSwipe="SwipeListView_ItemSwipe" 
