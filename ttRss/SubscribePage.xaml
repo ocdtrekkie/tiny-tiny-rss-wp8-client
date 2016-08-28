@@ -7,10 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
+          HorizontalAlignment="Center" Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,10 +21,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock x:Uid="SubscribeUrl" Text="Url" Grid.Row="0" Grid.Column="0" />
-        <TextBox x:Name="SubscribeUrl" Grid.Row="0" Grid.Column="1" />
-        <TextBlock x:Uid="SubscribeGroup" Text="Group" Grid.Row="1" Grid.Column="0" />
-        <ComboBox x:Name="SubscribeGroup" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding}">
+        <TextBlock x:Uid="SubscribeUrl" Text="Url" Grid.Row="0" Grid.Column="0" 
+                   VerticalAlignment="Center" />
+        <TextBox x:Name="SubscribeUrl" Grid.Row="0" Grid.Column="1" Margin="0,4" />
+        <TextBlock x:Uid="SubscribeGroup" Text="Group" Grid.Row="1" Grid.Column="0" 
+                   VerticalAlignment="Center" />
+        <ComboBox x:Name="SubscribeGroup" Grid.Row="1" Grid.Column="1" 
+                  ItemsSource="{Binding}" Margin="0,4">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Path=title}" />
@@ -31,12 +35,16 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <TextBlock x:Uid="SubscribeLogin" Text="Credentials for feed. Leave blank if not needed." 
-                   Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" />
-        <TextBlock x:Uid="SubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" />
-        <TextBox x:Name="SubscribeUsername" Grid.Row="3" Grid.Column="1" />
-        <TextBlock x:Uid="SubscribePassword" Text="Password" Grid.Row="4" Grid.Column="0" />
-        <TextBox x:Name="SubscribePassword" Grid.Row="4" Grid.Column="1" />
+                   Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
+                   VerticalAlignment="Center" Margin="0,4" />
+        <TextBlock x:Uid="SubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" 
+                   VerticalAlignment="Center" />
+        <TextBox x:Name="SubscribeUsername" Grid.Row="3" Grid.Column="1" Margin="0,4" />
+        <TextBlock x:Uid="SubscribePassword" Text="Password" Grid.Row="4" Grid.Column="0" 
+                   VerticalAlignment="Center" />
+        <TextBox x:Name="SubscribePassword" Grid.Row="4" Grid.Column="1" Margin="0,4" />
         <Button x:Uid="SubscribeButton" Content="Subscribe" Click="Button_Click"
-                Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"/>
+                Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"
+                VerticalAlignment="Center" HorizontalAlignment="Center" />
     </Grid>
 </Page>
