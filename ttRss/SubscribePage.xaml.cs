@@ -4,13 +4,16 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml.Linq;
 using TinyTinyRSS.Classes;
 using TinyTinyRSS.Interface;
 using TinyTinyRSS.Interface.Classes;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Diagnostics;
+using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -77,7 +80,8 @@ namespace TinyTinyRSS
                     if (Frame.CanGoBack)
                     {
                         Frame.GoBack();
-                    } else
+                    }
+                    else
                     {
                         Frame.Navigate(typeof(MainPage));
                     }
@@ -87,7 +91,8 @@ namespace TinyTinyRSS
                     MessageDialog msgbox = new MessageDialog("Subscribing failed. " + response);
                     await msgbox.ShowAsync();
                 }
-            } catch (TtRssException ex)
+            }
+            catch (TtRssException ex)
             {
                 if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
                 {
@@ -99,9 +104,40 @@ namespace TinyTinyRSS
                     MessageDialog msgbox = new MessageDialog(ex.Message);
                     await msgbox.ShowAsync();
                 }
-            } finally
+            }
+            finally
             {
                 ProgressBar.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// Should be used by the file activation to subscribe from feed file, but
+        /// that won't work cause we need the rss url which is not part of the file.
+        /// </summary>
+        /// <param name="e">NavigationEventArgs</param>
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (e.Parameter is FileActivatedEventArgs)
+            {
+                try
+                {
+                    FileActivatedEventArgs args = e.Parameter as FileActivatedEventArgs;
+                    if (args.Files.Count > 0)
+                    {
+                        var xmlFile = args.Files[0] as StorageFile;
+                        using (var stream = await xmlFile.OpenStreamForReadAsync())
+                        {
+                            XDocument document = XDocument.Load(stream);
+                            // Where is the url to the feed source?
+                        }
+                    }
+                } catch (Exception)
+                {
+                    MessageDialog msgbox = new MessageDialog("Reading xml file failed");
+                    await msgbox.ShowAsync();
+                }
             }
         }
     }

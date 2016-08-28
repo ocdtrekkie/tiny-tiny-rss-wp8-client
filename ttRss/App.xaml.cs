@@ -195,5 +195,37 @@ namespace TinyTinyRSS
                 return false;
             }
         }
+
+        /// <summary> 
+        // Open Feed xmls
+        // Not used at the moment as the url of the feed is not part of the xmls.
+        /// </summary> 
+        protected override void OnFileActivated(FileActivatedEventArgs e)
+        {
+            base.OnFileActivated(e);
+            Frame rootFrame = Window.Current.Content as Frame;
+            // Do not repeat app initialization when the Window already has content, 
+            // just ensure that the window is active 
+            if (rootFrame == null)
+            {
+                // Create a Frame to act as the navigation context and navigate to the first page 
+                rootFrame = new Frame();
+                Window.Current.Content = rootFrame;
+            }
+            if (rootFrame.Content == null)
+            {
+                if (!rootFrame.Navigate(typeof(MainPage)))
+                {
+                    throw new Exception("Failed to create initial page");
+                }
+            }
+            if (!rootFrame.Navigate(typeof(SubscribePage), e))
+            {
+                throw new Exception("Failed to create initial page");
+            }
+
+            // Ensure the current window is active 
+            Window.Current.Activate();
+        }
     }
 }
