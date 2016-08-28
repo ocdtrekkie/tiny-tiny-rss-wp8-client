@@ -346,9 +346,13 @@ namespace TinyTinyRSS.Interface
         {
             try
             {
+                if(ids.ToList().Count == 0)
+                {
+                    return false;
+                }
                 string updateOp = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"updateArticle\",\"article_ids\":\"" + string.Join(",", ids.Select(n => n.ToString()).ToArray()) + "\",\"mode\":" + (int)mode + ",\"field\":" + (int)field + "}";
                 Response response = await SendRequestAsync(null, updateOp);
-                if (response.content.ToString().Contains("OK"))
+                if (response != null && response.content.ToString().Contains("OK"))
                 {
                     return true;
                 }

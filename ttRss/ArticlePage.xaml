@@ -56,9 +56,9 @@
                     <AppBarToggleButton Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
                                         x:Name="toogleReadAppBarButton" 
                                         Icon="Mail" Click="AppBarButton_Click" 
-                                        IsChecked="{Binding Headline.unread, Mode=OneWay}" />
+                                        IsChecked="{Binding Path=Headline.unread, Mode=OneWay}" />
                     <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite"  
-                                         IsChecked="{Binding Headline.marked, Mode=OneWay}"
+                                         IsChecked="{Binding Path=Headline.marked, Mode=OneWay}"
                                          Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
                                          Click="AppBarButton_Click" />
                     <AppBarButton x:Name="shareLinkAppBarButton" 

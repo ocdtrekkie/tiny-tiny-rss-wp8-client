@@ -212,6 +212,7 @@ namespace TinyTinyRSS
                     catch (TtRssException ex)
                     {
                         checkException(ex);
+                        return false;
                     }
                 }
                 return true;
@@ -523,7 +524,7 @@ namespace TinyTinyRSS
         /// <summary>
         /// Get counters for all feeds in SplitViewPane.
         /// </summary>
-        protected async Task UpdateFeedCounters()
+        private async Task UpdateFeedCounters()
         {
             try {
                 await TtRssInterface.getInterface().getCounters();
@@ -536,7 +537,7 @@ namespace TinyTinyRSS
                 await sfUpdate;
             } catch (TtRssException ex)
             {
-                    checkException(ex);
+                checkException(ex);
             }
         }
 
