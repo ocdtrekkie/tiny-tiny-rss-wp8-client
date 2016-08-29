@@ -180,6 +180,7 @@ namespace TinyTinyRSS
                 if (await markArticleReadAutomatically(article))
                 {
                     item.Headline.unread = false;
+                    setCommandBarChecked(item.Headline);
                 }
                 if (_selectedIndex <= ArticlesCollection.Count - 1 && _selectedIndex > ArticlesCollection.Count - 3)
                 {
