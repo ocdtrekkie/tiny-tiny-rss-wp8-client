@@ -160,6 +160,7 @@ namespace TinyTinyRSS
 
                 WrappedArticle item = ArticlesCollection[_selectedIndex];
                 Article article = null;
+                AppBar.DataContext = item;
                 e.Item.DataContext = item;
                 try
                 {
@@ -200,19 +201,8 @@ namespace TinyTinyRSS
         /// <param name="headline">Headline holding data</param>
         private void setCommandBarChecked(Headline headline)
         {
-            PivotItem myPivotItem =
-                (PivotItem)(PivotControl.ContainerFromItem(PivotControl.Items[PivotControl.SelectedIndex]));
-
-            var toggleRead = Helper.FindDescendantByName(myPivotItem, "toogleReadAppBarButton") as AppBarToggleButton;
-            if (toggleRead != null)
-            {
-                toggleRead.IsChecked = headline.unread;
-            }
-            var toggleStar = Helper.FindDescendantByName(myPivotItem, "toggleStarAppBarButton") as AppBarToggleButton;
-            if (toggleStar != null)
-            {
-                toggleStar.IsChecked = headline.marked;
-            }
+            toggleStarAppBarButton.IsChecked = headline.marked;
+            toogleReadAppBarButton.IsChecked = headline.unread;
         }
 
         private void setHtml(string content)

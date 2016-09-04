@@ -21,7 +21,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -52,34 +51,36 @@
                     </StackPanel>
                 </Grid>
                 <WebView Visibility="Collapsed" Name="WebContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="{Binding}"/>
-                <CommandBar Name="AppBar"  Grid.Row="2">
-                    <AppBarToggleButton Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}}" 
-                                        x:Name="toogleReadAppBarButton" 
-                                        Icon="Mail" Click="AppBarButton_Click" 
-                                        IsChecked="{Binding Path=Headline.unread, Mode=OneWay}" />
-                    <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite"  
-                                         IsChecked="{Binding Path=Headline.marked, Mode=OneWay}"
-                                         Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}}" 
-                                         Click="AppBarButton_Click" />
-                    <AppBarButton x:Name="shareLinkAppBarButton" 
-                          Click="ShareAppBarButton_Click" 
-                          Label="" x:Uid="ShareAppBarButton">
-                        <AppBarButton.Icon>
-                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
-                        </AppBarButton.Icon>
-                    </AppBarButton>
-                    <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
-                          Label="" x:Uid="OpenExtAppBarButton" />
-                    <CommandBar.SecondaryCommands>
-                        <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
-                          Label="" x:Uid="TooglePublishAppBarButton" />
-                        <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
-                          Label="" x:Uid="MarkAllArticlesRead" />
-                    </CommandBar.SecondaryCommands>
-                </CommandBar>
             </Grid>
         </DataTemplate>
     </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar Name="AppBar" Grid.Row="2" DataContext="{Binding}">
+            <AppBarToggleButton Label="{Binding Path=Headline.unread, Converter={StaticResource UnReadTooltipConverter}, Mode=OneWay}" 
+                                        x:Name="toogleReadAppBarButton" 
+                                        Icon="Mail" Click="AppBarButton_Click" 
+                                        IsChecked="{Binding Path=Headline.unread, Mode=OneWay}" />
+            <AppBarToggleButton  x:Name="toggleStarAppBarButton" Icon="Favorite"  
+                                         IsChecked="{Binding Path=Headline.marked, Mode=OneWay}"
+                                         Label="{Binding Path=Headline.marked, Converter={StaticResource MarkedTooltipConverter}, Mode=OneWay}" 
+                                         Click="AppBarButton_Click" />
+            <AppBarButton x:Name="shareLinkAppBarButton" 
+                          Click="ShareAppBarButton_Click" 
+                          Label="" x:Uid="ShareAppBarButton">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72D;"/>
+                </AppBarButton.Icon>
+            </AppBarButton>
+            <AppBarButton x:Name="openExtAppBarButton" Icon="Globe" Click="openExt_Click" 
+                          Label="" x:Uid="OpenExtAppBarButton" />
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="publishAppBarMenu" Click="AppBarButton_Click" 
+                          Label="" x:Uid="TooglePublishAppBarButton" />
+                <AppBarButton x:Name="markAllReadMenu" Click="AppBarButton_Click" 
+                          Label="" x:Uid="MarkAllArticlesRead" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
     <!--LayoutRoot ist das Stammraster, in dem alle anderen Seiteninhalte platziert werden-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
