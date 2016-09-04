@@ -349,11 +349,7 @@ namespace TinyTinyRSS
 
         private void FeatureRequest_Click(object sender, RoutedEventArgs e)
         {
-            if(ManageFeedsCheckbox.IsChecked.HasValue && ManageFeedsCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_ManageFeeds");
-            }
-            else if (AutoReadScrollCheckbox.IsChecked.HasValue && AutoReadScrollCheckbox.IsChecked.Value)
+            if (AutoReadScrollCheckbox.IsChecked.HasValue && AutoReadScrollCheckbox.IsChecked.Value)
             {
                 Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AutoReadScroll");
             }
