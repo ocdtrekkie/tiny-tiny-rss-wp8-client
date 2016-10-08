@@ -56,7 +56,7 @@ namespace TinyTinyRSS
         {
             if (SubscribeUrl.Text.Length == 0)
             {
-                MessageDialog msgbox = new MessageDialog("Field url must not be empty!");
+                MessageDialog msgbox = new MessageDialog(loader.GetString("FeedSubscribeEmptyUrl"));
                 await msgbox.ShowAsync();
                 return;
             }
@@ -80,7 +80,8 @@ namespace TinyTinyRSS
                 }
                 else
                 {
-                    MessageDialog msgbox = new MessageDialog("Subscribing failed. " + response);
+                    MessageDialog msgbox = new MessageDialog(
+                        loader.GetString("FeedSubscribeFailed") + Environment.NewLine + response);
                     await msgbox.ShowAsync();
                 }
             }

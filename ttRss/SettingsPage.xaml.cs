@@ -375,7 +375,7 @@ namespace TinyTinyRSS
 
         private void FeatureCheckbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox[] options = new CheckBox[] { ManageFeedsCheckbox, AutoReadScrollCheckbox,
+            CheckBox[] options = new CheckBox[] { AutoReadScrollCheckbox,
                 LiveTileFeatureCheckbox, FeedTreeFeatureCheckbox, LabelNotesFeatureCheckbox,
                 ShortcutsFeatureCheckbox };
             int selected = 0;

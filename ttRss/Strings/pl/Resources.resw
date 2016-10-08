@@ -350,7 +350,7 @@
     <comment>Title of Special Feeds Panel</comment>
   </data>
   <data name="StarAppBarButtonText" xml:space="preserve">
-    <value>Artykuły oznaczone gwiazdką</value>
+    <value>Oznacz gwiazdką</value>
     <comment>Text of AppBarButton "Star Article"</comment>
   </data>
   <data name="SuccessfulConnection" xml:space="preserve">
@@ -517,5 +517,44 @@
   <data name="sortAppBarMenu.Label" xml:space="preserve">
     <value>Kolejność sortowania</value>
     <comment>Label for AppBarButton to change sorting</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="FeedSubscribeButton.Content" xml:space="preserve">
+    <value>Prenumeruj</value>
+  </data>
+  <data name="FeedSubscribeLink.Text" xml:space="preserve">
+    <value>Prenumeruj kanał</value>
+  </data>
+  <data name="FeedSubscribeEmptyUrl" xml:space="preserve">
+    <value>Pole ‘Adres kanału‘ musi być wypełnione!</value>
+  </data>
+  <data name="FeedSubscribeFailed" xml:space="preserve">
+    <value>Prenumerata nie powiodła się!</value>
+  </data>
+  <data name="FeedSubscribeGroup.Text" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="FeedSubscribeLogin.Text" xml:space="preserve">
+    <value>Uwierzytelnianie. Pozostaw puste jeśli nie jest wymagane.</value>
+  </data>
+  <data name="FeedSubscribePassword.Text" xml:space="preserve">
+    <value>Hasło</value>
+  </data>
+  <data name="FeedSubscribeUrl.Text" xml:space="preserve">
+    <value>Adres kanału</value>
+  </data>
+  <data name="FeedSubscribeUsername.Text" xml:space="preserve">
+    <value>Użytkownik</value>
+  </data>
+  <data name="FeedUnsubscribe.Text" xml:space="preserve">
+    <value>Prenumeruj kanał</value>
+  </data>
+  <data name="FeedUnsubscribeDialog" xml:space="preserve">
+    <value>Czy jesteś pewien, że chcesz się wypisać z kanału?</value>
+  </data>
+  <data name="FeedUnsubscribeFailed" xml:space="preserve">
+    <value>Wypisanie się z kanału zakończone niepowodzeniem</value>
   </data>
 </root>

@@ -22,7 +22,8 @@ namespace TinyTinyRSS
         protected Collection<WrappedArticle> ArticlesCollection;
         protected ResourceLoader loader = new Windows.ApplicationModel.Resources.ResourceLoader();
         protected LoggingChannel channel;
-        protected bool _showUnreadOnly, _moreArticles, _moreArticlesLoading;
+        protected bool _moreArticles, _moreArticlesLoading;
+        protected bool? _showUnreadOnly;
         protected int _sortOrder;
         protected bool initialized;
         private IAsyncOperation<IUICommand> asyncMsgDialogCommand = null;
@@ -321,7 +322,7 @@ namespace TinyTinyRSS
                             default: break;
                         }
                     }
-                    else if (_showUnreadOnly)
+                    else if (_showUnreadOnly.HasValue && _showUnreadOnly.Value)
                     {
                         skip = ArticlesCollection.Count(e => e.Headline.unread);
                     }

@@ -518,4 +518,43 @@
     <value>Sort Order</value>
     <comment>Label for AppBarButton to change sorting</comment>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FeedSubscribeButton.Content" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="FeedSubscribeLink.Text" xml:space="preserve">
+    <value>Subscribe to Feed</value>
+  </data>
+  <data name="FeedSubscribeEmptyUrl" xml:space="preserve">
+    <value>Field 'Feed Url' must not be empty!</value>
+  </data>
+  <data name="FeedSubscribeFailed" xml:space="preserve">
+    <value>Subscribing failed!</value>
+  </data>
+  <data name="FeedSubscribeGroup.Text" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="FeedSubscribeLogin.Text" xml:space="preserve">
+    <value>Credentials for feed. Leave blank if not needed.</value>
+  </data>
+  <data name="FeedSubscribePassword.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="FeedSubscribeUrl.Text" xml:space="preserve">
+    <value>Feed Url</value>
+  </data>
+  <data name="FeedSubscribeUsername.Text" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="FeedUnsubscribe.Text" xml:space="preserve">
+    <value>Unsubscribe from feed</value>
+  </data>
+  <data name="FeedUnsubscribeDialog" xml:space="preserve">
+    <value>Are you sure you want to unsubscribe from this feed?</value>
+  </data>
+  <data name="FeedUnsubscribeFailed" xml:space="preserve">
+    <value>FeedUnsubscribeFailed</value>
+  </data>
 </root>

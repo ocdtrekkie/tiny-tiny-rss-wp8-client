@@ -57,27 +57,9 @@ namespace TinyTinyRSS
             SpecialFeedsList.DataContext = SpecialFeedCollection;
             Splitview_Content.ManipulationStarted += Splitview_Content_ManipulationStarted;
             Splitview_Content.ManipulationCompleted += Splitview_Content_ManipulationCompleted;
-            _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
-            if (_showUnreadOnly)
-            {
-                FilterShowUnread.IsChecked = true;
-            }
-            else {
-                FilterShowAll.IsChecked = true;
-            }
-            _sortOrder = ConnectionSettings.getInstance().sortOrder;
-            if (_sortOrder == 0)
-            {
-                SortButtonDefault.IsChecked = true;
-            }
-            else if (_sortOrder == 1)
-            {
-                SortButtonNew.IsChecked = true;
-            }
-            else if (_sortOrder == 2)
-            {
-                SortButtonOld.IsChecked = true;
-            }
+            setUnreadOnly(ConnectionSettings.getInstance().showUnreadOnly);
+            setSortOrder(ConnectionSettings.getInstance().sortOrder);
+            
             _moreArticles = true;
             _moreArticlesLoading = false;
             RegisterForShare();
@@ -85,6 +67,21 @@ namespace TinyTinyRSS
             {
                 Article_Grid.DataContext = null;
             };
+        }
+
+        private void setUnreadOnly(bool unreadOnly)
+        {
+            _showUnreadOnly = unreadOnly;
+            if (_showUnreadOnly.HasValue && _showUnreadOnly.Value)
+            {
+                FilterShowUnread.IsChecked = true;
+                FilterShowAll.IsChecked = false;
+            }
+            else
+            {
+                FilterShowUnread.IsChecked = false;
+                FilterShowAll.IsChecked = true;
+            }
         }
 
         private async void PageLoaded(object sender, RoutedEventArgs e)
@@ -336,8 +333,8 @@ namespace TinyTinyRSS
         private async Task feedSelectionChanged()
         {
             try {
-                _showUnreadOnly = ConnectionSettings.getInstance().showUnreadOnly;
-                _sortOrder = ConnectionSettings.getInstance().sortOrder;
+                setUnreadOnly(ConnectionSettings.getInstance().showUnreadOnly);
+                setSortOrder(ConnectionSettings.getInstance().sortOrder);
                 _moreArticles = true;
                 Task updateFeedCounters = UpdateFeedCounters();
                 setFeedTitle();
@@ -357,6 +354,29 @@ namespace TinyTinyRSS
             catch (TtRssException ex)
             {
                 checkException(ex);
+            }
+        }
+
+        private void setSortOrder(int sortOrder)
+        {
+            _sortOrder = sortOrder;
+            if (_sortOrder==0)
+            {
+                SortButtonDefault.IsChecked = true;
+                SortButtonNew.IsChecked = false;
+                SortButtonOld.IsChecked = false;
+            }
+            else if (_sortOrder == 1)
+            {
+                SortButtonDefault.IsChecked = false;
+                SortButtonNew.IsChecked = true;
+                SortButtonOld.IsChecked = false;
+            }
+            else if (_sortOrder == 2)
+            {
+                SortButtonDefault.IsChecked = false;
+                SortButtonNew.IsChecked = false;
+                SortButtonOld.IsChecked = true;
             }
         }
 
@@ -502,8 +522,8 @@ namespace TinyTinyRSS
                 Task updateCounters = UpdateFeedCounters();
                 this.Frame.BackStack.Clear();
                 NavigationObject nav = e.Parameter as NavigationObject;
-                _sortOrder = nav._sortOrder;
-                _showUnreadOnly = nav._showUnreadOnly;
+                setSortOrder(nav._sortOrder);
+                setUnreadOnly(nav._showUnreadOnly.Value);
                 ArticlesCollection = new ObservableCollection<WrappedArticle>();
                 foreach (WrappedArticle article in nav.ArticlesCollection)
                 {
@@ -642,15 +662,11 @@ namespace TinyTinyRSS
         {
             if (sender == FilterShowUnread)
             {
-                _showUnreadOnly = true;
-                FilterShowUnread.IsChecked = true;
-                FilterShowAll.IsChecked = false;
+                setUnreadOnly(true);
             }
             else if (sender == FilterShowAll)
             {
-                _showUnreadOnly = false;
-                FilterShowUnread.IsChecked = false;
-                FilterShowAll.IsChecked = true;
+                setUnreadOnly(false);
             }
             else
             {
@@ -672,24 +688,15 @@ namespace TinyTinyRSS
         {
             if (sender == SortButtonDefault)
             {
-                _sortOrder = 0;
-                SortButtonDefault.IsChecked = true;
-                SortButtonNew.IsChecked = false;
-                SortButtonOld.IsChecked = false;
+                setSortOrder(0);
             }
             else if (sender == SortButtonNew)
             {
-                _sortOrder = 1;
-                SortButtonDefault.IsChecked = false;
-                SortButtonNew.IsChecked = true;
-                SortButtonOld.IsChecked = false;
+                setSortOrder(1);
             }
             else if (sender == SortButtonOld)
             {
-                _sortOrder = 2;
-                SortButtonDefault.IsChecked = false;
-                SortButtonNew.IsChecked = false;
-                SortButtonOld.IsChecked = true;
+                setSortOrder(2);
             }
             else
             {
@@ -1028,11 +1035,11 @@ namespace TinyTinyRSS
                 return;
             }
             ExtendedFeed feed = (ExtendedFeed) senderElement.DataContext;
-            MessageDialog msgbox = new MessageDialog("Are you sure you want to unsubscribe from this feed?");
-            msgbox.Commands.Add(new UICommand("Unsubscribe",
+            MessageDialog msgbox = new MessageDialog(loader.GetString("FeedUnsubscribeDialog"));
+            msgbox.Commands.Add(new UICommand(loader.GetString("FeedUnsubscribe/Text"),
             new UICommandInvokedHandler(this.DeleteInvokedHandler), feed.feed));
             msgbox.Commands.Add(new UICommand(
-                "Cancel",
+                loader.GetString("Cancel"),
                 new UICommandInvokedHandler(this.DeleteInvokedHandler), null));
             // Set the command to be invoked when escape is pressed
             msgbox.CancelCommandIndex = 1;
@@ -1048,7 +1055,7 @@ namespace TinyTinyRSS
                     UpdateAllFeedsList(true);
                 } else
                 {
-                    MessageDialog msgbox = new MessageDialog("Unsubscribing failed.");
+                    MessageDialog msgbox = new MessageDialog(loader.GetString("FeedUnsubscribeFailed"));
                     await msgbox.ShowAsync();
                 }
             }

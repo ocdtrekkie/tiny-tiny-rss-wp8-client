@@ -542,4 +542,43 @@
     <value>News</value>
     <comment>Text for Link to News in impressum</comment>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FeedSubscribeButton.Content" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="FeedSubscribeLink.Text" xml:space="preserve">
+    <value>订阅源</value>
+  </data>
+  <data name="FeedSubscribeEmptyUrl" xml:space="preserve">
+    <value>源地址不能为空，请检查</value>
+  </data>
+  <data name="FeedSubscribeFailed" xml:space="preserve">
+    <value>订阅失败</value>
+  </data>
+  <data name="FeedSubscribeGroup.Text" xml:space="preserve">
+    <value>类别</value>
+  </data>
+  <data name="FeedSubscribeLogin.Text" xml:space="preserve">
+    <value>订阅源凭据，如不需要请留空</value>
+  </data>
+  <data name="FeedSubscribePassword.Text" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="FeedSubscribeUrl.Text" xml:space="preserve">
+    <value>源地址</value>
+  </data>
+  <data name="FeedSubscribeUsername.Text" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="FeedUnsubscribe.Text" xml:space="preserve">
+    <value>退订订阅源</value>
+  </data>
+  <data name="FeedUnsubscribeDialog" xml:space="preserve">
+    <value>您确定想退订这个订阅源？</value>
+  </data>
+  <data name="FeedUnsubscribeFailed" xml:space="preserve">
+    <value>退订失败</value>
+  </data>
 </root>

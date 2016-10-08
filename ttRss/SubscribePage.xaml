@@ -22,10 +22,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock x:Uid="SubscribeUrl" Text="Url" Grid.Row="0" Grid.Column="0" 
+        <TextBlock x:Uid="FeedSubscribeUrl" Text="Url" Grid.Row="0" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribeUrl" Grid.Row="0" Grid.Column="1" Margin="0,4" />
-        <TextBlock x:Uid="SubscribeGroup" Text="Group" Grid.Row="1" Grid.Column="0" 
+        <TextBlock x:Uid="FeedSubscribeGroup" Text="Group" Grid.Row="1" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <ComboBox x:Name="SubscribeGroup" Grid.Row="1" Grid.Column="1" 
                   ItemsSource="{Binding}" Margin="0,4" HorizontalAlignment="Stretch">
@@ -35,16 +35,16 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <TextBlock x:Uid="SubscribeLogin" Text="Credentials for feed. Leave blank if not needed." 
+        <TextBlock x:Uid="FeedSubscribeLogin" Text="Credentials for feed. Leave blank if not needed." 
                    Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,4" />
-        <TextBlock x:Uid="SubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" 
+        <TextBlock x:Uid="FeedSubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribeUsername" Grid.Row="3" Grid.Column="1" Margin="0,4" />
-        <TextBlock x:Uid="SubscribePassword" Text="Password" Grid.Row="4" Grid.Column="0" 
+        <TextBlock x:Uid="FeedSubscribePassword" Text="Password" Grid.Row="4" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribePassword" Grid.Row="4" Grid.Column="1" Margin="0,4" />
-        <Button x:Uid="SubscribeButton" Content="Subscribe" Click="Button_Click"
+        <Button x:Uid="FeedSubscribeButton" Content="Subscribe" Click="Button_Click"
                 Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"
                 VerticalAlignment="Center" HorizontalAlignment="Center" />
         <ProgressBar IsIndeterminate="True" Visibility="Collapsed" 

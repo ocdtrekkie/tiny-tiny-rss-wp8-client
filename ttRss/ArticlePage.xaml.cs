@@ -227,7 +227,7 @@ namespace TinyTinyRSS
         protected override async void updateCount(bool force)
         {
             int actual = _selectedIndex + 1;
-            if (ConnectionSettings.getInstance().selectedFeed<0 || _showUnreadOnly)
+            if (ConnectionSettings.getInstance().selectedFeed<0 || (_showUnreadOnly.HasValue && _showUnreadOnly.Value))
             {
                 int max;
                 if (ConnectionSettings.getInstance().selectedFeed == (int)FeedId.Fresh)

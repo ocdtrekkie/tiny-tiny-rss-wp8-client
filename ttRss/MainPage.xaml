@@ -23,7 +23,8 @@
         <converter:MarkedTooltipConverter x:Key="MarkedTooltipConverter" />
         <converter:FeedIconConverter x:Key="FeedIconConverter" />
         <converter:AsyncConverter x:Key="FeedIconConverterNew" />
-        <converter:BoolToItalicConverter x:Key="BoolToItalicConverter" /> 
+        <converter:BoolToItalicConverter x:Key="BoolToItalicConverter" />
+        <converter:InvertBooleanConverter x:Key="InvertBoolConverter" />        
         <Style x:Key="ListButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundBaseLowBrush}"/>
             <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
@@ -159,7 +160,7 @@
                                     Padding="0 4 0 4" Style="{StaticResource ListButtonStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="Add" Width="20" HorizontalAlignment="Left" />
-                                    <TextBlock x:Uid="SubscribeButton" Text="Subscribe to Feed" Margin="4,0,0,0"/>
+                                    <TextBlock x:Uid="FeedSubscribeLink" Text="Subscribe to Feed" Margin="4,0,0,0"/>
                                 </StackPanel>
                             </Button>
                             <TextBlock Text="" x:Uid="SpecialFeeds" Margin="12,0,0,0" 
@@ -204,7 +205,7 @@
                                             <FlyoutBase.AttachedFlyout>
                                                 <MenuFlyout>
                                                     <MenuFlyout.Items>
-                                                        <MenuFlyoutItem x:Name="Remove" Text="Remove"    
+                                                        <MenuFlyoutItem x:Uid="FeedUnsubscribe" x:Name="Remove" Text="Unsubscribe"    
                                                             Click="Remove_Click" DataContext="{Binding}" />
                                                     </MenuFlyout.Items>
                                                 </MenuFlyout>

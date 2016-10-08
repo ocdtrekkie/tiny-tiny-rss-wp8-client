@@ -390,7 +390,7 @@
     <comment>Text of AppBarButton to unstar an article</comment>
   </data>
   <data name="UserNameSettings.Text" xml:space="preserve">
-    <value>Username</value>
+    <value>Utente</value>
     <comment>Label for textfield username in settings.</comment>
   </data>
   <data name="AllFeedsSpecialFeedText" xml:space="preserve">
@@ -517,5 +517,44 @@
   <data name="sortAppBarMenu.Label" xml:space="preserve">
     <value>Ordinamento</value>
     <comment>Label for AppBarButton to change sorting</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancella</value>
+  </data>
+  <data name="FeedSubscribeButton.Content" xml:space="preserve">
+    <value>Inscriviti</value>
+  </data>
+  <data name="FeedSubscribeLink.Text" xml:space="preserve">
+    <value>Inscriviti al feed</value>
+  </data>
+  <data name="FeedSubscribeEmptyUrl" xml:space="preserve">
+    <value>Campo 'url del feed' non può essere vuoto.</value>
+  </data>
+  <data name="FeedSubscribeFailed" xml:space="preserve">
+    <value>Iscrizione fallito!</value>
+  </data>
+  <data name="FeedSubscribeGroup.Text" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="FeedSubscribeLogin.Text" xml:space="preserve">
+    <value>Credenziali del feed. Lasciare vuoto se non necessarie.</value>
+  </data>
+  <data name="FeedSubscribePassword.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="FeedSubscribeUrl.Text" xml:space="preserve">
+    <value>Url del feed</value>
+  </data>
+  <data name="FeedSubscribeUsername.Text" xml:space="preserve">
+    <value>Utente</value>
+  </data>
+  <data name="FeedUnsubscribe.Text" xml:space="preserve">
+    <value>Annulla iscrizione feed</value>
+  </data>
+  <data name="FeedUnsubscribeDialog" xml:space="preserve">
+    <value>Sei sicuro di voler annullare l'iscrizione a questo feed?</value>
+  </data>
+  <data name="FeedUnsubscribeFailed" xml:space="preserve">
+    <value>Annullamento inscrizione fallito</value>
   </data>
 </root>

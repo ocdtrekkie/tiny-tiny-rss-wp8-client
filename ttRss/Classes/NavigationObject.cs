@@ -11,7 +11,7 @@ namespace TinyTinyRSS.Classes
     {
         public int selectedIndex { get; set; }
         public Collection<WrappedArticle> ArticlesCollection { get; set; }
-        public bool _showUnreadOnly { get; set; }
+        public bool? _showUnreadOnly { get; set; }
         public int _sortOrder { get; set; }
     }
 }

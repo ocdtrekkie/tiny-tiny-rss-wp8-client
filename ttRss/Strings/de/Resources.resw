@@ -517,4 +517,43 @@
     <value>Sortierung</value>
     <comment>Label for AppBarButton to change sorting</comment>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="FeedSubscribeButton.Content" xml:space="preserve">
+    <value>Abonnieren</value>
+  </data>
+  <data name="FeedSubscribeLink.Text" xml:space="preserve">
+    <value>Feed abonnieren</value>
+  </data>
+  <data name="FeedSubscribeEmptyUrl" xml:space="preserve">
+    <value>Feld 'Feed Url' darf nicht leer sein!</value>
+  </data>
+  <data name="FeedSubscribeFailed" xml:space="preserve">
+    <value>Abonnieren fehlgeschlagen!</value>
+  </data>
+  <data name="FeedSubscribeGroup.Text" xml:space="preserve">
+    <value>Kategorie</value>
+  </data>
+  <data name="FeedSubscribeLogin.Text" xml:space="preserve">
+    <value>Zugangsdaten für Feed. Bitte leer lassen, falls nicht benötigt.</value>
+  </data>
+  <data name="FeedSubscribePassword.Text" xml:space="preserve">
+    <value>Passwort</value>
+  </data>
+  <data name="FeedSubscribeUrl.Text" xml:space="preserve">
+    <value>Feed Url</value>
+  </data>
+  <data name="FeedSubscribeUsername.Text" xml:space="preserve">
+    <value>Nutzername</value>
+  </data>
+  <data name="FeedUnsubscribe.Text" xml:space="preserve">
+    <value>Feed abbestellen</value>
+  </data>
+  <data name="FeedUnsubscribeDialog" xml:space="preserve">
+    <value>Sind Sie sich sicher, dass der Feed abbestellt werden soll?</value>
+  </data>
+  <data name="FeedUnsubscribeFailed" xml:space="preserve">
+    <value>Abbestellen fehlgeschlagen</value>
+  </data>
 </root>

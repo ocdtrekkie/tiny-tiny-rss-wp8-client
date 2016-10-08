@@ -232,12 +232,12 @@ namespace TinyTinyRSS.Interface
             }
         }
 
-        public async Task<List<Headline>> getHeadlines(int feedId, bool unreadOnly, int skip, int sortOrder, bool isCat)
+        public async Task<List<Headline>> getHeadlines(int feedId, bool? unreadOnly, int skip, int sortOrder, bool isCat)
         {
             string view_mode = "all_articles";
             int limit = INITIALHEADLINECOUNT;
             string sort;
-            if (unreadOnly)
+            if (unreadOnly.HasValue && unreadOnly.Value)
                 view_mode = "unread";
             switch (sortOrder)
             {
