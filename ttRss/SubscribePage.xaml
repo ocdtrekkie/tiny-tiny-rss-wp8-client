@@ -7,11 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
-          HorizontalAlignment="Center" Margin="20">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="60" />
+            <ColumnDefinition Width="*" MaxWidth="600" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -37,7 +36,7 @@
         </ComboBox>
         <TextBlock x:Uid="FeedSubscribeLogin" Text="Credentials for feed. Leave blank if not needed." 
                    Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0" 
-                   VerticalAlignment="Center" Margin="0,4" />
+                   VerticalAlignment="Center" Margin="0,4" HorizontalAlignment="Left" />
         <TextBlock x:Uid="FeedSubscribeUsername" Text="Username" Grid.Row="3" Grid.Column="0" 
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribeUsername" Grid.Row="3" Grid.Column="1" Margin="0,4" />
@@ -45,8 +44,8 @@
                    VerticalAlignment="Center" Margin="0,0,4,0" HorizontalAlignment="Right" />
         <TextBox x:Name="SubscribePassword" Grid.Row="4" Grid.Column="1" Margin="0,4" />
         <Button x:Uid="FeedSubscribeButton" Content="Subscribe" Click="Button_Click"
-                Grid.Row="5" Grid.ColumnSpan="2" Grid.Column="0"
-                VerticalAlignment="Center" HorizontalAlignment="Center" />
+                Grid.Row="5" Grid.Column="1"
+                VerticalAlignment="Center" HorizontalAlignment="Left" />
         <ProgressBar IsIndeterminate="True" Visibility="Collapsed" 
                      x:Name="ProgressBar" HorizontalAlignment="Stretch"
                 Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" />
