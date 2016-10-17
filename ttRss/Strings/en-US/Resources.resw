@@ -162,11 +162,11 @@
     <comment>Progressbar message for initial login</comment>
   </data>
   <data name="MarkAllArticlesRead.Label" xml:space="preserve">
-    <value>Mark All as Read</value>
+    <value>Mark feed as read</value>
     <comment>AppMenu Entry to mark all articles of a feed as read.</comment>
   </data>
   <data name="MarkReadAppBarButtonText" xml:space="preserve">
-    <value>Mark Read</value>
+    <value>Mark read</value>
     <comment>Text for AppBarButton Mark as read</comment>
   </data>
   <data name="MarkReadSettings.Text" xml:space="preserve">
@@ -556,5 +556,8 @@
   </data>
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>FeedUnsubscribeFailed</value>
+  </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>Mark as read</value>
   </data>
 </root>

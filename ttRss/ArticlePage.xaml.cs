@@ -274,7 +274,7 @@ namespace TinyTinyRSS
             UpdateField field;
             int selectedIndex = _selectedIndex;
             FrameworkElement element = (FrameworkElement) sender;
-            Headline current = await ArticlesCollection[selectedIndex];
+            Headline current = ArticlesCollection[selectedIndex].Headline;
             if ("publishAppBarMenu".Equals(element.Name))
             {
                 field = UpdateField.Published;

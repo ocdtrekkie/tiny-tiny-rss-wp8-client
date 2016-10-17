@@ -170,7 +170,17 @@
                                         ItemsSource="{Binding}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid HorizontalAlignment="Stretch" Margin="0">
+                                        <Grid HorizontalAlignment="Stretch" Margin="0"
+                                              Holding="AllFeedsList_Holding"
+                                              RightTapped="AllFeedsList_Holding">
+                                            <FlyoutBase.AttachedFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyout.Items>
+                                                        <MenuFlyoutItem x:Uid="FeedMarkAsRead" Text="Mark as read"    
+                                                            Click="SpecialFeedsContext_Click" DataContext="{Binding}" />
+                                                    </MenuFlyout.Items>
+                                                </MenuFlyout>
+                                            </FlyoutBase.AttachedFlyout>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -206,6 +216,8 @@
                                                 <MenuFlyout>
                                                     <MenuFlyout.Items>
                                                         <MenuFlyoutItem x:Uid="FeedUnsubscribe" x:Name="Remove" Text="Unsubscribe"    
+                                                            Click="Remove_Click" DataContext="{Binding}" />
+                                                        <MenuFlyoutItem x:Uid="FeedMarkAsRead" Text="Mark as read"    
                                                             Click="Remove_Click" DataContext="{Binding}" />
                                                     </MenuFlyout.Items>
                                                 </MenuFlyout>

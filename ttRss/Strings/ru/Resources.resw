@@ -556,4 +556,7 @@
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>Не удалось отписаться</value>
   </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>Как прочитанные</value>
+  </data>
 </root>

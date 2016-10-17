@@ -557,4 +557,7 @@
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>Wypisanie się z kanału zakończone niepowodzeniem</value>
   </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>Oznacz jako przeczytane</value>
+  </data>
 </root>

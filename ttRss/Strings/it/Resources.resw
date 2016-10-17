@@ -557,4 +557,7 @@
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>Annullamento inscrizione fallito</value>
   </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>Segna come letto</value>
+  </data>
 </root>

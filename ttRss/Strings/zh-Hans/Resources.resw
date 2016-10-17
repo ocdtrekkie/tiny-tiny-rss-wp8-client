@@ -581,4 +581,7 @@
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>退订失败</value>
   </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>标记为已读</value>
+  </data>
 </root>

@@ -556,4 +556,7 @@
   <data name="FeedUnsubscribeFailed" xml:space="preserve">
     <value>Abbestellen fehlgeschlagen</value>
   </data>
+  <data name="FeedMarkAsRead.Text" xml:space="preserve">
+    <value>Markiere als gelesen</value>
+  </data>
 </root>

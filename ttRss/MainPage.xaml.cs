@@ -607,7 +607,9 @@ namespace TinyTinyRSS
                 else
                 {
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
-                    if(item == null) {
+                    if(item == null)
+                    {
+                        await showNoNetworkError();
                         return;
                     }
                     await item.getContent();
@@ -1038,15 +1040,37 @@ namespace TinyTinyRSS
                 return;
             }
             ExtendedFeed feed = (ExtendedFeed) senderElement.DataContext;
-            MessageDialog msgbox = new MessageDialog(loader.GetString("FeedUnsubscribeDialog"));
-            msgbox.Commands.Add(new UICommand(loader.GetString("FeedUnsubscribe/Text"),
-            new UICommandInvokedHandler(this.DeleteInvokedHandler), feed.feed));
-            msgbox.Commands.Add(new UICommand(
-                loader.GetString("Cancel"),
-                new UICommandInvokedHandler(this.DeleteInvokedHandler), null));
-            // Set the command to be invoked when escape is pressed
-            msgbox.CancelCommandIndex = 1;
-            await msgbox.ShowAsync();
+            if (senderElement.Name.Equals("Remove"))
+            {
+                MessageDialog msgbox = new MessageDialog(loader.GetString("FeedUnsubscribeDialog"));
+                msgbox.Commands.Add(new UICommand(loader.GetString("FeedUnsubscribe/Text"),
+                new UICommandInvokedHandler(this.DeleteInvokedHandler), feed.feed));
+                msgbox.Commands.Add(new UICommand(
+                    loader.GetString("Cancel"),
+                    new UICommandInvokedHandler(this.DeleteInvokedHandler), null));
+                // Set the command to be invoked when escape is pressed
+                msgbox.CancelCommandIndex = 1;
+                await msgbox.ShowAsync();
+            } else
+            {
+                // mark as read
+                bool success = await markAllRead(feed.feed.id, false);
+                UpdateFeedCounters();
+                if (success && feed.feed.id == ConnectionSettings.getInstance().selectedFeed)
+                {
+                    foreach (WrappedArticle wa in ArticlesCollection)
+                    {
+                        if (wa.Headline.unread)
+                        {
+                            wa.Headline.unread = false;
+                        }
+                        if (wa.Article != null && wa.Article.unread)
+                        {
+                            wa.Article.unread = false;
+                        }
+                    }
+                }
+            }
         }
 
         private async void DeleteInvokedHandler(IUICommand command)
@@ -1074,6 +1098,33 @@ namespace TinyTinyRSS
         private void SubscribeButton_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(SubscribePage));
+        }
+
+        private async void SpecialFeedsContext_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement senderElement = sender as FrameworkElement;
+            if (senderElement.DataContext == null || !(senderElement.DataContext is SpecialFeed))
+            {
+                return;
+            }
+            SpecialFeed feed = (SpecialFeed)senderElement.DataContext;            
+            // mark as read
+            bool success = await markAllRead(feed.id, false);
+            UpdateFeedCounters();
+            if (success && feed.id == ConnectionSettings.getInstance().selectedFeed)
+            {
+                foreach (WrappedArticle wa in ArticlesCollection)
+                {
+                    if (wa.Headline.unread)
+                    {
+                        wa.Headline.unread = false;
+                    }
+                    if (wa.Article != null && wa.Article.unread)
+                    {
+                        wa.Article.unread = false;
+                    }
+                }
+            }
         }
     }
 }

@@ -176,7 +176,10 @@ namespace TinyTinyRSS
                 if(art != null) {
                     var uri = new Uri(art.link);
                     await Windows.System.Launcher.LaunchUriAsync(uri);
-                } // TODO Fehlermeldung
+                } else
+                {
+                    await showNoNetworkError();
+                }
             }
         }
 
@@ -242,14 +245,7 @@ namespace TinyTinyRSS
         {
             if (ex.Message.Equals(TtRssInterface.NONETWORKERROR))
             {
-                if (asyncMsgDialogCommand != null)
-                {
-                    return;
-                }
-                MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                asyncMsgDialogCommand = msgbox.ShowAsync();
-                await asyncMsgDialogCommand;
-                asyncMsgDialogCommand = null;
+                await showNoNetworkError();
                 if (this is MainPage)
                 {
                     return;
@@ -268,6 +264,18 @@ namespace TinyTinyRSS
             {
                 throw ex;
             }
+        }
+
+        protected async Task showNoNetworkError()
+        {
+            if (asyncMsgDialogCommand != null)
+            {
+                return;
+            }
+            MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
+            asyncMsgDialogCommand = msgbox.ShowAsync();
+            await asyncMsgDialogCommand;
+            asyncMsgDialogCommand = null;
         }
 
         /// <summary>
@@ -371,12 +379,17 @@ namespace TinyTinyRSS
             }
             return contains;
         }
-        
-        protected async Task<bool> markAllRead() 
+
+        protected async Task<bool> markAllRead()
+        {
+            return await markAllRead(ConnectionSettings.getInstance().selectedFeed, ConnectionSettings.getInstance().isCategory);
+        }
+
+        protected async Task<bool> markAllRead(int id, bool isCat) 
         {
             SetProgressBar(true, ProgressMsg.MarkArticle);
             try {
-                bool success = await TtRssInterface.getInterface().markAllArticlesRead(ConnectionSettings.getInstance().selectedFeed, ConnectionSettings.getInstance().isCategory);
+                bool success = await TtRssInterface.getInterface().markAllArticlesRead(id, isCat);
                 Task task = PushNotificationHelper.UpdateLiveTile(-1);
                 SetProgressBar(false, ProgressMsg.MarkArticle);
                 return success;
