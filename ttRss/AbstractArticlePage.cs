@@ -173,8 +173,10 @@ namespace TinyTinyRSS
             else
             {
                 Article art = await article.getContent();
-                var uri = new Uri(art.link);
-                await Windows.System.Launcher.LaunchUriAsync(uri);
+                if(art != null) {
+                    var uri = new Uri(art.link);
+                    await Windows.System.Launcher.LaunchUriAsync(uri);
+                } // TODO Fehlermeldung
             }
         }
 
