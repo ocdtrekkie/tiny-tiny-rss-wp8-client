@@ -274,7 +274,7 @@ namespace TinyTinyRSS
             UpdateField field;
             int selectedIndex = _selectedIndex;
             FrameworkElement element = (FrameworkElement) sender;
-            Article current = await ArticlesCollection[selectedIndex].getContent();
+            Headline current = await ArticlesCollection[selectedIndex];
             if ("publishAppBarMenu".Equals(element.Name))
             {
                 field = UpdateField.Published;
@@ -319,6 +319,9 @@ namespace TinyTinyRSS
             }
             try
             {
+                if(current == null) {
+                    return;
+                }
                 SetProgressBar(true, ProgressMsg.MarkArticle);
                 List<int> idList = new List<int>();
                 idList.Add(current.id);
