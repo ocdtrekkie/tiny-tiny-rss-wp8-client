@@ -588,12 +588,13 @@ namespace TinyTinyRSS
                 {
                     return;
                 }
+                var _selectedIndex = HeadlinesView.SelectedIndex;
                 var orientation = DisplayInformation.GetForCurrentView().CurrentOrientation;
                 double width = RootSplitView.ActualWidth;
                 if (width < 720)
                 {
                     NavigationObject parameter = new NavigationObject();
-                    parameter.selectedIndex = HeadlinesView.SelectedIndex;
+                    parameter.selectedIndex = _selectedIndex;
                     parameter._showUnreadOnly = _showUnreadOnly;
                     parameter._sortOrder = _sortOrder;
                     parameter.ArticlesCollection = new ObservableCollection<WrappedArticle>();
@@ -605,8 +606,10 @@ namespace TinyTinyRSS
                 }
                 else
                 {
-                    var _selectedIndex = HeadlinesView.SelectedIndex;
                     WrappedArticle item = ArticlesCollection[_selectedIndex];
+                    if(item == null) {
+                        return;
+                    }
                     await item.getContent();
                     Article_Grid.DataContext = item;
                     Article_Grid.MinWidth = RootSplitView.ActualWidth / 2;
