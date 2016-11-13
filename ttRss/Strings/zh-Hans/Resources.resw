@@ -170,7 +170,7 @@
     <comment>Text for AppBarButton Mark as read</comment>
   </data>
   <data name="MarkReadSettings.Text" xml:space="preserve">
-    <value>自动将文章标记为已读</value>
+    <value>打开文章时自动标记为已读</value>
     <comment>Label for checkbox in settings to mark articles read automatically.</comment>
   </data>
   <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
@@ -583,5 +583,8 @@
   </data>
   <data name="FeedMarkAsRead.Text" xml:space="preserve">
     <value>标记为已读</value>
+  </data>
+  <data name="MarkReadScrollSettings.Text" xml:space="preserve">
+    <value>浏览文章标题时自动标记已读</value>
   </data>
 </root>

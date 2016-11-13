@@ -281,7 +281,7 @@ namespace TinyTinyRSS
         /// <summary>
         /// When a pivot item is loaded check if you need to load more articles, cause of lazy loading.
         /// </summary>
-        protected async Task LoadMoreHeadlines()
+        protected async Task<bool> LoadMoreHeadlines()
         {
             if (_moreArticles && !_moreArticlesLoading)
             {
@@ -364,6 +364,7 @@ namespace TinyTinyRSS
                     SetProgressBar(false, ProgressMsg.LoadMoreHeadlines);
                 }
             }
+            return _moreArticles;
         }
 
         private bool isHeadlineInArticleCollection(Headline headline)

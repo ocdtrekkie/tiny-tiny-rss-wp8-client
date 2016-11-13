@@ -33,6 +33,7 @@ namespace TinyTinyRSS.Interface
         public static string _lastLogKey = "lastLogFileName";
         public static string _httpAuthKey = "httpAuth";
         public static string _featuresVotedKey = "featureVote";
+        public static string _markReadByScrollingKey = "markReadByScrolling";
 
 
         private static ConnectionSettings instance;
@@ -58,6 +59,7 @@ namespace TinyTinyRSS.Interface
         private string _lastLog;
         private string _httpAuth;
         private string _featuresVoted;
+        private string _markReadByScrolling;
         private LoggingChannel channel;
 
         private ConnectionSettings()
@@ -163,7 +165,23 @@ namespace TinyTinyRSS.Interface
                 _markRead = value.ToString();
             }
         }
-
+        public bool markReadByScrolling
+        {
+            get
+            {
+                if (_markReadByScrolling == null)
+                {
+                    _markReadByScrolling = ReadSetting(_markReadByScrollingKey);
+                }
+                return _markReadByScrolling.ToLower().Equals("true");
+            }
+            set
+            {
+                SaveSetting(_markReadByScrollingKey, value.ToString());
+                _markReadByScrolling = value.ToString();
+            }
+        }
+        
         public bool httpAuth
         {
             get

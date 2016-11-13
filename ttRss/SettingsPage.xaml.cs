@@ -60,6 +60,7 @@ namespace TinyTinyRSS
             ServerField.Text = ConnectionSettings.getInstance().server;
             PasswdField.Password = ConnectionSettings.getInstance().password;
             MarkReadCheckbox.IsChecked = ConnectionSettings.getInstance().markRead;
+            MarkReadScrollCheckbox.IsChecked = ConnectionSettings.getInstance().markReadByScrolling;
             ShowUnreadOnlyCheckbox.IsChecked = ConnectionSettings.getInstance().showUnreadOnly;
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             DarkArticleBackgroundCheckbox.IsChecked = ConnectionSettings.getInstance().useDarkBackground;
@@ -322,9 +323,10 @@ namespace TinyTinyRSS
                 ConnectionSettings.getInstance().useDarkBackground = DarkArticleBackgroundCheckbox.IsChecked.Value;
             } else if (sender == UnsignedSslCb) {
                 ConnectionSettings.getInstance().allowSelfSignedCert = UnsignedSslCb.IsChecked.Value;
-            } else if (sender == HttpAuthCb)
-            {
+            } else if (sender == HttpAuthCb) {
                 ConnectionSettings.getInstance().httpAuth = HttpAuthCb.IsChecked.Value;
+            } else if (sender == MarkReadScrollCheckbox) {
+                ConnectionSettings.getInstance().markReadByScrolling = MarkReadScrollCheckbox.IsChecked.Value;
             }
         }
 

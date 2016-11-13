@@ -170,7 +170,7 @@
     <comment>Text for AppBarButton Mark as read</comment>
   </data>
   <data name="MarkReadSettings.Text" xml:space="preserve">
-    <value>Markiere Artikel automatisch als gelesen</value>
+    <value>Markiere Artikel als gelesen beim Öffnen</value>
     <comment>Label for checkbox in settings to mark articles read automatically.</comment>
   </data>
   <data name="MarkUnreadAppBarButtonText" xml:space="preserve">
@@ -558,5 +558,8 @@
   </data>
   <data name="FeedMarkAsRead.Text" xml:space="preserve">
     <value>Markiere als gelesen</value>
+  </data>
+  <data name="MarkReadScrollSettings" xml:space="preserve">
+    <value>Markiere als Gelesen durch Scrollen in Überschriften</value>
   </data>
 </root>

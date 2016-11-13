@@ -20,6 +20,7 @@ using Windows.UI.ViewManagement;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml.Controls.Primitives;
 using Universal.UI.Xaml.Controls;
+using System.Diagnostics;
 
 namespace TinyTinyRSS
 {
@@ -34,6 +35,9 @@ namespace TinyTinyRSS
         private List<SpecialFeed> SpecialFeedCollection;
         private List<ExtendedFeed> extendedFeeds = new List<ExtendedFeed>();
         private Point swipeStart;
+        private double verticalOffsetMax = 0;
+        private int markedReadIndex = -1;
+
         public Rect TogglePaneButtonRect
         {
             get;
@@ -333,6 +337,8 @@ namespace TinyTinyRSS
         private async Task feedSelectionChanged()
         {
             try {
+                markedReadIndex = -1;
+                verticalOffsetMax = 0;
                 setUnreadOnly(ConnectionSettings.getInstance().showUnreadOnly);
                 setSortOrder(ConnectionSettings.getInstance().sortOrder);
                 _moreArticles = true;
@@ -504,12 +510,67 @@ namespace TinyTinyRSS
             {
                 return;
             }
-            ScrollViewer sv = (ScrollViewer)sender;
+
+            ScrollViewer sv = (ScrollViewer)sender;            
             var verticalOffsetValue = sv.VerticalOffset;
+            bool markAll = false;
             var maxVerticalOffsetValue = sv.ExtentHeight - sv.ViewportHeight;
-            if (verticalOffsetValue >= 0.85 * maxVerticalOffsetValue)
+            if (verticalOffsetValue >= 0.95 * maxVerticalOffsetValue)
             {
-                await LoadMoreHeadlines();
+                markAll = !await LoadMoreHeadlines();
+            }
+
+            if(!ConnectionSettings.getInstance().markReadByScrolling)
+            {
+                return;
+            }
+
+            if (verticalOffsetValue > verticalOffsetMax)
+            {
+                verticalOffsetMax = verticalOffsetValue;
+                List<WrappedArticle> toMarkList = new List<WrappedArticle>();
+                if (!markAll)
+                {
+                    for (int idx = markedReadIndex + 1; idx <= ArticlesCollection.Count; idx++)
+                    {
+                        ListViewItem item = (ListViewItem) HeadlinesView.ContainerFromIndex(idx);
+                        if(item == null)
+                        {
+                            // set read index to last synced.{
+                            markedReadIndex = idx - 1;
+                            break;
+                        }
+                        Point pos = item.TransformToVisual(sv).TransformPoint(new Point(0, 0));
+                        if (pos.Y < (sv.ViewportHeight / 3))
+                        {
+                            if (ArticlesCollection[idx].Headline.unread)
+                            {
+                                toMarkList.Add(ArticlesCollection[idx]);
+                            }
+                        }
+                        else
+                        {
+                            // set read index to last synced.{
+                            markedReadIndex = idx - 1;
+                            break;
+                        }
+                    }
+                } else
+                {
+                    toMarkList = ArticlesCollection.Where(x => x.Headline.unread).ToList();
+                }
+                bool success = await TtRssInterface.getInterface().updateArticles(
+                    toMarkList.Select(x => x.Headline.id).ToList(), UpdateField.Unread, UpdateMode.False);
+                if (success)
+                {
+                    Task updateFeedCounters = UpdateFeedCounters();
+                    toMarkList.ForEach(x => x.Headline.unread = false);
+                    toMarkList.Where(x => x.Article!=null).ToList().ForEach(x => x.Article.unread = false);                    
+                    Task t1 = PushNotificationHelper.UpdateLiveTile(-1);
+                    Task t2 = updateFeedCounters;
+                    await t1;
+                    await t2;
+                }
             }
         }
 

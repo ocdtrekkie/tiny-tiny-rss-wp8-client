@@ -67,6 +67,9 @@
                         <CheckBox x:Name="MarkReadCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="Changed">
                             <TextBlock Text="" x:Uid="MarkReadSettings" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
+                        <CheckBox x:Name="MarkReadScrollCheckbox"  HorizontalAlignment="Left" VerticalAlignment="Center" Click="Changed">
+                            <TextBlock Text="Mark read when scrolling" x:Uid="MarkReadScrollSettings" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
+                        </CheckBox>
                         <CheckBox x:Name="ShowUnreadOnlyCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Click="Changed">
                             <TextBlock Text="" x:Uid="UnreadOnlySettings" TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         </CheckBox>
@@ -93,9 +96,6 @@
                 </PivotItem.Header>
                 <StackPanel Margin="12,0,12,0" Orientation="Vertical">
                     <TextBlock Text="Please vote for up to 2 features you want to have implemented in the next version. You can vote once per version." TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
-                    <CheckBox x:Name="AutoReadScrollCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Checked="FeatureCheckbox_Checked">
-                        <TextBlock Text="Mark articles as read while scrolling through article list." TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
-                    </CheckBox>
                     <CheckBox x:Name="LiveTileFeatureCheckbox" HorizontalAlignment="Left" VerticalAlignment="Center" Checked="FeatureCheckbox_Checked">
                         <TextBlock Text="Advanced Live Tiles (per feed and with headlines)." TextWrapping="Wrap" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                     </CheckBox>
