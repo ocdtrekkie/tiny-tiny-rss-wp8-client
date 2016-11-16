@@ -559,7 +559,7 @@
   <data name="FeedMarkAsRead.Text" xml:space="preserve">
     <value>Markiere als gelesen</value>
   </data>
-  <data name="MarkReadScrollSettings" xml:space="preserve">
+  <data name="MarkReadScrollSettings.Text" xml:space="preserve">
     <value>Markiere als Gelesen durch Scrollen in Überschriften</value>
   </data>
 </root>

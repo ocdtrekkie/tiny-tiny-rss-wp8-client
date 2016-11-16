@@ -515,9 +515,9 @@ namespace TinyTinyRSS
             var verticalOffsetValue = sv.VerticalOffset;
             bool markAll = false;
             var maxVerticalOffsetValue = sv.ExtentHeight - sv.ViewportHeight;
-            if (verticalOffsetValue >= 0.95 * maxVerticalOffsetValue)
+            if (verticalOffsetValue >= 0.85 * maxVerticalOffsetValue)
             {
-                markAll = !await LoadMoreHeadlines();
+                markAll = !await LoadMoreHeadlines() && verticalOffsetValue >= maxVerticalOffsetValue;
             }
 
             if(!ConnectionSettings.getInstance().markReadByScrolling)
@@ -541,7 +541,7 @@ namespace TinyTinyRSS
                             break;
                         }
                         Point pos = item.TransformToVisual(sv).TransformPoint(new Point(0, 0));
-                        if (pos.Y < (sv.ViewportHeight / 3))
+                        if (pos.Y < (sv.ViewportHeight / 8))
                         {
                             if (ArticlesCollection[idx].Headline.unread)
                             {

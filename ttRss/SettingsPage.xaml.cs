@@ -351,11 +351,7 @@ namespace TinyTinyRSS
 
         private void FeatureRequest_Click(object sender, RoutedEventArgs e)
         {
-            if (AutoReadScrollCheckbox.IsChecked.HasValue && AutoReadScrollCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AutoReadScroll");
-            }
-            else if (LiveTileFeatureCheckbox.IsChecked.HasValue && LiveTileFeatureCheckbox.IsChecked.Value)
+            if (LiveTileFeatureCheckbox.IsChecked.HasValue && LiveTileFeatureCheckbox.IsChecked.Value)
             {
                 Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AdvancedLiveTiles");
             }
@@ -377,9 +373,8 @@ namespace TinyTinyRSS
 
         private void FeatureCheckbox_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox[] options = new CheckBox[] { AutoReadScrollCheckbox,
-                LiveTileFeatureCheckbox, FeedTreeFeatureCheckbox, LabelNotesFeatureCheckbox,
-                ShortcutsFeatureCheckbox };
+            CheckBox[] options = new CheckBox[] { LiveTileFeatureCheckbox, FeedTreeFeatureCheckbox,
+                LabelNotesFeatureCheckbox, ShortcutsFeatureCheckbox };
             int selected = 0;
             foreach (CheckBox box in options)
             {
