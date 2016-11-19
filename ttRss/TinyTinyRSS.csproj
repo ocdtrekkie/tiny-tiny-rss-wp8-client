@@ -20,8 +20,8 @@
     <AppxBundle>Always</AppxBundle>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x86|arm</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>6F94B6951C4570C223BC6F5A64471610A0FE56FE</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>TinyTinyRSS_StoreKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>4C2E9E50563C47469F12F80F37BA6D6B3465E541</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>TinyTinyRSS_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -117,6 +117,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="project.json" />
+    <None Include="TinyTinyRSS_TemporaryKey.pfx" />
     <PRIResource Include="Strings\it\Resources.resw">
       <SubType>Designer</SubType>
     </PRIResource>
