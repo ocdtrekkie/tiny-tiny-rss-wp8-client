@@ -182,7 +182,7 @@
     <comment>Message to show, when ArticleView has nothing to display.</comment>
   </data>
   <data name="NoConnection" xml:space="preserve">
-    <value>No connection could be established. Check your settings or wait for a better signal.</value>
+    <value>No connection could be established. Check your login credentials or wait for a better signal.</value>
     <comment>Text for MessageBox if Server could not be reached.</comment>
   </data>
   <data name="OpenExtAppBarButton.Label" xml:space="preserve">
