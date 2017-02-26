@@ -34,12 +34,12 @@ namespace TinyTinyRSS
             LogSession.addChannel(channel);
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
-            //this.Resuming += App_Resuming;
+            this.Resuming += App_Resuming;
             this.UnhandledException += App_UnhandledException;
             Microsoft.HockeyApp.HockeyClient.Current.Configure("920bbd7c3ad746fa91e80e46588ae87a");
         }
 
-        private void App_Resuming(object sender, object e)
+        private async void App_Resuming(object sender, object e)
         {
             Frame rootFrame = Window.Current.Content as Frame;
             var now = DateTime.Now;
@@ -47,10 +47,10 @@ namespace TinyTinyRSS
             if (last != null && rootFrame != null)
             {
                 TimeSpan span = now.Subtract(last);
-                if (span.Minutes > 10)
+                if (span.Minutes >= 10)
                 {
-                    rootFrame.BackStack.Clear();
                     rootFrame.Navigate(typeof(MainPage));
+                    rootFrame.BackStack.Clear();
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace TinyTinyRSS
             Window.Current.Activate();
         }
 
-        private async void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             channel.LogMessage("Unhandled Exception: " + e.Message);
             channel.LogMessage(e.Exception.ToString());
