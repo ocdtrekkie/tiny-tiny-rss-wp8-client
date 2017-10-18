@@ -211,9 +211,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ttRssInterface\ttRssInterface.csproj">
-      <Project>{fd35a92c-6853-48c7-b702-29b610501be2}</Project>
-      <Name>ttRssInterface</Name>
+    <ProjectReference Include="..\ttrssClient\ttrssClient.csproj">
+      <Project>{86711ae5-564b-4baa-baae-2fb48b152c1c}</Project>
+      <Name>ttrssClient</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
