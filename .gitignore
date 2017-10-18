@@ -158,3 +158,4 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+/.vs/TinyTinyRSS/v15/sqlite3/storage.ide
