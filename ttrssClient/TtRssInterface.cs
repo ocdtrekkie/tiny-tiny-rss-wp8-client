@@ -257,7 +257,7 @@ namespace TinyTinyRSS.Interface
             }
             try
             {
-                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\", \"is_cat\":\"" + isCat + "\"}";
+                string getHeadlines = "{\"sid\":\"" + SidPlaceholder + "\",\"op\":\"getHeadlines\",\"show_excerpt\":false,\"limit\":" + limit + ",\"skip\":" + skip + ", \"view_mode\":\"" + view_mode + "\", \"feed_id\":" + (int)feedId + ", \"order_by\":\"" + sort + "\", \"is_cat\":\"" + isCat.ToString().ToLower() + "\"}";
                 ResponseArray unreadItems = await SendRequestArrayAsync(null, getHeadlines);
                 List<Headline> headlines = ParseContentOrError<Headline>(unreadItems);
                 return headlines;
