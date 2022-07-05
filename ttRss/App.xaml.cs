@@ -11,6 +11,7 @@ using Windows.Storage;
 using Windows.UI.Core;
 using System.Threading.Tasks;
 using Windows.Foundation.Diagnostics;
+using Microsoft.HockeyApp;
 
 namespace TinyTinyRSS
 {
@@ -36,7 +37,7 @@ namespace TinyTinyRSS
             this.Suspending += this.OnSuspending;
             this.Resuming += App_Resuming;
             this.UnhandledException += App_UnhandledException;
-            Microsoft.HockeyApp.HockeyClient.Current.Configure("920bbd7c3ad746fa91e80e46588ae87a");
+            HockeyClient.Current.Configure("920bbd7c3ad746fa91e80e46588ae87a");
         }
 
         private async void App_Resuming(object sender, object e)
