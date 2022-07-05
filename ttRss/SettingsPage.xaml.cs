@@ -38,7 +38,7 @@ namespace TinyTinyRSS
                     Package.Current.Id.Version.Build,
                     Package.Current.Id.Version.Revision);
             this.AppVersion.Text = loader.GetString("SettingsAboutVersion") + appVersion;
-            this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + "Stefan Prasse";
+            this.AppAuthor.Text = loader.GetString("SettingsAboutAuthor") + Package.Current.Id.Author;
             channel = new LoggingChannel("SettingsPage.cs", null);
             LogSession.addChannel(channel);
             this.Loaded += PageLoaded;
