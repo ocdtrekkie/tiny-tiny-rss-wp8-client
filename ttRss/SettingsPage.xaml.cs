@@ -65,11 +65,9 @@ namespace TinyTinyRSS
             ProgressAsCntrCheckbox.IsChecked = ConnectionSettings.getInstance().progressAsCntr;
             DarkArticleBackgroundCheckbox.IsChecked = ConnectionSettings.getInstance().useDarkBackground;
             SortBox.SelectedIndex = ConnectionSettings.getInstance().sortOrder;
-            LiveTileCheckbox.IsChecked = ConnectionSettings.getInstance().liveTileActive;
             SwipeMarginSlider.Value = ConnectionSettings.getInstance().swipeMargin;
             UnsignedSslCb.IsChecked = ConnectionSettings.getInstance().allowSelfSignedCert;
             HttpAuthCb.IsChecked = ConnectionSettings.getInstance().httpAuth;
-            FeatureRequestButton.IsEnabled = !ConnectionSettings.getInstance().featuresVoted;
         }
 		
 		// Test and save connection settings.        
@@ -211,73 +209,6 @@ namespace TinyTinyRSS
             channel.LogMessage("End Send via email.", LoggingLevel.Information);
         }
 
-		// Live tile activated/deactivated
-        private async void LiveTileCheckbox_Click(object sender, RoutedEventArgs e)
-        {
-            LiveTileProgress.Visibility = Visibility.Visible;
-            string deviceId = PushNotificationHelper.GetDeviceID();
-            if (LiveTileCheckbox.IsChecked.HasValue && LiveTileCheckbox.IsChecked.Value)
-            {
-                if (await TestSettings())
-                {
-                    ConnectionSettings.getInstance().liveTileActive = true;
-                    if (await PushNotificationHelper.AddNotificationChannel(UsernameField.Text, PasswdField.Password, ServerField.Text))
-                    {
-                        await PushNotificationHelper.UpdateLiveTile(-1);
-                    }
-                    else
-                    {
-                        ConnectionSettings.getInstance().liveTileActive = false;
-                        LiveTileCheckbox.IsChecked = false;
-                        MessageDialog msgbox = new MessageDialog(loader.GetString("ErrorAddLiveTile"));
-                        await msgbox.ShowAsync();     
-                    }
-                }
-                else
-                {
-                    MessageDialog msgbox = new MessageDialog(loader.GetString("NoConnection"));
-                    await msgbox.ShowAsync();     
-                    LiveTileCheckbox.IsChecked = false;
-                }
-            }
-            else
-            {
-                if (ConnectionSettings.getInstance().liveTileActive == true)
-                {
-                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
-                    BadgeUpdateManager.CreateBadgeUpdaterForApplication().Clear();
-                    ConnectionSettings.getInstance().liveTileActive = false;
-                    Task t = PushNotificationHelper.ClosePushNotifications();
-                    var httpFormUrlEncodedContent = new HttpFormUrlEncodedContent(new[] {
-                        new KeyValuePair<string, string>("action", "deleteUser"),
-                        new KeyValuePair<string, string>("deviceId", deviceId),
-                        new KeyValuePair<string, string>("hash", PushNotificationHelper.HASH)
-                    });
-                    try
-                    {
-                        HttpClient httpClient = new HttpClient();
-                        HttpRequestMessage msg = new HttpRequestMessage(new HttpMethod("POST"), new Uri(PushNotificationHelper.SERVERURL));
-                        msg.Content = httpFormUrlEncodedContent;
-                        HttpResponseMessage httpresponse = await httpClient.SendRequestAsync(msg).AsTask();
-                        var responseString = await httpresponse.Content.ReadAsStringAsync();
-                        
-                        if (!responseString.Equals("1"))
-                        {
-                            channel.LogMessage("error deleting livetile user");
-                            channel.LogMessage(responseString);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        channel.LogMessage("error deleting livetile user");
-                        channel.LogMessage(ex.Message);
-                    }
-                    await t;
-                }
-            }
-            LiveTileProgress.Visibility = Visibility.Collapsed;
-        }
-
         /// <summary>
         /// Button listener that opens the webpage of this project.
         /// </summary>
@@ -326,46 +257,6 @@ namespace TinyTinyRSS
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
             ConnectionSettings.getInstance().swipeMargin = Convert.ToInt32(e.NewValue);
-        }
-
-        private void FeatureRequest_Click(object sender, RoutedEventArgs e)
-        {
-            if (LiveTileFeatureCheckbox.IsChecked.HasValue && LiveTileFeatureCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_AdvancedLiveTiles");
-            }
-            else if (FeedTreeFeatureCheckbox.IsChecked.HasValue && FeedTreeFeatureCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_FeedTree");
-            }
-            else if (LabelNotesFeatureCheckbox.IsChecked.HasValue && LabelNotesFeatureCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_LabelsAndNotes");
-            }
-            else if (ShortcutsFeatureCheckbox.IsChecked.HasValue && ShortcutsFeatureCheckbox.IsChecked.Value)
-            {
-                Microsoft.HockeyApp.HockeyClient.Current.TrackEvent("Feature_KeyboardShortcuts");
-            }
-            ConnectionSettings.getInstance().featuresVoted = true;
-            FeatureRequestButton.IsEnabled = !ConnectionSettings.getInstance().featuresVoted;
-        }
-
-        private void FeatureCheckbox_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckBox[] options = new CheckBox[] { LiveTileFeatureCheckbox, FeedTreeFeatureCheckbox,
-                LabelNotesFeatureCheckbox, ShortcutsFeatureCheckbox };
-            int selected = 0;
-            foreach (CheckBox box in options)
-            {
-                if(box.IsChecked.HasValue && box.IsChecked.Value)
-                {
-                    selected++;
-                }
-            }
-            if(selected>2)
-            {
-                ((CheckBox)sender).IsChecked = false;
-            }
         }
     }
 }
