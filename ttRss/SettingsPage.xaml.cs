@@ -163,7 +163,7 @@ namespace TinyTinyRSS
             {
                 // Send an Email with attachment
                 EmailMessage email = new EmailMessage();
-                email.To.Add(new EmailRecipient("stefan@thescientist.eu"));
+                email.To.Add(new EmailRecipient("inbox@jacobweisz.com"));
                 email.Subject = Subject;
                 StorageFile file = null;
 

@@ -100,19 +100,20 @@
                         <TextBlock Text="" x:Uid="ApplicationName" FontSize="24" FontWeight="Bold"/>
                         <TextBlock Name="AppVersion" FontSize="{StaticResource TextStyleSmallFontSize}"/>
                         <TextBlock Name="AppAuthor" Margin="0,0,0,10" FontSize="{StaticResource TextStyleSmallFontSize}"/>
+                        <TextBlock Name="AppCredits" Margin="0,0,0,10" FontSize="{StaticResource TextStyleSmallFontSize}" Text="This app was originally developed by Stefan Prasse. It has been updated and republished with permission."/>
                         <TextBlock Name="AboutText" Text="" x:Uid="SettingsAboutText" FontSize="{StaticResource TextStyleSmallFontSize}" TextWrapping="Wrap"/>
                         <RadioButton Name="AboutRadio0" Content="" x:Uid="SettingsAboutRadioNoLog" GroupName="LogGroup" IsChecked="true" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <RadioButton Name="AboutRadio1" Content="" x:Uid="SettingsAboutRadioActualLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <RadioButton Name="AboutRadio2" Content="" x:Uid="SettingsAboutRadioLastLog" GroupName="LogGroup" FontSize="{StaticResource TextStyleMediumFontSize}"/>
                         <Button Name="AboutSendButton" Content="" x:Uid="SettingsAboutButtonSendLog" Click="AboutSendButton_Click" FontSize="{StaticResource TextStyleMediumFontSize}"/>
-                        <HyperlinkButton Name="ProjectPageButton" NavigateUri="https://thescientist.eu/tt-rss-reader-for-wp-8/">
+                        <HyperlinkButton Name="ProjectPageButton" NavigateUri="https://github.com/ocdtrekkie/tiny-tiny-rss-wp8-client/">
                             <TextBlock FontSize="{StaticResource TextStyleMediumFontSize}">
                                 <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonProjectWeb" />
                                 </Underline>
                             </TextBlock>
                         </HyperlinkButton>
-                        <HyperlinkButton NavigateUri="https://thescientist.eu/tt-rss-reader-for-wp-8/" Name="PrivacyPolicyButton">
+                        <HyperlinkButton NavigateUri="https://github.com/ocdtrekkie/tiny-tiny-rss-wp8-client/" Name="PrivacyPolicyButton">
                             <TextBlock x:Name="TextPrivacy" TextAlignment="Center" FontSize="{StaticResource TextStyleMediumFontSize}">
                                  <Underline>
                                     <Run Text="" x:Uid="SettingsAboutButtonPrivacyPolicy" />
