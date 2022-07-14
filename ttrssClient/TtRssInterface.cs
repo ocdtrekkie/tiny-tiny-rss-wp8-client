@@ -96,11 +96,11 @@ namespace TinyTinyRSS.Interface
                 }
                 else if (e.Message.Equals("Error occured: JSON Deserialization returned null.") || e.Message.Equals(NONETWORKERROR))
                 {
-                    return "Something went wrong. May you're not connected to the web.";
+                    return "Something went wrong. Maybe you're not connected to the web.";
                 }
                 return e.Message;
             }
-            catch (NullReferenceException nre)
+            catch (NullReferenceException)
             {
                 ConnectionSettings.getInstance().username = oldUser;
                 ConnectionSettings.getInstance().password = oldPass;

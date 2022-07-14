@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="41231TheScientist.TinyTinyRSSReader" Publisher="CN=Jacob Weisz" Version="4.3.4.0" />
-  <mp:PhoneIdentity PhoneProductId="ad6373d0-14b8-4908-8a40-2208f047aeaf" PhonePublisherId="4b22ace6-b3ff-4b70-92b2-c4bcb07a0645" />
+  <Identity Name="26548JacobWeisz.TinyTinyRSSReader2" Publisher="CN=99D568AD-9294-4FF8-BF3A-BE0AC209C2EF" Version="4.4.0.0" />
+  <mp:PhoneIdentity PhoneProductId="48cda4b4-4653-4882-9f26-291d0c003d82" PhonePublisherId="4b22ace6-b3ff-4b70-92b2-c4bcb07a0645" />
   <Properties>
-    <DisplayName>Tiny Tiny RSS Reader</DisplayName>
+    <DisplayName>Tiny Tiny RSS Reader 2</DisplayName>
     <PublisherDisplayName>Jacob Weisz</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -33,6 +33,6 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClientServer" />
-  </Capabilities>
+    <Capability Name="internetClient"/>
+    <Capability Name="privateNetworkClientServer"/></Capabilities>
 </Package>

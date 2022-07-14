@@ -281,10 +281,11 @@ namespace TinyTinyRSS.Classes
                 {
                     AsyncValue = null;
                 }
-
-                string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
+                
                 try
                 {
+                    string iconsUrl = server.Replace("/api/", "/" + conf.icons_url + "/") + feedId + ".ico";
+
                     if (!ConnectionSettings.getInstance().httpAuth)
                     {
                         AsyncValue = new BitmapImage(new Uri(iconsUrl));
