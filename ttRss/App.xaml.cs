@@ -117,7 +117,7 @@ namespace TinyTinyRSS
             Window.Current.Activate();
         }
 
-        private void App_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void App_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             channel.LogMessage("Unhandled Exception: " + e.Message);
             channel.LogMessage(e.Exception.ToString());
